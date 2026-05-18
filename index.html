@@ -1105,10 +1105,10 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
         </div>
 
         <div className="panel">
-          <div className="sb-title">Training</div>
+          <div className="sb-title" style={{color:'#aa5500'}}>Training</div>
           {skill && skillData ? (<>
-            <div className="sb-name">{skill.name}</div>
-            <div className="sb-sub">{skill.category} · Lv {skillData.level}</div>
+            <div className="sb-name" style={{color:'#ff8800'}}>{skill.name}</div>
+            <div className="sb-sub" style={{color:'#aa5500'}}>{skill.category} · Lv {skillData.level}</div>
             <div className="progress-wrap" style={{height:13}}>
               <div className="progress-fill skill" style={{width:`${skillPct}%`}}></div>
               <div className="progress-text">{formatNum(skillData.xp)} / {formatNum(skillNeed)}</div>
@@ -1137,8 +1137,8 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
         const meta = PATH_META[path];
         return (
           <div key={path}>
-            <div className="category-header" style={{color: meta.color}}>
-              {meta.label} <span style={{color:'#4a5880',fontWeight:400,textTransform:'none',fontSize:10,letterSpacing:0}}>— {meta.desc}</span>
+            <div className="category-header" style={{color:'#00cc66'}}>
+              {meta.label} <span style={{color:'#00aa44',fontWeight:400,textTransform:'none',fontSize:10,letterSpacing:0}}>— {meta.desc}</span>
             </div>
             {inPath.map(career => {
               const cur = state.careers[career.id];
@@ -1265,7 +1265,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
       {cats.map(cat => (
         <div key={cat.key}>
           <div className="category-header" style={{color:'#0088cc'}}>{cat.name}</div>
-          <div className="description">{cat.desc}</div>
+          <div className="description" style={{color:'#5a8aaa'}}>{cat.desc}</div>
           {SHOP.filter(i => i.category === cat.key).map(item => {
             const unlocked = isShopUnlocked(item);
             const active = !!state.shop[item.id];
@@ -1310,7 +1310,7 @@ function RebirthTab({ state, pendingInsight }) {
   return (
     <div className="panel">
       <div className="section-title" style={{color:'#ff8800', textShadow:'0 0 8px rgba(255,136,0,0.3)'}}>⊹ Cosmic Insight</div>
-      <div className="description">
+      <div className="description" style={{color:'#aa7700'}}>
         Each life ends with a black cube in your hand. Touching it brings you back to the garage, young again, with vague echoes of who you were.
         Insight persists across rebirths and multiplies all your XP and SC gain.
       </div>
@@ -1326,7 +1326,7 @@ function RebirthTab({ state, pendingInsight }) {
           <div className="stat-label" style={{color:'#aa6600'}}>New multiplier: <span style={{color:'#ffaa44'}}>×{nextMult.toFixed(3)}</span></div>
         </div>
       </div>
-      <div className="description" style={{marginTop: 16}}>
+      <div className="description" style={{marginTop: 16, color:'#aa7700'}}>
         Insight is calculated from total career levels at death, multiplied by your Memory skill, your Cube Attunement skill, and whether you possess The Cube.
         You cannot manually rebirth — your loops end naturally with age.
       </div>
