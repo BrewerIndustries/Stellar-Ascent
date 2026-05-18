@@ -64,6 +64,9 @@ In-game reference and lore discovery system. Unlocks entries as the player reach
 
 ## Changelog
 
+### v0.1.4 — *Pacing*
+- Day tick slowed 4× (TICK_MS 50 → 200ms). A first life at 1× speed is now ~68 minutes instead of ~17
+
 ### v0.1.3 — *Equipment & Stability*
 - Equipment items now stack — multiple can be active simultaneously, bonuses combine, each costs SC/day
 - Fixed blank screen crash when loading saves from previous versions (new career/skill IDs merged with saved data on load)
