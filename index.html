@@ -1105,10 +1105,10 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
         </div>
 
         <div className="panel">
-          <div className="sb-title" style={{color:'#aa5500'}}>Training</div>
+          <div className="sb-title" style={{color:'#7a3aaa'}}>Training</div>
           {skill && skillData ? (<>
-            <div className="sb-name" style={{color:'#ff8800'}}>{skill.name}</div>
-            <div className="sb-sub" style={{color:'#aa5500'}}>{skill.category} · Lv {skillData.level}</div>
+            <div className="sb-name" style={{color:'#bf5fff'}}>{skill.name}</div>
+            <div className="sb-sub" style={{color:'#7a3aaa'}}>{skill.category} · Lv {skillData.level}</div>
             <div className="progress-wrap" style={{height:13}}>
               <div className="progress-fill skill" style={{width:`${skillPct}%`}}></div>
               <div className="progress-text">{formatNum(skillData.xp)} / {formatNum(skillNeed)}</div>
