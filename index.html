@@ -1210,7 +1210,8 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
               const prevCareer = skill.prevReq ? CAREERS.find(c => c.id === skill.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${skill.prevReqLvl || 1}` : '';
               return (
-                <div key={skill.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
+                <div key={skill.id} className={`row ${!unlocked ? 'locked' : ''}`}
+                  style={isActive ? {background:'rgba(40,0,70,0.5)', borderLeft:'3px solid #bf5fff', boxShadow:'inset 0 0 12px rgba(191,95,255,0.05)'} : {}}>
                   <div>
                     <div className="row-name" style={{color:'#e0c8ff'}}>{skill.name}</div>
                     <div className="row-level" style={{color:'#bf5fff'}}>
@@ -1230,7 +1231,7 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
                   <div className="row-effect" style={{fontSize: 10, opacity: 0.8}}>{skill.effect}</div>
                   <div style={{display:'flex',flexDirection:'column',gap:4,alignItems:'flex-end'}}>
                     {unlocked ? (
-                      <button className={isActive ? 'active-btn' : ''} onClick={() => setActiveSkill(skill.id)} disabled={isActive}>
+                      <button style={isActive ? {background:'rgba(60,0,100,0.7)', borderColor:'#7700bb', color:'#bf5fff'} : {}} onClick={() => setActiveSkill(skill.id)} disabled={isActive}>
                         {isActive ? 'Training' : 'Train'}
                       </button>
                     ) : (
