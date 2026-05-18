@@ -344,6 +344,42 @@
     color: #2a4838;
     margin-bottom: 6px;
   }
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .toggle-label { color: #a0c8b0; }
+  .toggle-btn {
+    padding: 3px 10px;
+    border-radius: 10px;
+    border: 1px solid #1e4030;
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    background: rgba(6,3,14,0.8);
+    color: #3a5848;
+    transition: all 0.15s;
+    min-width: 42px;
+    text-align: center;
+  }
+  .toggle-btn.on {
+    background: rgba(0,60,30,0.7);
+    border-color: #00aa55;
+    color: #00ff88;
+    box-shadow: 0 0 6px rgba(0,255,136,0.2);
+  }
+  .skill-skip-label {
+    font-size: 11px;
+    color: #3a5848;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .skill-skip-label.skipped { color: #ff4477; text-decoration: line-through; }
 </style>
 </head>
 <body>
@@ -515,6 +551,9 @@ const freshState = (insight = 0, hasReborn = false) => ({
   skills: initialSkills(),
   shop: { cramped_apt: true, hand_tools: true },
   totalDays: 0,
+  autoPromote: false,
+  autoLearn: false,
+  skillSkip: {},
 });
 
 // ============================================================
@@ -533,9 +572,12 @@ function App() {
           return {
             ...fresh,
             ...parsed,
-            careers: { ...fresh.careers, ...parsed.careers },
-            skills:  { ...fresh.skills,  ...parsed.skills  },
-            shop:    parsed.shop || fresh.shop,
+            careers:     { ...fresh.careers, ...parsed.careers },
+            skills:      { ...fresh.skills,  ...parsed.skills  },
+            shop:        parsed.shop || fresh.shop,
+            skillSkip:   parsed.skillSkip || {},
+            autoPromote: parsed.autoPromote || false,
+            autoLearn:   parsed.autoLearn   || false,
           };
         }
       }
@@ -709,6 +751,37 @@ function App() {
             }
           }
 
+          // Auto-promote: switch to next career when its level req is met
+          if (s.autoPromote) {
+            const next = CAREERS.find(c =>
+              c.prevReq === s.activeJob &&
+              (!c.postRebirth || s.hasReborn) &&
+              s.careers[s.activeJob]?.level >= c.levelReq
+            );
+            if (next) s.activeJob = next.id;
+          }
+
+          // Auto-learn: switch to unlocked non-skipped skill closest to leveling up
+          if (s.autoLearn) {
+            const candidates = SKILLS.filter(sk => {
+              if (s.skillSkip[sk.id]) return false;
+              if (sk.postRebirth && !s.hasReborn) return false;
+              if (sk.prevReq) {
+                const prev = s.careers[sk.prevReq];
+                if (!prev || prev.level < (sk.prevReqLvl || 1)) return false;
+              }
+              return true;
+            });
+            if (candidates.length > 0) {
+              const best = candidates.reduce((a, b) => {
+                const remA = xpToLevel(s.skills[a.id].level) - s.skills[a.id].xp;
+                const remB = xpToLevel(s.skills[b.id].level) - s.skills[b.id].xp;
+                return remA <= remB ? a : b;
+              });
+              s.activeSkill = best.id;
+            }
+          }
+
           // Shop daily expense
           const dailyCost = shopDailyCost(s, mults);
           s.sc -= dailyCost;
@@ -750,6 +823,9 @@ function App() {
   // ----- actions -----
   const setActiveJob = (id) => setState(s => ({ ...s, activeJob: id }));
   const setActiveSkill = (id) => setState(s => ({ ...s, activeSkill: id }));
+  const toggleAutoPromote = () => setState(s => ({ ...s, autoPromote: !s.autoPromote }));
+  const toggleAutoLearn   = () => setState(s => ({ ...s, autoLearn:   !s.autoLearn   }));
+  const toggleSkillSkip   = (id) => setState(s => ({ ...s, skillSkip: { ...s.skillSkip, [id]: !s.skillSkip[id] } }));
   const buyShop = (item) => {
     setState(s => {
       const newShop = { ...s.shop };
@@ -839,6 +915,7 @@ function App() {
           ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct}
           speed={speed} setSpeed={setSpeed} paused={paused} setPaused={setPaused}
           hardReset={hardReset}
+          toggleAutoPromote={toggleAutoPromote} toggleAutoLearn={toggleAutoLearn}
         />
 
         <div>
@@ -850,7 +927,7 @@ function App() {
           </div>
 
           {tab === 'careers' && <CareersTab state={state} mults={mults} setActiveJob={setActiveJob} isCareerUnlocked={isCareerUnlocked} jobXpMult={jobXpMult} jobPayMult={jobPayMult} />}
-          {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} />}
+          {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} toggleSkillSkip={toggleSkillSkip} />}
           {tab === 'shop' && <ShopTab state={state} mults={mults} buyShop={buyShop} isShopUnlocked={isShopUnlocked} />}
           {tab === 'rebirth' && <RebirthTab state={state} pendingInsight={calcInsightGain(state)} />}
         </div>
@@ -898,7 +975,7 @@ function App() {
 // ============================================================
 // SIDEBAR
 // ============================================================
-function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, speed, setSpeed, paused, setPaused, hardReset }) {
+function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn }) {
   const job = CAREERS.find(c => c.id === state.activeJob);
   const skill = SKILLS.find(s => s.id === state.activeSkill);
   const jobData = job ? state.careers[job.id] : null;
@@ -985,6 +1062,23 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
         </>) : <div className="sb-label">None</div>}
       </div>
 
+      <div className="panel">
+        <div className="sb-title">Automation</div>
+        <div className="toggle-row">
+          <span className="toggle-label">Auto-Promote</span>
+          <button className={`toggle-btn ${state.autoPromote ? 'on' : ''}`} onClick={toggleAutoPromote}>
+            {state.autoPromote ? 'ON' : 'OFF'}
+          </button>
+        </div>
+        <div className="toggle-row">
+          <span className="toggle-label">Auto-Learn</span>
+          <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
+            {state.autoLearn ? 'ON' : 'OFF'}
+          </button>
+        </div>
+        {state.autoLearn && <div style={{fontSize:10,color:'#2a4838',marginTop:4}}>Trains whichever skill is closest to leveling up. Mark skills to skip in the Skills tab.</div>}
+      </div>
+
       <button className="danger" onClick={hardReset} style={{width:'100%',padding:'8px',borderRadius:6}}>Hard Reset</button>
     </div>
   );
@@ -1052,7 +1146,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
   );
 }
 
-function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult }) {
+function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult, toggleSkillSkip }) {
   const cats = ['Fundamentals', 'Hands-On', 'Theoretical', 'Command', 'Cosmic'];
   return (
     <div className="panel">
@@ -1089,13 +1183,19 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
                   </div>
                   <div className="row-effect">×{effect.toFixed(2)}</div>
                   <div className="row-effect" style={{fontSize: 10, opacity: 0.8}}>{skill.effect}</div>
-                  <div>
+                  <div style={{display:'flex',flexDirection:'column',gap:4,alignItems:'flex-end'}}>
                     {unlocked ? (
                       <button className={isActive ? 'active-btn' : ''} onClick={() => setActiveSkill(skill.id)} disabled={isActive}>
                         {isActive ? 'Training' : 'Train'}
                       </button>
                     ) : (
                       <button disabled>Locked</button>
+                    )}
+                    {unlocked && state.autoLearn && (
+                      <label className={`skill-skip-label${state.skillSkip[skill.id] ? ' skipped' : ''}`}>
+                        <input type="checkbox" checked={!!state.skillSkip[skill.id]} onChange={() => toggleSkillSkip(skill.id)} style={{accentColor:'#ff4477'}} />
+                        skip
+                      </label>
                     )}
                   </div>
                 </div>
