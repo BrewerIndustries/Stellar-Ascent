@@ -1156,7 +1156,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
                     <div className="row-name">{career.name}</div>
                     <div className="row-level">
                       Lv {cur.level}
-                      {state.hasReborn && cur.maxLevel > 0 && <span style={{color:'#bf5fff',marginLeft:5}}>↑{cur.maxLevel}</span>}
+                      {cur.maxLevel > 0 && <span style={{color:'#7a3aaa',marginLeft:6,fontSize:11}}>best {cur.maxLevel}</span>}
                     </div>
                   </div>
                   <div className="progress-wrap">
