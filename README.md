@@ -43,6 +43,14 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 - Achievements
 - Statistics tab (total lives, total SC earned, longest career, etc.)
 
+### Codex tab
+In-game reference and lore discovery system. Unlocks entries as the player reaches milestones.
+- **Mechanics definitions** — plain-language explanations of every stat, multiplier, and system (Happiness, Cosmic Insight, XP rate, SC/day, path bonuses, rebirth loop, etc.)
+- **Career & skill entries** — flavour description for each career and skill; what it means in the world, not just what it does in the numbers
+- **Lore fragments** — hidden entries that unlock at specific milestones (first rebirth, reaching The Ascended, buying The Cube, hitting certain Cosmic Insight thresholds). Fragments hint at the alien civilisation, the nature of the loop, what the cube actually is, and why the test is happening
+- **Signal log** — a running log of "anomalous readings" and intercepted transmissions that appear in early game, building dread before first contact. Entries are short, cryptic, never explained directly
+- **The Cube entry** — intentionally vague. Grows more detailed with each rebirth. By loop 5 it contradicts itself
+
 ### Polish
 - Patch Notes tab (in-game)
 - Audio (Web Audio API, ambient + click feedback)
