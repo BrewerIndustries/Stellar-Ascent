@@ -32,10 +32,10 @@
     box-shadow: 0 0 24px rgba(0, 255, 136, 0.04);
   }
   .title { font-size: 22px; font-weight: 600; color: #00ff88; text-shadow: 0 0 12px rgba(0,255,136,0.5); }
-  .subtitle { font-size: 11px; color: #3a2060; }
+  .subtitle { font-size: 11px; color: #6a4a9a; }
   .stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
   .stat { color: #8ab8a0; }
-  .stat-label { color: #3a5048; font-size: 11px; }
+  .stat-label { color: #6a8878; font-size: 11px; }
   .stat-value { color: #d8f0e8; font-weight: 600; }
   .stat-value.good { color: #00ff88; }
   .stat-value.bad { color: #ff4477; }
@@ -84,7 +84,7 @@
   }
   .category-header {
     font-size: 12px;
-    color: #4a2a7a;
+    color: #7a5aaa;
     margin: 14px 0 6px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
@@ -257,7 +257,7 @@
   }
   .intro-subtitle {
     font-size: 12px;
-    color: #2a4a38;
+    color: #4a7060;
     letter-spacing: 1px;
     margin-bottom: 28px;
   }
@@ -285,7 +285,7 @@
   .intro-begin:hover { background: rgba(0, 90, 45, 0.8); box-shadow: 0 0 16px rgba(0,255,136,0.25); }
 
   .description {
-    color: #4a6858;
+    color: #7a9888;
     font-size: 12px;
     margin-bottom: 12px;
     line-height: 1.5;
@@ -318,7 +318,7 @@
   .sidebar-card .panel:last-child { border-bottom: none; }
   .sb-title {
     font-size: 10px;
-    color: #2a4838;
+    color: #5a8870;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 8px;
@@ -339,7 +339,7 @@
     font-size: 12px;
     margin-bottom: 3px;
   }
-  .sb-label { color: #3a5848; }
+  .sb-label { color: #5a7868; }
   .sb-val { color: #a0c8b0; font-weight: 500; }
   .sb-val.good { color: #00ff88; }
   .sb-val.bad { color: #ff4477; }
@@ -355,7 +355,7 @@
   }
   .sb-sub {
     font-size: 10px;
-    color: #2a4838;
+    color: #4a6858;
     margin-bottom: 6px;
   }
   .toggle-row {
@@ -1085,7 +1085,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
         </div>
 
         <div className="panel">
-          <div className="sb-title">Happiness <span style={{color:'#00ff88',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#2a4838',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
+          <div className="sb-title">Happiness <span style={{color:'#00ff88',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#4a7060',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
           <div className="progress-wrap" style={{height:10,marginBottom:4}}>
             <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#00ff88 100%)'}}></div>
           </div>
@@ -1198,7 +1198,7 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
         if (!anyUnlocked) return null;
         return (
           <div key={cat}>
-            <div className="category-header">{cat}</div>
+            <div className="category-header" style={{color:'#9960cc'}}>{cat}</div>
             {inCat.map(skill => {
               const cur = state.skills[skill.id];
               const unlocked = isSkillUnlocked(skill);
@@ -1264,7 +1264,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
     <div className="panel">
       {cats.map(cat => (
         <div key={cat.key}>
-          <div className="category-header" style={{color:'#005588'}}>{cat.name}</div>
+          <div className="category-header" style={{color:'#0088cc'}}>{cat.name}</div>
           <div className="description">{cat.desc}</div>
           {SHOP.filter(i => i.category === cat.key).map(item => {
             const unlocked = isShopUnlocked(item);
@@ -1316,14 +1316,14 @@ function RebirthTab({ state, pendingInsight }) {
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16}}>
         <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.5)', borderColor:'#552200'}}>
-          <div className="stat-label">Current Cosmic Insight</div>
+          <div className="stat-label" style={{color:'#aa6600'}}>Current Cosmic Insight</div>
           <div style={{fontSize: 24, color: '#ff8800', margin: '8px 0', textShadow:'0 0 10px rgba(255,136,0,0.4)'}}>{formatNum(state.cosmicInsight)}</div>
-          <div className="stat-label">Global multiplier: <span style={{color:'#ff8800'}}>×{mult.toFixed(3)}</span></div>
+          <div className="stat-label" style={{color:'#aa6600'}}>Global multiplier: <span style={{color:'#ff8800'}}>×{mult.toFixed(3)}</span></div>
         </div>
         <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.3)', borderColor:'#442200'}}>
-          <div className="stat-label">Insight if you died now</div>
+          <div className="stat-label" style={{color:'#aa6600'}}>Insight if you died now</div>
           <div style={{fontSize: 24, color: '#ffaa44', margin: '8px 0'}}>+{formatNum(pendingInsight)}</div>
-          <div className="stat-label">New multiplier: <span style={{color:'#ffaa44'}}>×{nextMult.toFixed(3)}</span></div>
+          <div className="stat-label" style={{color:'#aa6600'}}>New multiplier: <span style={{color:'#ffaa44'}}>×{nextMult.toFixed(3)}</span></div>
         </div>
       </div>
       <div className="description" style={{marginTop: 16}}>
