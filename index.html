@@ -1018,6 +1018,23 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
         </div>
 
         <div className="panel">
+          <div className="sb-title">Automation</div>
+          <div className="toggle-row">
+            <span className="toggle-label">Auto-Promote</span>
+            <button className={`toggle-btn ${state.autoPromote ? 'on' : ''}`} onClick={toggleAutoPromote}>
+              {state.autoPromote ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          <div className="toggle-row">
+            <span className="toggle-label">Auto-Learn</span>
+            <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
+              {state.autoLearn ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          {state.autoLearn && <div style={{fontSize:10,color:'#2a4838',marginTop:4}}>Trains whichever skill is closest to leveling up. Mark skills to skip in the Skills tab.</div>}
+        </div>
+
+        <div className="panel">
           <div className="sb-title">Speed</div>
           <div style={{display:'flex',gap:4}}>
             {[1,3,10].map(s => (
@@ -1077,22 +1094,6 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
           </>) : <div className="sb-label">None</div>}
         </div>
 
-        <div className="panel">
-          <div className="sb-title">Automation</div>
-          <div className="toggle-row">
-            <span className="toggle-label">Auto-Promote</span>
-            <button className={`toggle-btn ${state.autoPromote ? 'on' : ''}`} onClick={toggleAutoPromote}>
-              {state.autoPromote ? 'ON' : 'OFF'}
-            </button>
-          </div>
-          <div className="toggle-row">
-            <span className="toggle-label">Auto-Learn</span>
-            <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
-              {state.autoLearn ? 'ON' : 'OFF'}
-            </button>
-          </div>
-          {state.autoLearn && <div style={{fontSize:10,color:'#2a4838',marginTop:4}}>Trains whichever skill is closest to leveling up. Mark skills to skip in the Skills tab.</div>}
-        </div>
       </div>
 
       <button className="danger" onClick={hardReset} style={{width:'100%',padding:'8px',borderRadius:6}}>Hard Reset</button>
