@@ -56,6 +56,12 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 
 ## Changelog
 
+### v0.1.1 — *UI Pass*
+- Intro overlay on page load freezes game until player clicks Begin
+- Left status sidebar (PKR-style): Life/lifespan bar, Speed controls, Finances (balance, net, income, expense), Cosmic Insight, active Career progress, active Skill progress
+- Hard Reset moved into sidebar; header simplified to title only
+- GitHub repo: `BrewerIndustries/Stellar-Ascent` — dev branch for active work, main branch for GitHub Pages deploys
+
 ### v0.1 — *Scaffold*
 - Initial release. Literal reskin of Progress Knight: Reborn structure.
 - 25 careers, 16 skills, 25 shop items
