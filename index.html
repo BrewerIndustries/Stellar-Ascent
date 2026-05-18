@@ -511,8 +511,18 @@ function App() {
       const saved = localStorage.getItem('stellar_ascent_save');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // sanity-check shape
-        if (parsed && parsed.careers && parsed.skills) return parsed;
+        if (parsed && parsed.careers && parsed.skills) {
+          // Merge saved data with fresh defaults so new career/skill IDs
+          // added in future updates always have valid initial values.
+          const fresh = freshState(parsed.cosmicInsight || 0, parsed.hasReborn || false);
+          return {
+            ...fresh,
+            ...parsed,
+            careers: { ...fresh.careers, ...parsed.careers },
+            skills:  { ...fresh.skills,  ...parsed.skills  },
+            shop:    parsed.shop || fresh.shop,
+          };
+        }
       }
     } catch (e) {}
     return freshState();
