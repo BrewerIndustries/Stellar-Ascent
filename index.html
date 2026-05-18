@@ -655,7 +655,7 @@ function App() {
     SHOP.forEach(item => {
       if (item.category === 'Living' && s.shop[item.id] && item.happiness != null) happiness = item.happiness;
     });
-    const happinessMult = happiness / 100;
+    const happinessMult = happiness / 50;
 
     return {
       cosmicMult,
@@ -1278,7 +1278,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
                 <div>
                   <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
                   {item.happiness != null && (
-                    <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/100).toFixed(2)}</div>
+                    <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/50).toFixed(2)}</div>
                   )}
                 </div>
                 <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
