@@ -370,30 +370,30 @@ const CAREERS = [
   // ── THE GARAGE (Independent — always available) ──────────────────────────
   { id: 'scrap_scavenger',        name: 'Scrap Scavenger',       path: 'garage',    basePay: 5,      baseXp: 10, prevReq: null,                  levelReq: 0   },
   { id: 'electronics_repair',     name: 'Electronics Repairman', path: 'garage',    basePay: 12,     baseXp: 11, prevReq: 'scrap_scavenger',     levelReq: 10  },
-  { id: 'hobbyist_engineer',      name: 'Hobbyist Engineer',     path: 'garage',    basePay: 22,     baseXp: 12, prevReq: 'electronics_repair',  levelReq: 40  },
-  { id: 'garage_inventor',        name: 'Garage Inventor',       path: 'garage',    basePay: 40,     baseXp: 14, prevReq: 'hobbyist_engineer',   levelReq: 80  },
-  { id: 'independent_researcher', name: 'Independent Researcher',path: 'garage',    basePay: 70,     baseXp: 17, prevReq: 'garage_inventor',     levelReq: 150 },
+  { id: 'hobbyist_engineer',      name: 'Hobbyist Engineer',     path: 'garage',    basePay: 31,     baseXp: 12, prevReq: 'electronics_repair',  levelReq: 40  },
+  { id: 'garage_inventor',        name: 'Garage Inventor',       path: 'garage',    basePay: 90,     baseXp: 14, prevReq: 'hobbyist_engineer',   levelReq: 80  },
+  { id: 'independent_researcher', name: 'Independent Researcher',path: 'garage',    basePay: 286,    baseXp: 17, prevReq: 'garage_inventor',     levelReq: 150 },
 
   // ── THE ACADEMY (Science — unlocks at Electronics Repair lv30) ───────────
-  { id: 'lab_assistant',          name: 'Lab Assistant',         path: 'academy',   basePay: 55,     baseXp: 14, prevReq: 'electronics_repair',  levelReq: 30  },
-  { id: 'research_associate',     name: 'Research Associate',    path: 'academy',   basePay: 120,    baseXp: 18, prevReq: 'lab_assistant',       levelReq: 25  },
-  { id: 'research_scientist',     name: 'Research Scientist',    path: 'academy',   basePay: 280,    baseXp: 25, prevReq: 'research_associate',  levelReq: 60  },
-  { id: 'senior_researcher',      name: 'Senior Researcher',     path: 'academy',   basePay: 650,    baseXp: 36, prevReq: 'research_scientist',  levelReq: 130 },
-  { id: 'department_chair',       name: 'Department Chair',      path: 'academy',   basePay: 1500,   baseXp: 52, prevReq: 'senior_researcher',   levelReq: 230 },
+  { id: 'lab_assistant',          name: 'Lab Assistant',         path: 'academy',   basePay: 20,     baseXp: 14, prevReq: 'electronics_repair',  levelReq: 30  },
+  { id: 'research_associate',     name: 'Research Associate',    path: 'academy',   basePay: 40,     baseXp: 18, prevReq: 'lab_assistant',       levelReq: 25  },
+  { id: 'research_scientist',     name: 'Research Scientist',    path: 'academy',   basePay: 90,     baseXp: 25, prevReq: 'research_associate',  levelReq: 60  },
+  { id: 'senior_researcher',      name: 'Senior Researcher',     path: 'academy',   basePay: 240,    baseXp: 36, prevReq: 'research_scientist',  levelReq: 130 },
+  { id: 'department_chair',       name: 'Department Chair',      path: 'academy',   basePay: 700,    baseXp: 52, prevReq: 'senior_researcher',   levelReq: 230 },
 
   // ── THE CORPS (Military — unlocks at Hobbyist Engineer lv25) ─────────────
-  { id: 'corps_cadet',            name: 'Space Corps Cadet',     path: 'corps',     basePay: 60,     baseXp: 13, prevReq: 'hobbyist_engineer',   levelReq: 25  },
-  { id: 'flight_officer',         name: 'Flight Officer',        path: 'corps',     basePay: 140,    baseXp: 17, prevReq: 'corps_cadet',         levelReq: 25  },
-  { id: 'squadron_leader',        name: 'Squadron Leader',       path: 'corps',     basePay: 340,    baseXp: 24, prevReq: 'flight_officer',      levelReq: 60  },
-  { id: 'wing_commander',         name: 'Wing Commander',        path: 'corps',     basePay: 800,    baseXp: 35, prevReq: 'squadron_leader',     levelReq: 130 },
-  { id: 'fleet_admiral',          name: 'Fleet Admiral',         path: 'corps',     basePay: 1800,   baseXp: 50, prevReq: 'wing_commander',      levelReq: 230 },
+  { id: 'corps_cadet',            name: 'Space Corps Cadet',     path: 'corps',     basePay: 55,     baseXp: 13, prevReq: 'hobbyist_engineer',   levelReq: 25  },
+  { id: 'flight_officer',         name: 'Flight Officer',        path: 'corps',     basePay: 110,    baseXp: 17, prevReq: 'corps_cadet',         levelReq: 25  },
+  { id: 'squadron_leader',        name: 'Squadron Leader',       path: 'corps',     basePay: 260,    baseXp: 24, prevReq: 'flight_officer',      levelReq: 60  },
+  { id: 'wing_commander',         name: 'Wing Commander',        path: 'corps',     basePay: 700,    baseXp: 35, prevReq: 'squadron_leader',     levelReq: 130 },
+  { id: 'fleet_admiral',          name: 'Fleet Admiral',         path: 'corps',     basePay: 2000,   baseXp: 50, prevReq: 'wing_commander',      levelReq: 230 },
 
   // ── THE SYNDICATE (Corporate — unlocks at Garage Inventor lv20) ──────────
-  { id: 'field_agent',            name: 'Field Agent',           path: 'syndicate', basePay: 65,     baseXp: 14, prevReq: 'garage_inventor',     levelReq: 20  },
-  { id: 'ops_manager',            name: 'Operations Manager',    path: 'syndicate', basePay: 175,    baseXp: 19, prevReq: 'field_agent',         levelReq: 25  },
-  { id: 'division_director',      name: 'Division Director',     path: 'syndicate', basePay: 420,    baseXp: 27, prevReq: 'ops_manager',         levelReq: 60  },
-  { id: 'vp_operations',          name: 'VP of Operations',      path: 'syndicate', basePay: 980,    baseXp: 40, prevReq: 'division_director',   levelReq: 130 },
-  { id: 'syndicate_ceo',          name: 'Syndicate CEO',         path: 'syndicate', basePay: 2200,   baseXp: 58, prevReq: 'vp_operations',       levelReq: 230 },
+  { id: 'field_agent',            name: 'Field Agent',           path: 'syndicate', basePay: 165,    baseXp: 14, prevReq: 'garage_inventor',     levelReq: 20  },
+  { id: 'ops_manager',            name: 'Operations Manager',    path: 'syndicate', basePay: 330,    baseXp: 19, prevReq: 'field_agent',         levelReq: 25  },
+  { id: 'division_director',      name: 'Division Director',     path: 'syndicate', basePay: 780,    baseXp: 27, prevReq: 'ops_manager',         levelReq: 60  },
+  { id: 'vp_operations',          name: 'VP of Operations',      path: 'syndicate', basePay: 2050,   baseXp: 40, prevReq: 'division_director',   levelReq: 130 },
+  { id: 'syndicate_ceo',          name: 'Syndicate CEO',         path: 'syndicate', basePay: 5800,   baseXp: 58, prevReq: 'vp_operations',       levelReq: 230 },
 
   // ── THE ASCENDED (post-rebirth — unlocks after Independent Researcher lv50) ─
   { id: 'xenolinguist',           name: 'Xenolinguist',          path: 'ascended',  basePay: 8000,   baseXp: 75, prevReq: 'independent_researcher', levelReq: 50, postRebirth: true },
@@ -684,7 +684,7 @@ function App() {
           if (job) {
             const cur = s.careers[job.id];
             const xpGain = job.baseXp * jobXpMult(s, mults, job);
-            const payGain = job.basePay * jobPayMult(s, mults, job) * (1 + cur.level * 0.01);
+            const payGain = job.basePay * jobPayMult(s, mults, job) * (1 + Math.log10(cur.level + 1));
             s.sc += payGain;
             const newXp = cur.xp + xpGain;
             const need = xpToLevel(cur.level);
@@ -1013,7 +1013,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
               const need = xpToLevel(cur.level);
               const pct = Math.min(100, (cur.xp / need) * 100);
               const isActive = state.activeJob === career.id;
-              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + cur.level * 0.01);
+              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + Math.log10(cur.level + 1));
               const xpGain = career.baseXp * jobXpMult(state, mults, career);
               const prevCareer = career.prevReq ? CAREERS.find(c => c.id === career.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${career.levelReq}` : '';
