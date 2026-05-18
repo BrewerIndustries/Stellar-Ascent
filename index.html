@@ -545,12 +545,12 @@ const calcInsightGain = (state) => {
 // ============================================================
 const initialCareers = () => {
   const obj = {};
-  CAREERS.forEach(c => { obj[c.id] = { level: 0, xp: 0 }; });
+  CAREERS.forEach(c => { obj[c.id] = { level: 0, xp: 0, maxLevel: 0 }; });
   return obj;
 };
 const initialSkills = () => {
   const obj = {};
-  SKILLS.forEach(s => { obj[s.id] = { level: 0, xp: 0 }; });
+  SKILLS.forEach(s => { obj[s.id] = { level: 0, xp: 0, maxLevel: 0 }; });
   return obj;
 };
 
@@ -676,6 +676,8 @@ function App() {
     if (job.path === 'corps')     m *= mults.skills.strategic_vision;
     if (job.path === 'syndicate') m *= mults.skills.charisma;
     if (job.path === 'ascended')  m *= mults.skills.resonance;
+    const maxLv = s.careers[job.id]?.maxLevel || 0;
+    if (maxLv > 0) m *= (1 + maxLv / 10);
     return m;
   };
   const jobPayMult = (s, mults, job) => {
@@ -693,6 +695,8 @@ function App() {
     if (bonus) m *= bonus;
     if (mults.shop.all) m *= mults.shop.all;
     if (skill.category === 'Cosmic' && mults.shop.cosmic) m *= mults.shop.cosmic;
+    const maxLv = s.skills[skill.id]?.maxLevel || 0;
+    if (maxLv > 0) m *= (1 + maxLv / 10);
     return m;
   };
   const shopDailyCost = (s, mults) => {
@@ -858,7 +862,17 @@ function App() {
   };
 
   const doRebirth = () => {
-    setState(s => freshState(s.cosmicInsight + pendingInsight, true));
+    setState(s => {
+      const next = freshState(s.cosmicInsight + pendingInsight, true);
+      // Carry forward the highest level ever reached for each career and skill
+      CAREERS.forEach(c => {
+        next.careers[c.id].maxLevel = Math.max(s.careers[c.id]?.maxLevel || 0, s.careers[c.id]?.level || 0);
+      });
+      SKILLS.forEach(sk => {
+        next.skills[sk.id].maxLevel = Math.max(s.skills[sk.id]?.maxLevel || 0, s.skills[sk.id]?.level || 0);
+      });
+      return next;
+    });
     setShowDeath(false);
     showDeathRef.current = false;
     setPendingInsight(0);
@@ -1132,7 +1146,10 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
                 <div key={career.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                   <div>
                     <div className="row-name">{career.name}</div>
-                    <div className="row-level">Lv {cur.level}</div>
+                    <div className="row-level">
+                      Lv {cur.level}
+                      {state.hasReborn && cur.maxLevel > 0 && <span style={{color:'#bf5fff',marginLeft:5}}>↑{cur.maxLevel}</span>}
+                    </div>
                   </div>
                   <div className="progress-wrap">
                     <div className="progress-fill" style={{width:`${pct}%`}}></div>
@@ -1188,7 +1205,10 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
                 <div key={skill.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                   <div>
                     <div className="row-name" style={{color:'#e0c8ff'}}>{skill.name}</div>
-                    <div className="row-level" style={{color:'#bf5fff'}}>Lv {cur.level}</div>
+                    <div className="row-level" style={{color:'#bf5fff'}}>
+                      Lv {cur.level}
+                      {state.hasReborn && cur.maxLevel > 0 && <span style={{color:'#7a3aaa',marginLeft:5}}>↑{cur.maxLevel}</span>}
+                    </div>
                   </div>
                   <div className="progress-wrap">
                     <div className="progress-fill skill" style={{width: `${pct}%`}}></div>
