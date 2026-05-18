@@ -301,14 +301,28 @@
     .main-layout { grid-template-columns: 1fr; }
   }
   .sidebar { display: flex; flex-direction: column; gap: 8px; }
-  .sidebar .panel { padding: 12px 14px; }
+  .sidebar-card {
+    background: rgba(10, 5, 22, 0.6);
+    border: 1px solid #1e0f3a;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .sidebar-card .panel {
+    padding: 12px 14px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid #120830;
+  }
+  .sidebar-card .panel:last-child { border-bottom: none; }
   .sb-title {
     font-size: 10px;
     color: #2a4838;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 8px;
-    border-bottom: 1px solid #120830;
+    border-bottom: 1px solid #1a0a2a;
     padding-bottom: 4px;
   }
   .sb-big {
@@ -989,94 +1003,96 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
 
   return (
     <div className="sidebar">
-      <div className="panel">
-        <div className="sb-title">Life</div>
-        <div className="sb-big">{ageYears}<span style={{fontSize:13,color:'#6878a0',fontWeight:400}}>y </span>{ageDayOfYear}<span style={{fontSize:13,color:'#6878a0',fontWeight:400}}>d</span></div>
-        <div className="progress-wrap" style={{height:13,marginBottom:8}}>
-          <div className="progress-fill life" style={{width:`${lifePct}%`}}></div>
-          <div className="progress-text">{ageYears} / 70 years</div>
+      <div className="sidebar-card">
+        <div className="panel">
+          <div className="sb-title">Life</div>
+          <div className="sb-big">{ageYears}<span style={{fontSize:13,color:'#2a4838',fontWeight:400}}>y </span>{ageDayOfYear}<span style={{fontSize:13,color:'#2a4838',fontWeight:400}}>d</span></div>
+          <div className="progress-wrap" style={{height:13,marginBottom:8}}>
+            <div className="progress-fill life" style={{width:`${lifePct}%`}}></div>
+            <div className="progress-text">{ageYears} / 70 years</div>
+          </div>
+          <div className="sb-row">
+            <span className="sb-label">Status</span>
+            <span className="sb-val" style={{color: state.hasReborn ? '#bf5fff' : '#00cc66'}}>{state.hasReborn ? 'Reborn' : 'First Life'}</span>
+          </div>
         </div>
-        <div className="sb-row">
-          <span className="sb-label">Status</span>
-          <span className="sb-val" style={{color: state.hasReborn ? '#c89eff' : '#8fb8ff'}}>{state.hasReborn ? 'Reborn' : 'First Life'}</span>
-        </div>
-      </div>
 
-      <div className="panel">
-        <div className="sb-title">Speed</div>
-        <div style={{display:'flex',gap:4}}>
-          {[1,3,10].map(s => (
-            <button key={s} className={`speed-btn ${!paused && speed === s ? 'active' : ''}`}
+        <div className="panel">
+          <div className="sb-title">Speed</div>
+          <div style={{display:'flex',gap:4}}>
+            {[1,3,10].map(s => (
+              <button key={s} className={`speed-btn ${!paused && speed === s ? 'active' : ''}`}
+                style={{flex:1,padding:'5px 0'}}
+                onClick={() => { setPaused(false); setSpeed(s); }}>{s}×</button>
+            ))}
+            <button className={`speed-btn ${paused ? 'active' : ''}`}
               style={{flex:1,padding:'5px 0'}}
-              onClick={() => { setPaused(false); setSpeed(s); }}>{s}×</button>
-          ))}
-          <button className={`speed-btn ${paused ? 'active' : ''}`}
-            style={{flex:1,padding:'5px 0'}}
-            onClick={() => setPaused(p => !p)}>{paused ? '▶' : '❚❚'}</button>
-        </div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Finances</div>
-        <div className="sb-big" style={{color:'#f0c878'}}>{formatNum(state.sc)} <span style={{fontSize:11,color:'#806030',fontWeight:400}}>SC</span></div>
-        <div className="sb-row"><span className="sb-label">Net / day</span><span className={`sb-val ${net>=0?'good':'bad'}`}>{net>=0?'+':''}{formatNum(net)}</span></div>
-        <div className="sb-row"><span className="sb-label">Income / day</span><span className="sb-val good">+{formatNum(dailyIncome)}</span></div>
-        <div className="sb-row"><span className="sb-label">Expense / day</span><span className="sb-val bad">-{formatNum(dailyExpense)}</span></div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Cosmic Insight</div>
-        <div className="sb-big" style={{color:'#c89eff'}}>{formatNum(state.cosmicInsight)}</div>
-        <div className="sb-row"><span className="sb-label">Global multiplier</span><span className="sb-val cosmic">×{mults.cosmicMult.toFixed(3)}</span></div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Happiness <span style={{color:'#7eda9e',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#4a5880',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
-        <div className="progress-wrap" style={{height:10,marginBottom:4}}>
-          <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#7eda9e 100%)'}}></div>
-        </div>
-        <div className="sb-row" style={{fontSize:10,color:'#4a5880'}}>Upgrade Living Quarters to raise happiness &amp; XP rate</div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Current Career</div>
-        {job && jobData ? (<>
-          <div className="sb-name">{job.name}</div>
-          <div className="sb-sub" style={{color: PATH_META[job.path]?.color || '#8a96b8'}}>{PATH_META[job.path]?.label} · Lv {jobData.level}</div>
-          <div className="progress-wrap" style={{height:13}}>
-            <div className="progress-fill" style={{width:`${jobPct}%`}}></div>
-            <div className="progress-text">{formatNum(jobData.xp)} / {formatNum(jobNeed)}</div>
+              onClick={() => setPaused(p => !p)}>{paused ? '▶' : '❚❚'}</button>
           </div>
-        </>) : <div className="sb-label">None</div>}
-      </div>
+        </div>
 
-      <div className="panel">
-        <div className="sb-title">Training</div>
-        {skill && skillData ? (<>
-          <div className="sb-name">{skill.name}</div>
-          <div className="sb-sub">{skill.category} · Lv {skillData.level}</div>
-          <div className="progress-wrap" style={{height:13}}>
-            <div className="progress-fill skill" style={{width:`${skillPct}%`}}></div>
-            <div className="progress-text">{formatNum(skillData.xp)} / {formatNum(skillNeed)}</div>
+        <div className="panel">
+          <div className="sb-title">Finances</div>
+          <div className="sb-big" style={{color:'#f0c850'}}>{formatNum(state.sc)} <span style={{fontSize:11,color:'#604820',fontWeight:400}}>SC</span></div>
+          <div className="sb-row"><span className="sb-label">Net / day</span><span className={`sb-val ${net>=0?'good':'bad'}`}>{net>=0?'+':''}{formatNum(net)}</span></div>
+          <div className="sb-row"><span className="sb-label">Income / day</span><span className="sb-val good">+{formatNum(dailyIncome)}</span></div>
+          <div className="sb-row"><span className="sb-label">Expense / day</span><span className="sb-val bad">-{formatNum(dailyExpense)}</span></div>
+        </div>
+
+        <div className="panel">
+          <div className="sb-title">Cosmic Insight</div>
+          <div className="sb-big" style={{color:'#bf5fff'}}>{formatNum(state.cosmicInsight)}</div>
+          <div className="sb-row"><span className="sb-label">Global multiplier</span><span className="sb-val cosmic">×{mults.cosmicMult.toFixed(3)}</span></div>
+        </div>
+
+        <div className="panel">
+          <div className="sb-title">Happiness <span style={{color:'#00ff88',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#2a4838',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
+          <div className="progress-wrap" style={{height:10,marginBottom:4}}>
+            <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#00ff88 100%)'}}></div>
           </div>
-        </>) : <div className="sb-label">None</div>}
-      </div>
+          <div className="sb-row" style={{fontSize:10,color:'#2a4838'}}>Upgrade Living Quarters to raise happiness &amp; XP rate</div>
+        </div>
 
-      <div className="panel">
-        <div className="sb-title">Automation</div>
-        <div className="toggle-row">
-          <span className="toggle-label">Auto-Promote</span>
-          <button className={`toggle-btn ${state.autoPromote ? 'on' : ''}`} onClick={toggleAutoPromote}>
-            {state.autoPromote ? 'ON' : 'OFF'}
-          </button>
+        <div className="panel">
+          <div className="sb-title">Current Career</div>
+          {job && jobData ? (<>
+            <div className="sb-name">{job.name}</div>
+            <div className="sb-sub" style={{color: PATH_META[job.path]?.color || '#00cc66'}}>{PATH_META[job.path]?.label} · Lv {jobData.level}</div>
+            <div className="progress-wrap" style={{height:13}}>
+              <div className="progress-fill" style={{width:`${jobPct}%`}}></div>
+              <div className="progress-text">{formatNum(jobData.xp)} / {formatNum(jobNeed)}</div>
+            </div>
+          </>) : <div className="sb-label">None</div>}
         </div>
-        <div className="toggle-row">
-          <span className="toggle-label">Auto-Learn</span>
-          <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
-            {state.autoLearn ? 'ON' : 'OFF'}
-          </button>
+
+        <div className="panel">
+          <div className="sb-title">Training</div>
+          {skill && skillData ? (<>
+            <div className="sb-name">{skill.name}</div>
+            <div className="sb-sub">{skill.category} · Lv {skillData.level}</div>
+            <div className="progress-wrap" style={{height:13}}>
+              <div className="progress-fill skill" style={{width:`${skillPct}%`}}></div>
+              <div className="progress-text">{formatNum(skillData.xp)} / {formatNum(skillNeed)}</div>
+            </div>
+          </>) : <div className="sb-label">None</div>}
         </div>
-        {state.autoLearn && <div style={{fontSize:10,color:'#2a4838',marginTop:4}}>Trains whichever skill is closest to leveling up. Mark skills to skip in the Skills tab.</div>}
+
+        <div className="panel">
+          <div className="sb-title">Automation</div>
+          <div className="toggle-row">
+            <span className="toggle-label">Auto-Promote</span>
+            <button className={`toggle-btn ${state.autoPromote ? 'on' : ''}`} onClick={toggleAutoPromote}>
+              {state.autoPromote ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          <div className="toggle-row">
+            <span className="toggle-label">Auto-Learn</span>
+            <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
+              {state.autoLearn ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          {state.autoLearn && <div style={{fontSize:10,color:'#2a4838',marginTop:4}}>Trains whichever skill is closest to leveling up. Mark skills to skip in the Skills tab.</div>}
+        </div>
       </div>
 
       <button className="danger" onClick={hardReset} style={{width:'100%',padding:'8px',borderRadius:6}}>Hard Reset</button>
@@ -1170,8 +1186,8 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
               return (
                 <div key={skill.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                   <div>
-                    <div className="row-name">{skill.name}</div>
-                    <div className="row-level">Lv {cur.level}</div>
+                    <div className="row-name" style={{color:'#e0c8ff'}}>{skill.name}</div>
+                    <div className="row-level" style={{color:'#bf5fff'}}>Lv {cur.level}</div>
                   </div>
                   <div className="progress-wrap">
                     <div className="progress-fill skill" style={{width: `${pct}%`}}></div>
