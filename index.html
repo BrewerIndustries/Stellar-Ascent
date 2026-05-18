@@ -698,6 +698,18 @@ function App() {
           const dailyCost = shopDailyCost(s, mults);
           s.sc -= dailyCost;
 
+          // Bankruptcy: can't go below 0 — strip paid items and drop to cramped apartment
+          if (s.sc < 0) {
+            s.sc = 0;
+            const stripped = { cramped_apt: true, hand_tools: true };
+            SHOP.forEach(item => {
+              if (item.cost === 0 && item.id !== 'cramped_apt' && item.id !== 'hand_tools') {
+                if (s.shop[item.id]) stripped[item.id] = true;
+              }
+            });
+            s.shop = stripped;
+          }
+
           // Passive Cosmic Insight from The Cube (small per-day trickle)
           if (s.shop.the_cube && s.hasReborn) {
             // accumulated at rebirth time; this is just visual feedback in late game

@@ -32,6 +32,7 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 
 ### Story & flavor
 - Anomaly events in early game (mysterious signals, weird readings)
+- **Pre-contact rebirth framing** — first rebirth should be explained without referencing aliens or The Cube (player hasn't seen them yet); needs an in-world reason (unexplained déjà vu, a dream, a compulsion) that only retroactively makes sense after first contact
 - First contact event triggering the rebirth mechanic narratively
 - Endgame revelation: many species, structured galaxy
 - Final career arc: decode the Cube, find a younger species to pass it to
@@ -39,6 +40,16 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 
 ### Mechanics
 - **Lifespan extension / Time Dilation system** — FTL and relativistic travel slow your aging tick. Sources: Endurance (baseline), Tier 4 jobs (passive dilation), Cryostasis shop item, Cosmic Insight upgrades, Cube Attunement (endgame).
+- **Auto-learn / Auto-promote toggles** — sidebar toggles that automatically assign skill training to the highest unlocked skill and promote to the next available career when the current one is ready; each toggle is independent. Add per-skill "skip" checkboxes (visible post-rebirth) so players can exclude skills from the auto-learn rotation.
+- **Happiness baseline = 1.0× by default** — currently Cramped Apartment starts at 0.5× XP, making the base feel like a penalty. Change default happiness so no Living Quarters = 1.0× multiplier, and all Living Quarters upgrades add above that (e.g. Cramped Apartment = 1.1×, penthouse = 2.0×). Happiness should only ever be a bonus, never a debuff.
+- **Logarithmic income scaling with career level** — PKR uses `1 + log₁₀(level + 1)` so income grows meaningfully as you level but doesn't explode. Audit current SA income formula and align to this.
+- **Expense-reducing skill** — PKR has Bargaining (`1 − log₇(level+1) / 10`, min 0.1). SA has no expense reduction path. Add an equivalent skill (e.g. *Resourcefulness* or *Black Market Contacts*) that reduces SC/day costs for shop items, capped at 90% off.
+- **Bankruptcy / housing downgrade** — if SC balance goes negative, auto-cancel all active shop items and drop to cheapest Living Quarters. Adds real stakes to overspending without hard game-overs.
+- **Age-gated UI reveals** — progressively reveal sections of the UI as the player ages, mirroring PKR's approach (automation at age 20, rebirth at 25). Keeps the interface from being overwhelming on day 1 and makes early-game feel like discovery.
+- **Passive income buildings / installations** — PKR has town buildings that generate income independently of jobs. SA equivalent: research labs, orbital platforms, manufacturing bays. These persist through rebirth, providing a long-term investment track separate from career income.
+- **Second prestige path (Alignment)** — PKR has a two-tier rebirth: normal rebirth preserves maxLevel, Dark Rebirth resets it but unlocks a shadow skill tree. SA equivalent: after a threshold of rebirths, the player can choose to *align with the aliens* (surrendering autonomy, gains power multipliers) or *resist* (harder path, unlocks hidden careers and lore). Each alignment has its own persistent currency and skill tree.
+- **Career/skill level memory across rebirths** — track the highest level ever reached per career and skill; on subsequent lives, XP gain for that career/skill is multiplied by `1 + (previousMaxLevel / 10)` (PKR formula: lv10 past = 2× XP, lv20 = 3×, etc.). `maxLevel` persists through rebirth; current level resets to 0 as normal. No hardcoded cap — scales linearly with past investment.
+- **Large number formatting** — SI notation (k / M / B / T / q) for SC balances, income, and XP values once they get large. PKR uses this throughout; currently SA likely shows raw numbers.
 - Cosmic Insight upgrade tree (spend Insight on permanent buffs)
 - Achievements
 - Statistics tab (total lives, total SC earned, longest career, etc.)
