@@ -948,10 +948,18 @@ function App() {
 
         <div>
           <div className="tabs">
-            <button className={`tab ${tab === 'careers' ? 'active' : ''}`} onClick={() => setTab('careers')}>Careers</button>
-            <button className={`tab ${tab === 'skills' ? 'active' : ''}`} onClick={() => setTab('skills')}>Skills</button>
-            <button className={`tab ${tab === 'shop' ? 'active' : ''}`} onClick={() => setTab('shop')}>Shop</button>
-            <button className={`tab ${tab === 'rebirth' ? 'active' : ''}`} onClick={() => setTab('rebirth')}>Rebirth</button>
+            {[
+              { id:'careers', label:'Careers', bg:'rgba(0,60,30,0.6)',   color:'#00ff88', border:'#00aa55', glow:'rgba(0,255,136,0.15)'   },
+              { id:'skills',  label:'Skills',  bg:'rgba(50,0,90,0.6)',   color:'#bf5fff', border:'#7700bb', glow:'rgba(191,95,255,0.15)'  },
+              { id:'shop',    label:'Shop',    bg:'rgba(0,30,80,0.6)',   color:'#00aaff', border:'#0055cc', glow:'rgba(0,170,255,0.15)'   },
+              { id:'rebirth', label:'Rebirth', bg:'rgba(70,30,0,0.6)',   color:'#ff8800', border:'#aa5500', glow:'rgba(255,136,0,0.15)'   },
+            ].map(t => (
+              <button key={t.id}
+                className={`tab ${tab === t.id ? 'active' : ''}`}
+                style={tab === t.id ? {background:t.bg, color:t.color, borderColor:t.border, boxShadow:`0 0 8px ${t.glow}`} : {}}
+                onClick={() => setTab(t.id)}
+              >{t.label}</button>
+            ))}
           </div>
 
           {tab === 'careers' && <CareersTab state={state} mults={mults} setActiveJob={setActiveJob} isCareerUnlocked={isCareerUnlocked} jobXpMult={jobXpMult} jobPayMult={jobPayMult} />}
@@ -1255,7 +1263,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
     <div className="panel">
       {cats.map(cat => (
         <div key={cat.key}>
-          <div className="category-header">{cat.name}</div>
+          <div className="category-header" style={{color:'#005588'}}>{cat.name}</div>
           <div className="description">{cat.desc}</div>
           {SHOP.filter(i => i.category === cat.key).map(item => {
             const unlocked = isShopUnlocked(item);
@@ -1264,19 +1272,22 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
             if (item.category === 'Equipment') cost *= mults.skills.tool_mastery;
             cost *= mults.skills.composure;
             return (
-              <div key={item.id} className={`row ${active ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
+              <div key={item.id} className={`row ${!unlocked ? 'locked' : ''}`}
+                style={active ? {background:'rgba(0,30,70,0.5)', borderLeft:'3px solid #00aaff', boxShadow:'inset 0 0 12px rgba(0,170,255,0.05)'} : {}}>
                 <div>
-                  <div className="row-name">{item.name}</div>
+                  <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
                   {item.happiness != null && (
-                    <div className="row-level" style={{color:'#7eda9e'}}>Happiness {item.happiness} → XP ×{(item.happiness/100).toFixed(2)}</div>
+                    <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/100).toFixed(2)}</div>
                   )}
                 </div>
-                <div className="row-effect">{item.effect}</div>
+                <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
                 <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
                 <div></div>
                 <div>
                   {unlocked ? (
-                    <button className={active ? 'active-btn' : ''} onClick={() => buyShop(item)}>
+                    <button
+                      style={active ? {background:'rgba(0,40,100,0.7)', borderColor:'#0055cc', color:'#00aaff'} : {}}
+                      onClick={() => buyShop(item)}>
                       {active ? (item.exclusive ? 'Active' : 'Drop') : (item.exclusive ? 'Choose' : 'Buy')}
                     </button>
                   ) : (
@@ -1297,21 +1308,21 @@ function RebirthTab({ state, pendingInsight }) {
   const nextMult = insightMultiplier(state.cosmicInsight + pendingInsight);
   return (
     <div className="panel">
-      <div className="section-title">⊹ Cosmic Insight</div>
+      <div className="section-title" style={{color:'#ff8800', textShadow:'0 0 8px rgba(255,136,0,0.3)'}}>⊹ Cosmic Insight</div>
       <div className="description">
         Each life ends with a black cube in your hand. Touching it brings you back to the garage, young again, with vague echoes of who you were.
         Insight persists across rebirths and multiplies all your XP and SC gain.
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16}}>
-        <div className="panel" style={{margin: 0, background: 'rgba(40, 30, 70, 0.4)'}}>
+        <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.5)', borderColor:'#552200'}}>
           <div className="stat-label">Current Cosmic Insight</div>
-          <div style={{fontSize: 24, color: '#c89eff', margin: '8px 0'}}>{formatNum(state.cosmicInsight)}</div>
-          <div className="stat-label">Global multiplier: <span className="stat-value cosmic">×{mult.toFixed(3)}</span></div>
+          <div style={{fontSize: 24, color: '#ff8800', margin: '8px 0', textShadow:'0 0 10px rgba(255,136,0,0.4)'}}>{formatNum(state.cosmicInsight)}</div>
+          <div className="stat-label">Global multiplier: <span style={{color:'#ff8800'}}>×{mult.toFixed(3)}</span></div>
         </div>
-        <div className="panel" style={{margin: 0, background: 'rgba(50, 35, 30, 0.4)'}}>
+        <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.3)', borderColor:'#442200'}}>
           <div className="stat-label">Insight if you died now</div>
-          <div style={{fontSize: 24, color: '#f0c878', margin: '8px 0'}}>+{formatNum(pendingInsight)}</div>
-          <div className="stat-label">New multiplier: <span className="stat-value cosmic">×{nextMult.toFixed(3)}</span></div>
+          <div style={{fontSize: 24, color: '#ffaa44', margin: '8px 0'}}>+{formatNum(pendingInsight)}</div>
+          <div className="stat-label">New multiplier: <span style={{color:'#ffaa44'}}>×{nextMult.toFixed(3)}</span></div>
         </div>
       </div>
       <div className="description" style={{marginTop: 16}}>
@@ -1319,7 +1330,7 @@ function RebirthTab({ state, pendingInsight }) {
         You cannot manually rebirth — your loops end naturally with age.
       </div>
       {!state.hasReborn && (
-        <div className="description" style={{marginTop: 12, color: '#c89eff', fontStyle: 'italic'}}>
+        <div className="description" style={{marginTop: 12, color: '#ff8800', fontStyle: 'italic'}}>
           You have not yet completed a full loop. Reach the end of your life to discover the cube.
         </div>
       )}
