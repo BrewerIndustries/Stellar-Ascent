@@ -438,15 +438,15 @@ const SHOP = [
   { id: 'captain_quarters',name: "Captain's Quarters",     category: 'Living', cost: 2500000,  happiness: 97, effect: 'All skills +100%',            bonus: { all: 2 },             exclusive: 'Living', corpsReq: true },
   { id: 'cube_sanctum',    name: 'Cube-Resonant Sanctum',  category: 'Living', cost: 15000000, happiness: 100,effect: 'Cosmic skills +200%',         bonus: { cosmic: 3 },          exclusive: 'Living', postRebirth: true },
 
-  // Equipment (one active)
-  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Default', bonus: {}, exclusive: 'Equipment' },
-  { id: 'soldering_station', name: 'Soldering Station', category: 'Equipment', cost: 25, effect: 'Dexterity +50%', bonus: { dexterity: 1.5 }, exclusive: 'Equipment' },
-  { id: 'lab_bench', name: 'Lab Bench', category: 'Equipment', cost: 250, effect: 'Theory +50%', bonus: { theory: 1.5 }, exclusive: 'Equipment' },
-  { id: 'cad_workstation', name: 'CAD Workstation', category: 'Equipment', cost: 2200, effect: 'Mechanical Aptitude +75%', bonus: { mechanical_aptitude: 1.75 }, exclusive: 'Equipment' },
-  { id: 'research_cluster', name: 'Research Cluster', category: 'Equipment', cost: 20000, effect: 'Pattern Recognition +100%', bonus: { pattern_recognition: 2 }, exclusive: 'Equipment' },
-  { id: 'aerospace_sim', name: 'Aerospace Simulator', category: 'Equipment', cost: 120000, effect: 'Strategic Vision +100%', bonus: { strategic_vision: 2 }, exclusive: 'Equipment' },
-  { id: 'quantum_lab', name: 'Quantum Lab', category: 'Equipment', cost: 800000, effect: 'All skills +75%', bonus: { all: 1.75 }, exclusive: 'Equipment', tier4: true },
-  { id: 'alien_workbench', name: 'Alien Artifact Workbench', category: 'Equipment', cost: 8000000, effect: 'Cosmic skills +200%', bonus: { cosmic: 3 }, exclusive: 'Equipment', postRebirth: true },
+  // Equipment (multiple active)
+  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Default starter tools', bonus: {} },
+  { id: 'soldering_station', name: 'Soldering Station', category: 'Equipment', cost: 25, effect: 'Dexterity +50%', bonus: { dexterity: 1.5 } },
+  { id: 'lab_bench', name: 'Lab Bench', category: 'Equipment', cost: 250, effect: 'Theory +50%', bonus: { theory: 1.5 } },
+  { id: 'cad_workstation', name: 'CAD Workstation', category: 'Equipment', cost: 2200, effect: 'Mechanical Aptitude +75%', bonus: { mechanical_aptitude: 1.75 } },
+  { id: 'research_cluster', name: 'Research Cluster', category: 'Equipment', cost: 20000, effect: 'Pattern Recognition +100%', bonus: { pattern_recognition: 2 } },
+  { id: 'aerospace_sim', name: 'Aerospace Simulator', category: 'Equipment', cost: 120000, effect: 'Strategic Vision +100%', bonus: { strategic_vision: 2 } },
+  { id: 'quantum_lab', name: 'Quantum Lab', category: 'Equipment', cost: 800000, effect: 'All skills +75%', bonus: { all: 1.75 }, corpsReq: true },
+  { id: 'alien_workbench', name: 'Alien Artifact Workbench', category: 'Equipment', cost: 8000000, effect: 'Cosmic skills +200%', bonus: { cosmic: 3 }, postRebirth: true },
 
   // Misc (multiple)
   { id: 'textbooks', name: 'Textbook Subscription', category: 'Misc', cost: 10, effect: 'Theory +25%', bonus: { theory: 1.25 } },
@@ -1074,7 +1074,7 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
 function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
   const cats = [
     { name: 'Living Quarters', key: 'Living', desc: 'One active. Happiness controls how fast you gain XP — upgrade to accelerate leveling.' },
-    { name: 'Equipment', key: 'Equipment', desc: 'One active. The tools of your trade.' },
+    { name: 'Equipment', key: 'Equipment', desc: 'Multiple active. Stack tools to combine their bonuses.' },
     { name: 'Misc', key: 'Misc', desc: 'Multiple active. Lifestyle upgrades and consumables.' },
   ];
   return (
