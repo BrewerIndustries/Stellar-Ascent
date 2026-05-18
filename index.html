@@ -226,6 +226,49 @@
   }
   .death-btn:hover { background: rgba(160, 120, 220, 0.8); }
 
+  .intro-modal {
+    background: linear-gradient(135deg, #0d1126 0%, #1a1f3a 60%, #2a1f4a 100%);
+    border: 1px solid #3a4a80;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 520px;
+    text-align: center;
+  }
+  .intro-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #8fb8ff;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+  .intro-subtitle {
+    font-size: 12px;
+    color: #4a5fa0;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+  }
+  .intro-text {
+    color: #b0bcd8;
+    line-height: 1.8;
+    font-size: 14px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  .intro-text em { color: #c89eff; font-style: italic; }
+  .intro-begin {
+    background: rgba(80, 120, 200, 0.5);
+    border: 1px solid #5a7fc8;
+    color: #e0e6ff;
+    padding: 12px 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: inherit;
+    margin-top: 20px;
+    letter-spacing: 1px;
+  }
+  .intro-begin:hover { background: rgba(100, 150, 220, 0.7); }
+
   .description {
     color: #8a96b8;
     font-size: 12px;
@@ -425,6 +468,7 @@ function App() {
   const [paused, setPaused] = useState(false);
   const [showDeath, setShowDeath] = useState(false);
   const [pendingInsight, setPendingInsight] = useState(0);
+  const [introSeen, setIntroSeen] = useState(false);
 
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -434,6 +478,8 @@ function App() {
   pausedRef.current = paused;
   const showDeathRef = useRef(showDeath);
   showDeathRef.current = showDeath;
+  const introSeenRef = useRef(introSeen);
+  introSeenRef.current = introSeen;
 
   // ----- helpers used during tick -----
   const calcMults = (s) => {
@@ -527,7 +573,7 @@ function App() {
   // ----- main tick -----
   useEffect(() => {
     const interval = setInterval(() => {
-      if (pausedRef.current || showDeathRef.current) return;
+      if (!introSeenRef.current || pausedRef.current || showDeathRef.current) return;
       const ticks = speedRef.current;
 
       setState(prev => {
@@ -736,6 +782,25 @@ function App() {
       {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} />}
       {tab === 'shop' && <ShopTab state={state} mults={mults} buyShop={buyShop} isShopUnlocked={isShopUnlocked} />}
       {tab === 'rebirth' && <RebirthTab state={state} pendingInsight={calcInsightGain(state)} />}
+
+      {!introSeen && (
+        <div className="death-overlay">
+          <div className="intro-modal">
+            <div className="intro-title">⊹ STELLAR ASCENT</div>
+            <div className="intro-subtitle">v0.1 — THE GARAGE YEARS</div>
+            <div className="intro-text">
+              <p>You're in your garage. Again.</p>
+              <br/>
+              <p>Tools on the bench. A half-built circuit board. The smell of solder and cold coffee. You've been tinkering your whole life — building things no one asked for, chasing ideas no one else can see yet.</p>
+              <br/>
+              <p>You don't know why, but you feel like you've done this before.</p>
+              <br/>
+              <p><em>Maybe this time, you'll go further.</em></p>
+            </div>
+            <button className="intro-begin" onClick={() => setIntroSeen(true)}>Begin</button>
+          </div>
+        </div>
+      )}
 
       {showDeath && (
         <div className="death-overlay">
