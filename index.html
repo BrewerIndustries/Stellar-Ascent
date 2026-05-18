@@ -892,7 +892,7 @@ function App() {
     const job = CAREERS.find(c => c.id === state.activeJob);
     if (!job) return 0;
     const cur = state.careers[job.id];
-    return job.basePay * jobPayMult(state, mults, job) * (1 + cur.level * 0.01);
+    return job.basePay * jobPayMult(state, mults, job) * (1 + Math.log10(cur.level + 1));
   }, [state, mults]);
   const dailyExpense = useMemo(() => shopDailyCost(state, mults), [state, mults]);
 
