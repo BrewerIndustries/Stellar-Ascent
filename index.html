@@ -350,50 +350,50 @@ const DEATH_AGE_DAYS = 70 * DAYS_PER_YEAR;
 // XP formula: matches Reborn-style exponential scaling
 const xpToLevel = (level) => Math.floor(250 * Math.pow(1.01, level) * (level + 1));
 
-// Career tiers
+// Career paths
 const CAREERS = [
-  // Tier 1 - The Garage
-  { id: 'scrap_scavenger', name: 'Scrap Scavenger', tier: 1, basePay: 5, baseXp: 10, levelReq: 0, prevReq: null },
-  { id: 'electronics_repair', name: 'Electronics Repairman', tier: 1, basePay: 9, baseXp: 11, levelReq: 10, prevReq: 'scrap_scavenger' },
-  { id: 'hobbyist_engineer', name: 'Hobbyist Engineer', tier: 1, basePay: 15, baseXp: 12, levelReq: 40, prevReq: 'electronics_repair' },
-  { id: 'garage_inventor', name: 'Garage Inventor', tier: 1, basePay: 24, baseXp: 13, levelReq: 80, prevReq: 'hobbyist_engineer' },
-  { id: 'independent_researcher', name: 'Independent Researcher', tier: 1, basePay: 40, baseXp: 15, levelReq: 150, prevReq: 'garage_inventor' },
+  // ── THE GARAGE (Independent — always available) ──────────────────────────
+  { id: 'scrap_scavenger',        name: 'Scrap Scavenger',       path: 'garage',    basePay: 5,      baseXp: 10, prevReq: null,                  levelReq: 0   },
+  { id: 'electronics_repair',     name: 'Electronics Repairman', path: 'garage',    basePay: 12,     baseXp: 11, prevReq: 'scrap_scavenger',     levelReq: 10  },
+  { id: 'hobbyist_engineer',      name: 'Hobbyist Engineer',     path: 'garage',    basePay: 22,     baseXp: 12, prevReq: 'electronics_repair',  levelReq: 40  },
+  { id: 'garage_inventor',        name: 'Garage Inventor',       path: 'garage',    basePay: 40,     baseXp: 14, prevReq: 'hobbyist_engineer',   levelReq: 80  },
+  { id: 'independent_researcher', name: 'Independent Researcher',path: 'garage',    basePay: 70,     baseXp: 17, prevReq: 'garage_inventor',     levelReq: 150 },
 
-  // Tier 2 - The Institutions
-  { id: 'lab_tech', name: 'Lab Technician', tier: 2, basePay: 60, baseXp: 18, levelReq: 100, prevReq: 'electronics_repair' },
-  { id: 'junior_engineer', name: 'Junior Engineer', tier: 2, basePay: 95, baseXp: 22, levelReq: 200, prevReq: 'lab_tech' },
-  { id: 'research_scientist', name: 'Research Scientist', tier: 2, basePay: 150, baseXp: 28, levelReq: 350, prevReq: 'junior_engineer' },
-  { id: 'project_lead', name: 'Project Lead', tier: 2, basePay: 240, baseXp: 35, levelReq: 550, prevReq: 'research_scientist' },
-  { id: 'principal_investigator', name: 'Principal Investigator', tier: 2, basePay: 400, baseXp: 45, levelReq: 800, prevReq: 'project_lead' },
+  // ── THE ACADEMY (Science — unlocks at Electronics Repair lv30) ───────────
+  { id: 'lab_assistant',          name: 'Lab Assistant',         path: 'academy',   basePay: 55,     baseXp: 14, prevReq: 'electronics_repair',  levelReq: 30  },
+  { id: 'research_associate',     name: 'Research Associate',    path: 'academy',   basePay: 120,    baseXp: 18, prevReq: 'lab_assistant',       levelReq: 25  },
+  { id: 'research_scientist',     name: 'Research Scientist',    path: 'academy',   basePay: 280,    baseXp: 25, prevReq: 'research_associate',  levelReq: 60  },
+  { id: 'senior_researcher',      name: 'Senior Researcher',     path: 'academy',   basePay: 650,    baseXp: 36, prevReq: 'research_scientist',  levelReq: 130 },
+  { id: 'department_chair',       name: 'Department Chair',      path: 'academy',   basePay: 1500,   baseXp: 52, prevReq: 'senior_researcher',   levelReq: 230 },
 
-  // Tier 3 - The Industry
-  { id: 'aerospace_engineer', name: 'Aerospace Engineer', tier: 3, basePay: 650, baseXp: 60, levelReq: 1100, prevReq: 'junior_engineer' },
-  { id: 'mission_director', name: 'Mission Director', tier: 3, basePay: 1050, baseXp: 80, levelReq: 1500, prevReq: 'aerospace_engineer' },
-  { id: 'chief_technologist', name: 'Chief Technologist', tier: 3, basePay: 1700, baseXp: 105, levelReq: 1950, prevReq: 'mission_director' },
-  { id: 'startup_founder', name: 'Startup Founder', tier: 3, basePay: 2800, baseXp: 140, levelReq: 2450, prevReq: 'chief_technologist' },
-  { id: 'ceo_architect', name: 'CEO / Chief Architect', tier: 3, basePay: 4500, baseXp: 185, levelReq: 3000, prevReq: 'startup_founder' },
+  // ── THE CORPS (Military — unlocks at Hobbyist Engineer lv25) ─────────────
+  { id: 'corps_cadet',            name: 'Space Corps Cadet',     path: 'corps',     basePay: 60,     baseXp: 13, prevReq: 'hobbyist_engineer',   levelReq: 25  },
+  { id: 'flight_officer',         name: 'Flight Officer',        path: 'corps',     basePay: 140,    baseXp: 17, prevReq: 'corps_cadet',         levelReq: 25  },
+  { id: 'squadron_leader',        name: 'Squadron Leader',       path: 'corps',     basePay: 340,    baseXp: 24, prevReq: 'flight_officer',      levelReq: 60  },
+  { id: 'wing_commander',         name: 'Wing Commander',        path: 'corps',     basePay: 800,    baseXp: 35, prevReq: 'squadron_leader',     levelReq: 130 },
+  { id: 'fleet_admiral',          name: 'Fleet Admiral',         path: 'corps',     basePay: 1800,   baseXp: 50, prevReq: 'wing_commander',      levelReq: 230 },
 
-  // Tier 4 - The Captain
-  { id: 'astronaut_candidate', name: 'Astronaut Candidate', tier: 4, basePay: 7300, baseXp: 245, levelReq: 1800, prevReq: 'principal_investigator' },
-  { id: 'orbital_specialist', name: 'Orbital Specialist', tier: 4, basePay: 11800, baseXp: 320, levelReq: 2400, prevReq: 'astronaut_candidate' },
-  { id: 'lunar_ops_lead', name: 'Lunar Operations Lead', tier: 4, basePay: 19000, baseXp: 425, levelReq: 3100, prevReq: 'orbital_specialist' },
-  { id: 'deep_space_pilot', name: 'Deep Space Pilot', tier: 4, basePay: 30500, baseXp: 560, levelReq: 3900, prevReq: 'lunar_ops_lead' },
-  { id: 'starship_captain', name: 'Starship Captain', tier: 4, basePay: 49000, baseXp: 740, levelReq: 4800, prevReq: 'deep_space_pilot' },
+  // ── THE SYNDICATE (Corporate — unlocks at Garage Inventor lv20) ──────────
+  { id: 'field_agent',            name: 'Field Agent',           path: 'syndicate', basePay: 65,     baseXp: 14, prevReq: 'garage_inventor',     levelReq: 20  },
+  { id: 'ops_manager',            name: 'Operations Manager',    path: 'syndicate', basePay: 175,    baseXp: 19, prevReq: 'field_agent',         levelReq: 25  },
+  { id: 'division_director',      name: 'Division Director',     path: 'syndicate', basePay: 420,    baseXp: 27, prevReq: 'ops_manager',         levelReq: 60  },
+  { id: 'vp_operations',          name: 'VP of Operations',      path: 'syndicate', basePay: 980,    baseXp: 40, prevReq: 'division_director',   levelReq: 130 },
+  { id: 'syndicate_ceo',          name: 'Syndicate CEO',         path: 'syndicate', basePay: 2200,   baseXp: 58, prevReq: 'vp_operations',       levelReq: 230 },
 
-  // Tier 5 - The Ascended (post-rebirth only)
-  { id: 'xenolinguist', name: 'Xenolinguist', tier: 5, basePay: 78000, baseXp: 980, levelReq: 3500, prevReq: 'starship_captain', postRebirth: true },
-  { id: 'void_cartographer', name: 'Void Cartographer', tier: 5, basePay: 125000, baseXp: 1300, levelReq: 4500, prevReq: 'xenolinguist', postRebirth: true },
-  { id: 'stellar_diplomat', name: 'Stellar Diplomat', tier: 5, basePay: 200000, baseXp: 1720, levelReq: 5700, prevReq: 'void_cartographer', postRebirth: true },
-  { id: 'cube_scholar', name: 'Cube Scholar', tier: 5, basePay: 320000, baseXp: 2280, levelReq: 7000, prevReq: 'stellar_diplomat', postRebirth: true },
-  { id: 'galactic_custodian', name: 'Galactic Custodian', tier: 5, basePay: 510000, baseXp: 3020, levelReq: 8500, prevReq: 'cube_scholar', postRebirth: true },
+  // ── THE ASCENDED (post-rebirth — unlocks after Independent Researcher lv50) ─
+  { id: 'xenolinguist',           name: 'Xenolinguist',          path: 'ascended',  basePay: 8000,   baseXp: 75, prevReq: 'independent_researcher', levelReq: 50, postRebirth: true },
+  { id: 'void_cartographer',      name: 'Void Cartographer',     path: 'ascended',  basePay: 25000,  baseXp: 120,prevReq: 'xenolinguist',         levelReq: 80, postRebirth: true },
+  { id: 'stellar_diplomat',       name: 'Stellar Diplomat',      path: 'ascended',  basePay: 80000,  baseXp: 180,prevReq: 'void_cartographer',    levelReq: 150,postRebirth: true },
+  { id: 'cube_scholar',           name: 'Cube Scholar',          path: 'ascended',  basePay: 250000, baseXp: 280,prevReq: 'stellar_diplomat',     levelReq: 250,postRebirth: true },
+  { id: 'galactic_custodian',     name: 'Galactic Custodian',    path: 'ascended',  basePay: 800000, baseXp: 420,prevReq: 'cube_scholar',         levelReq: 380,postRebirth: true },
 ];
 
-const TIER_NAMES = {
-  1: 'The Garage',
-  2: 'The Institutions',
-  3: 'The Industry',
-  4: 'The Captain',
-  5: 'The Ascended',
+const PATH_META = {
+  garage:    { label: 'The Garage',    desc: 'Self-taught. Scrappy. Starting from zero.',           color: '#8fb8ff' },
+  academy:   { label: 'The Academy',   desc: 'Institutions of science and structured discovery.',   color: '#7eda9e' },
+  corps:     { label: 'The Corps',     desc: 'Space Force. Discipline, rank, and command.',         color: '#f0a878' },
+  syndicate: { label: 'The Syndicate', desc: 'Corporate power, strategy, and influence.',           color: '#f0c878' },
+  ascended:  { label: 'The Ascended',  desc: 'Post-rebirth. Cosmic awareness unlocked.',            color: '#c89eff' },
 };
 
 // Skills
@@ -410,14 +410,14 @@ const SKILLS = [
   { id: 'tool_mastery', name: 'Tool Mastery', category: 'Hands-On', effect: 'Reduces Equipment costs', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
 
   // Theoretical
-  { id: 'theory', name: 'Theory', category: 'Theoretical', effect: 'XP on Institutions & Industry jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_tech', prevReqLvl: 1 },
-  { id: 'mathematical_insight', name: 'Mathematical Insight', category: 'Theoretical', effect: 'SC from Institutions & Industry jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_tech', prevReqLvl: 1 },
-  { id: 'pattern_recognition', name: 'Pattern Recognition', category: 'Theoretical', effect: 'XP on all skills', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: 'lab_tech', prevReqLvl: 1 },
+  { id: 'theory', name: 'Theory', category: 'Theoretical', effect: '+1% XP/lv for Academy jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'mathematical_insight', name: 'Mathematical Insight', category: 'Theoretical', effect: '+1% SC/lv for Academy jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'pattern_recognition', name: 'Pattern Recognition', category: 'Theoretical', effect: '+0.5% XP/lv for all skills', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: 'lab_assistant', prevReqLvl: 1 },
 
   // Command
-  { id: 'charisma', name: 'Charisma', category: 'Command', effect: 'SC from Industry & Captain jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'aerospace_engineer', prevReqLvl: 1 },
-  { id: 'strategic_vision', name: 'Strategic Vision', category: 'Command', effect: 'XP on Industry & Captain jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'aerospace_engineer', prevReqLvl: 1 },
-  { id: 'composure', name: 'Composure', category: 'Command', effect: 'Reduces all shop costs', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'aerospace_engineer', prevReqLvl: 1 },
+  { id: 'charisma', name: 'Charisma', category: 'Command', effect: '+1% SC/lv for Syndicate & Corps jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
+  { id: 'strategic_vision', name: 'Strategic Vision', category: 'Command', effect: '+1% XP/lv for Corps & Syndicate jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
+  { id: 'composure', name: 'Composure', category: 'Command', effect: '-0.5% shop costs/lv', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'flight_officer', prevReqLvl: 1 },
 
   // Cosmic (post-rebirth)
   { id: 'resonance', name: 'Resonance', category: 'Cosmic', effect: 'XP on Ascended jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
@@ -427,16 +427,16 @@ const SKILLS = [
 
 // Shop items
 const SHOP = [
-  // Living Quarters (one active)
-  { id: 'cramped_apt', name: 'Cramped Apartment', category: 'Living', cost: 0, effect: 'Default', bonus: {}, exclusive: 'Living' },
-  { id: 'garage_house', name: 'Suburban Garage House', category: 'Living', cost: 30, effect: 'Focus +50%', bonus: { focus: 1.5 }, exclusive: 'Living' },
-  { id: 'uni_housing', name: 'University Housing', category: 'Living', cost: 200, effect: 'Theory +50%', bonus: { theory: 1.5 }, exclusive: 'Living' },
-  { id: 'downtown_loft', name: 'Downtown Loft', category: 'Living', cost: 1500, effect: 'Charisma +50%', bonus: { charisma: 1.5 }, exclusive: 'Living' },
-  { id: 'private_estate', name: 'Private Estate', category: 'Living', cost: 15000, effect: 'Ingenuity +100%', bonus: { ingenuity: 2 }, exclusive: 'Living' },
-  { id: 'corp_compound', name: 'Corporate Compound', category: 'Living', cost: 75000, effect: 'Strategic Vision +100%', bonus: { strategic_vision: 2 }, exclusive: 'Living' },
-  { id: 'orbital_habitat', name: 'Orbital Habitat', category: 'Living', cost: 400000, effect: 'Endurance +200%', bonus: { endurance: 3 }, exclusive: 'Living', tier4: true },
-  { id: 'captain_quarters', name: 'Captain\'s Quarters', category: 'Living', cost: 2500000, effect: 'All skills +100%', bonus: { all: 2 }, exclusive: 'Living', tier4: true },
-  { id: 'cube_sanctum', name: 'Cube-Resonant Sanctum', category: 'Living', cost: 15000000, effect: 'Cosmic skills +200%', bonus: { cosmic: 3 }, exclusive: 'Living', postRebirth: true },
+  // Living Quarters (one active) — happiness controls all XP gain
+  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,        happiness: 50, effect: 'No bonus',                    bonus: {},                     exclusive: 'Living' },
+  { id: 'garage_house',    name: 'Suburban Garage House',  category: 'Living', cost: 30,       happiness: 60, effect: 'Focus +50%',                  bonus: { focus: 1.5 },         exclusive: 'Living' },
+  { id: 'uni_housing',     name: 'University Housing',     category: 'Living', cost: 200,      happiness: 68, effect: 'Theory +50%',                 bonus: { theory: 1.5 },        exclusive: 'Living' },
+  { id: 'downtown_loft',   name: 'Downtown Loft',          category: 'Living', cost: 1500,     happiness: 75, effect: 'Charisma +50%',               bonus: { charisma: 1.5 },      exclusive: 'Living' },
+  { id: 'private_estate',  name: 'Private Estate',         category: 'Living', cost: 15000,    happiness: 82, effect: 'Ingenuity +100%',             bonus: { ingenuity: 2 },       exclusive: 'Living' },
+  { id: 'corp_compound',   name: 'Corporate Compound',     category: 'Living', cost: 75000,    happiness: 88, effect: 'Strategic Vision +100%',      bonus: { strategic_vision: 2 },exclusive: 'Living' },
+  { id: 'orbital_habitat', name: 'Orbital Habitat',        category: 'Living', cost: 400000,   happiness: 93, effect: 'Endurance +200%',             bonus: { endurance: 3 },       exclusive: 'Living', corpsReq: true },
+  { id: 'captain_quarters',name: "Captain's Quarters",     category: 'Living', cost: 2500000,  happiness: 97, effect: 'All skills +100%',            bonus: { all: 2 },             exclusive: 'Living', corpsReq: true },
+  { id: 'cube_sanctum',    name: 'Cube-Resonant Sanctum',  category: 'Living', cost: 15000000, happiness: 100,effect: 'Cosmic skills +200%',         bonus: { cosmic: 3 },          exclusive: 'Living', postRebirth: true },
 
   // Equipment (one active)
   { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Default', bonus: {}, exclusive: 'Equipment' },
@@ -569,8 +569,17 @@ function App() {
       }
     });
 
+    // Happiness from active living quarters (controls all XP gain)
+    let happiness = 50;
+    SHOP.forEach(item => {
+      if (item.category === 'Living' && s.shop[item.id] && item.happiness != null) happiness = item.happiness;
+    });
+    const happinessMult = happiness / 100;
+
     return {
       cosmicMult,
+      happiness,
+      happinessMult,
       skills: { focus, ingenuity, endurance, dexterity, mechanical_aptitude: mechAptitude,
                 theory, mathematical_insight: mathInsight, pattern_recognition: patternRec,
                 charisma, strategic_vision: stratVision, composure, resonance,
@@ -580,23 +589,25 @@ function App() {
   };
 
   const jobXpMult = (s, mults, job) => {
-    let m = mults.cosmicMult * mults.skills.focus * mults.shop.all_xp;
-    if (job.tier === 1 || job.tier === 3) m *= mults.skills.dexterity;
-    if (job.tier === 2 || job.tier === 3) m *= mults.skills.theory;
-    if (job.tier === 3 || job.tier === 4) m *= mults.skills.strategic_vision;
-    if (job.tier === 5) m *= mults.skills.resonance;
+    let m = mults.cosmicMult * mults.skills.focus * mults.shop.all_xp * mults.happinessMult;
+    if (job.path === 'garage')    m *= mults.skills.dexterity;
+    if (job.path === 'academy')   m *= mults.skills.theory * mults.skills.pattern_recognition;
+    if (job.path === 'corps')     m *= mults.skills.strategic_vision;
+    if (job.path === 'syndicate') m *= mults.skills.charisma;
+    if (job.path === 'ascended')  m *= mults.skills.resonance;
     return m;
   };
   const jobPayMult = (s, mults, job) => {
     let m = mults.cosmicMult * mults.skills.ingenuity * mults.shop.ingenuity;
-    if (job.tier === 1 || job.tier === 3) m *= mults.skills.mechanical_aptitude * mults.shop.mechanical_aptitude;
-    if (job.tier === 2 || job.tier === 3) m *= mults.skills.mathematical_insight;
-    if (job.tier === 3 || job.tier === 4) m *= mults.skills.charisma * mults.shop.charisma;
-    if (job.tier === 5) m *= mults.skills.xenocognition;
+    if (job.path === 'garage')    m *= mults.skills.mechanical_aptitude * mults.shop.mechanical_aptitude;
+    if (job.path === 'academy')   m *= mults.skills.mathematical_insight;
+    if (job.path === 'corps')     m *= mults.skills.charisma * mults.shop.charisma;
+    if (job.path === 'syndicate') m *= mults.skills.charisma * mults.shop.charisma;
+    if (job.path === 'ascended')  m *= mults.skills.xenocognition;
     return m;
   };
   const skillXpMult = (s, mults, skill) => {
-    let m = mults.cosmicMult * mults.skills.pattern_recognition * mults.shop.all_xp;
+    let m = mults.cosmicMult * mults.skills.pattern_recognition * mults.shop.all_xp * mults.happinessMult;
     const bonus = mults.shop[skill.id];
     if (bonus) m *= bonus;
     if (mults.shop.all) m *= mults.shop.all;
@@ -767,10 +778,9 @@ function App() {
   };
   const isShopUnlocked = (item) => {
     if (item.postRebirth && !state.hasReborn) return false;
-    if (item.tier4) {
-      // unlock when astronaut_candidate is at least level 1
-      const tier4 = state.careers.astronaut_candidate;
-      if (!tier4 || tier4.level < 1) return false;
+    if (item.corpsReq) {
+      const cadet = state.careers.corps_cadet;
+      if (!cadet || cadet.level < 1) return false;
     }
     return true;
   };
@@ -907,10 +917,18 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
       </div>
 
       <div className="panel">
+        <div className="sb-title">Happiness <span style={{color:'#7eda9e',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#4a5880',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
+        <div className="progress-wrap" style={{height:10,marginBottom:4}}>
+          <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#7eda9e 100%)'}}></div>
+        </div>
+        <div className="sb-row" style={{fontSize:10,color:'#4a5880'}}>Upgrade Living Quarters to raise happiness &amp; XP rate</div>
+      </div>
+
+      <div className="panel">
         <div className="sb-title">Current Career</div>
         {job && jobData ? (<>
           <div className="sb-name">{job.name}</div>
-          <div className="sb-sub">Tier {job.tier} · {TIER_NAMES[job.tier]} · Lv {jobData.level}</div>
+          <div className="sb-sub" style={{color: PATH_META[job.path]?.color || '#8a96b8'}}>{PATH_META[job.path]?.label} · Lv {jobData.level}</div>
           <div className="progress-wrap" style={{height:13}}>
             <div className="progress-fill" style={{width:`${jobPct}%`}}></div>
             <div className="progress-text">{formatNum(jobData.xp)} / {formatNum(jobNeed)}</div>
@@ -939,17 +957,20 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
 // TABS
 // ============================================================
 function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, jobPayMult }) {
-  const tiers = [1, 2, 3, 4, 5];
+  const paths = ['garage', 'academy', 'corps', 'syndicate', 'ascended'];
   return (
     <div className="panel">
-      {tiers.map(tier => {
-        const inTier = CAREERS.filter(c => c.tier === tier);
-        const anyUnlocked = inTier.some(c => isCareerUnlocked(c));
-        if (!anyUnlocked && tier > 1) return null;
+      {paths.map(path => {
+        const inPath = CAREERS.filter(c => c.path === path);
+        const anyReachable = inPath.some(c => isCareerUnlocked(c) || (c.prevReq && state.careers[c.prevReq]?.level > 0));
+        if (!anyReachable && path !== 'garage') return null;
+        const meta = PATH_META[path];
         return (
-          <div key={tier}>
-            <div className="category-header">Tier {tier} — {TIER_NAMES[tier]}</div>
-            {inTier.map(career => {
+          <div key={path}>
+            <div className="category-header" style={{color: meta.color}}>
+              {meta.label} <span style={{color:'#4a5880',fontWeight:400,textTransform:'none',fontSize:10,letterSpacing:0}}>— {meta.desc}</span>
+            </div>
+            {inPath.map(career => {
               const cur = state.careers[career.id];
               const unlocked = isCareerUnlocked(career);
               const need = xpToLevel(cur.level);
@@ -957,6 +978,8 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
               const isActive = state.activeJob === career.id;
               const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + cur.level * 0.01);
               const xpGain = career.baseXp * jobXpMult(state, mults, career);
+              const prevCareer = career.prevReq ? CAREERS.find(c => c.id === career.prevReq) : null;
+              const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${career.levelReq}` : '';
               return (
                 <div key={career.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                   <div>
@@ -964,17 +987,19 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
                     <div className="row-level">Lv {cur.level}</div>
                   </div>
                   <div className="progress-wrap">
-                    <div className="progress-fill" style={{width: `${pct}%`}}></div>
-                    <div className="progress-text">{formatNum(cur.xp)} / {formatNum(need)} ({formatNum(xpGain)}/day)</div>
+                    <div className="progress-fill" style={{width:`${pct}%`}}></div>
+                    <div className="progress-text">
+                      {unlocked
+                        ? `${formatNum(cur.xp)} / ${formatNum(need)} XP · ${formatNum(xpGain)} XP/day`
+                        : reqLabel}
+                    </div>
                   </div>
-                  <div className="row-pay">+{formatNum(payGain)}/d</div>
-                  <div className="row-effect">
-                    {!unlocked && career.prevReq ? `Req ${career.levelReq}` : ''}
-                  </div>
+                  <div className="row-pay" title="Stellar Credits earned per game-day">+{formatNum(payGain)} SC/day</div>
+                  <div></div>
                   <div>
                     {unlocked ? (
                       <button className={isActive ? 'active-btn' : ''} onClick={() => setActiveJob(career.id)} disabled={isActive}>
-                        {isActive ? 'Active' : 'Work'}
+                        {isActive ? 'Working' : 'Work'}
                       </button>
                     ) : (
                       <button disabled>Locked</button>
@@ -1009,6 +1034,8 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
               const isActive = state.activeSkill === skill.id;
               const xpGain = 10 * skillXpMult(state, mults, skill);
               const effect = skill.effectFn(cur.level);
+              const prevCareer = skill.prevReq ? CAREERS.find(c => c.id === skill.prevReq) : null;
+              const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${skill.prevReqLvl || 1}` : '';
               return (
                 <div key={skill.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                   <div>
@@ -1017,14 +1044,18 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
                   </div>
                   <div className="progress-wrap">
                     <div className="progress-fill skill" style={{width: `${pct}%`}}></div>
-                    <div className="progress-text">{formatNum(cur.xp)} / {formatNum(need)} ({formatNum(xpGain)}/day)</div>
+                    <div className="progress-text">
+                      {unlocked
+                        ? `${formatNum(cur.xp)} / ${formatNum(need)} XP · ${formatNum(xpGain)} XP/day`
+                        : reqLabel}
+                    </div>
                   </div>
                   <div className="row-effect">×{effect.toFixed(2)}</div>
                   <div className="row-effect" style={{fontSize: 10, opacity: 0.8}}>{skill.effect}</div>
                   <div>
                     {unlocked ? (
                       <button className={isActive ? 'active-btn' : ''} onClick={() => setActiveSkill(skill.id)} disabled={isActive}>
-                        {isActive ? 'Active' : 'Train'}
+                        {isActive ? 'Training' : 'Train'}
                       </button>
                     ) : (
                       <button disabled>Locked</button>
@@ -1042,7 +1073,7 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
 
 function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
   const cats = [
-    { name: 'Living Quarters', key: 'Living', desc: 'One active. Determines your home and lifestyle.' },
+    { name: 'Living Quarters', key: 'Living', desc: 'One active. Happiness controls how fast you gain XP — upgrade to accelerate leveling.' },
     { name: 'Equipment', key: 'Equipment', desc: 'One active. The tools of your trade.' },
     { name: 'Misc', key: 'Misc', desc: 'Multiple active. Lifestyle upgrades and consumables.' },
   ];
@@ -1062,9 +1093,12 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
               <div key={item.id} className={`row ${active ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                 <div>
                   <div className="row-name">{item.name}</div>
+                  {item.happiness != null && (
+                    <div className="row-level" style={{color:'#7eda9e'}}>Happiness {item.happiness} → XP ×{(item.happiness/100).toFixed(2)}</div>
+                  )}
                 </div>
                 <div className="row-effect">{item.effect}</div>
-                <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/d` : 'Free'}</div>
+                <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
                 <div></div>
                 <div>
                   {unlocked ? (

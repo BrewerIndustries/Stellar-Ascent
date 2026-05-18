@@ -56,6 +56,13 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 
 ## Changelog
 
+### v0.1.2 — *Paths & Happiness*
+- **4 career paths** — The Garage (always), The Academy (Electronics lv30), The Corps (Hobbyist lv25), The Syndicate (Inventor lv20), plus The Ascended (post-rebirth)
+- **Happiness system** — Living Quarters set happiness (50–100); happiness/100 multiplies all XP gain. Cramped Apartment = 0.5× XP; upgrades accelerate progression
+- **Better labels** — Career rows show "Needs [Career] lv X" when locked, explicit SC/day pay, XP/day rates; Skills show unlock requirements and numeric effect per level
+- Skills unlock tied to new path careers (Theoretical → Lab Assistant; Command → Flight Officer)
+- Path-specific skill bonuses: Garage uses Dexterity, Academy uses Theory, Corps uses Strategic Vision, Syndicate uses Charisma
+
 ### v0.1.1 — *UI Pass*
 - Intro overlay on page load freezes game until player clicks Begin
 - Left status sidebar (PKR-style): Life/lifespan bar, Speed controls, Finances (balance, net, income, expense), Cosmic Insight, active Career progress, active Skill progress
