@@ -31,30 +31,22 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 ## Backlog
 
 ### Story & flavor
-- Anomaly events in early game (mysterious signals, weird readings)
+- **Pre-contact rebirth framing** — first rebirth should be explained without referencing aliens or The Cube (player hasn't seen them yet); needs an in-world reason (unexplained déjà vu, a dream, a compulsion) that only retroactively makes sense after first contact
 - First contact event triggering the rebirth mechanic narratively
 - Endgame revelation: many species, structured galaxy
 - Final career arc: decode the Cube, find a younger species to pass it to
-- Story event popups at career/skill milestones
+- **The Cube Codex entry** — intentionally vague. Grows more detailed with each rebirth. By loop 5 it contradicts itself
 
 ### Mechanics
-- **Lifespan extension / Time Dilation system** — FTL and relativistic travel slow your aging tick. Sources: Endurance (baseline), Tier 4 jobs (passive dilation), Cryostasis shop item, Cosmic Insight upgrades, Cube Attunement (endgame).
-- Cosmic Insight upgrade tree (spend Insight on permanent buffs)
-- Achievements
-- Statistics tab (total lives, total SC earned, longest career, etc.)
-
-### Codex tab
-In-game reference and lore discovery system. Unlocks entries as the player reaches milestones.
-- **Mechanics definitions** — plain-language explanations of every stat, multiplier, and system (Happiness, Cosmic Insight, XP rate, SC/day, path bonuses, rebirth loop, etc.)
-- **Career & skill entries** — flavour description for each career and skill; what it means in the world, not just what it does in the numbers
-- **Lore fragments** — hidden entries that unlock at specific milestones (first rebirth, reaching The Ascended, buying The Cube, hitting certain Cosmic Insight thresholds). Fragments hint at the alien civilisation, the nature of the loop, what the cube actually is, and why the test is happening
-- **Signal log** — a running log of "anomalous readings" and intercepted transmissions that appear in early game, building dread before first contact. Entries are short, cryptic, never explained directly
-- **The Cube entry** — intentionally vague. Grows more detailed with each rebirth. By loop 5 it contradicts itself
+- **Age-gated UI reveals** — progressively reveal sections of the UI as the player ages (automation at age 20, rebirth tab at 25, etc.). Keeps the interface from being overwhelming on day 1.
+- **Second prestige path (Alignment)** — after a threshold of rebirths, choose to *align with the aliens* (gains power multipliers) or *resist* (harder path, unlocks hidden careers and lore). Each path has its own persistent currency and skill tree.
+- **Cosmic Insight upgrade tree** — spend Insight on permanent buffs between runs.
+- **Lifespan extension via Cosmic Insight** — post-rebirth upgrades that further extend effective death age beyond Cryostasis.
 
 ### Polish
-- Patch Notes tab (in-game)
+- **Settings menu** — dedicated Settings tab or modal with: hard reset, save export/import, speed defaults, and any future toggles. Currently these live scattered across the sidebar.
+- **First-time tutorial** — overlay-based walkthrough that fires on a fresh save (no prior play). Covers: what SC is, how to pick a career, what skills do, and what the rebirth loop is for. Should be re-triggerable at any time from the Settings menu.
 - Audio (Web Audio API, ambient + click feedback)
-- Save export/import to file (base64)
 - Mobile-friendly layout
 - Visual polish: animations on level-up, rebirth cinematic, particle effects
 
@@ -63,6 +55,12 @@ In-game reference and lore discovery system. Unlocks entries as the player reach
 - itch.io mirror release once beta-stable
 
 ## Changelog
+
+### v0.1.6 — *Depth Update*
+- **Codex tab** — Mechanics reference, Signal Log (5 anomaly events), 7 Lore Fragments, Career & Skill flavour entries for all 25 careers and 17 skills
+- **Build tab** — 3 Installations (Research Station 500M, Orbital Platform 5B, Dyson Array Segment 50B SC) that persist through every rebirth and generate passive SC/day
+- **Time Dilation** — Cryostasis Pod (35,000 SC/day) multiplies effective lifespan ×1.5; Cryonics skill (Fundamentals) amplifies the multiplier by +2%/lv. Life bar reflects actual effective death age.
+- **Four backlog fixes** — Frugality skill (all-cost reducer), maxLevel spread bug, base-pay display in Careers tab, achievement system (21 achievements)
 
 ### v0.1.4 — *Pacing*
 - Day tick slowed 4× (TICK_MS 50 → 200ms). A first life at 1× speed is now ~68 minutes instead of ~17

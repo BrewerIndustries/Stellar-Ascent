@@ -11,15 +11,16 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-    color: #e0e6f0;
+    background: #000;
+    color: #d8f0e8;
     min-height: 100vh;
     overflow-x: hidden;
   }
   #root { max-width: 1400px; margin: 0 auto; padding: 16px; }
   .header {
-    background: rgba(20, 25, 50, 0.8);
-    border: 1px solid #2a3560;
+    background: rgba(10, 5, 22, 0.92);
+    border: 1px solid #1e0f3a;
+    border-top: 1px solid #2a0f50;
     border-radius: 8px;
     padding: 12px 20px;
     margin-bottom: 12px;
@@ -28,16 +29,17 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
+    box-shadow: 0 0 24px rgba(0, 255, 136, 0.04);
   }
-  .title { font-size: 22px; font-weight: 600; color: #8fb8ff; }
-  .subtitle { font-size: 11px; color: #6878a0; }
+  .title { font-size: 22px; font-weight: 600; color: #00ff88; text-shadow: 0 0 12px rgba(0,255,136,0.5); }
+  .subtitle { font-size: 11px; color: #6a4a9a; }
   .stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
-  .stat { color: #b0bcd8; }
-  .stat-label { color: #6878a0; font-size: 11px; }
-  .stat-value { color: #e0e6f0; font-weight: 600; }
-  .stat-value.good { color: #7eda9e; }
-  .stat-value.bad { color: #e07a7a; }
-  .stat-value.cosmic { color: #c89eff; }
+  .stat { color: #8ab8a0; }
+  .stat-label { color: #6a8878; font-size: 11px; }
+  .stat-value { color: #d8f0e8; font-weight: 600; }
+  .stat-value.good { color: #00ff88; }
+  .stat-value.bad { color: #ff4477; }
+  .stat-value.cosmic { color: #bf5fff; }
 
   .tabs {
     display: flex;
@@ -46,9 +48,9 @@
     flex-wrap: wrap;
   }
   .tab {
-    background: rgba(20, 25, 50, 0.6);
-    border: 1px solid #2a3560;
-    color: #b0bcd8;
+    background: rgba(10, 5, 22, 0.7);
+    border: 1px solid #1e0f3a;
+    color: #7a9a8a;
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
@@ -56,35 +58,37 @@
     font-family: inherit;
     transition: all 0.15s;
   }
-  .tab:hover { background: rgba(40, 50, 90, 0.8); color: #e0e6f0; }
+  .tab:hover { background: rgba(30, 15, 55, 0.9); color: #d8f0e8; border-color: #3a1a60; }
   .tab.active {
-    background: rgba(60, 80, 140, 0.9);
-    color: #e0e6f0;
-    border-color: #4a5fa0;
+    background: rgba(0, 60, 30, 0.6);
+    color: #00ff88;
+    border-color: #00aa55;
+    box-shadow: 0 0 8px rgba(0,255,136,0.15);
   }
 
   .panel {
-    background: rgba(20, 25, 50, 0.5);
-    border: 1px solid #2a3560;
+    background: rgba(10, 5, 22, 0.6);
+    border: 1px solid #1e0f3a;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 12px;
   }
   .section-title {
     font-size: 14px;
-    color: #8fb8ff;
+    color: #00ff88;
     margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
+    text-shadow: 0 0 8px rgba(0,255,136,0.3);
   }
   .category-header {
     font-size: 12px;
-    color: #6878a0;
+    color: #7a5aaa;
     margin: 14px 0 6px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    border-bottom: 1px solid #2a3560;
+    border-bottom: 1px solid #1e0f3a;
     padding-bottom: 4px;
   }
   .category-header:first-child { margin-top: 0; }
@@ -97,40 +101,43 @@
     padding: 8px 10px;
     border-radius: 4px;
     margin-bottom: 4px;
-    background: rgba(15, 20, 40, 0.5);
+    background: rgba(6, 3, 14, 0.6);
     font-size: 13px;
     transition: background 0.15s;
+    border-left: 3px solid transparent;
   }
-  .row:hover { background: rgba(30, 40, 70, 0.7); }
+  .row:hover { background: rgba(20, 10, 40, 0.8); }
   .row.active {
-    background: rgba(60, 100, 60, 0.4);
-    border-left: 3px solid #7eda9e;
+    background: rgba(0, 50, 25, 0.4);
+    border-left: 3px solid #00ff88;
+    box-shadow: inset 0 0 12px rgba(0,255,136,0.05);
   }
   .row.locked {
-    opacity: 0.4;
+    opacity: 0.35;
     cursor: not-allowed;
   }
-  .row-name { font-weight: 500; color: #d0d8ef; }
-  .row-level { color: #8fb8ff; font-size: 12px; }
-  .row-pay { color: #f0c878; font-size: 12px; }
-  .row-cost { color: #e07a7a; font-size: 12px; }
-  .row-effect { color: #7eda9e; font-size: 12px; }
+  .row-name { font-weight: 500; color: #c8e8d8; }
+  .row-level { color: #00cc66; font-size: 12px; }
+  .row-pay { color: #f0c850; font-size: 12px; }
+  .row-cost { color: #ff4477; font-size: 12px; }
+  .row-effect { color: #bf5fff; font-size: 12px; }
 
   .progress-wrap {
-    background: rgba(10, 15, 30, 0.8);
+    background: rgba(5, 2, 12, 0.9);
     border-radius: 4px;
     height: 18px;
     position: relative;
     overflow: hidden;
-    border: 1px solid #1a2040;
+    border: 1px solid #1a0830;
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4a6fb5 0%, #6f9fd8 100%);
+    background: linear-gradient(90deg, #006633 0%, #00ff88 100%);
     transition: width 0.2s;
+    box-shadow: 0 0 6px rgba(0,255,136,0.4);
   }
-  .progress-fill.skill { background: linear-gradient(90deg, #a85fc8 0%, #c89eff 100%); }
-  .progress-fill.life { background: linear-gradient(90deg, #c87555 0%, #f0a878 100%); }
+  .progress-fill.skill { background: linear-gradient(90deg, #6600aa 0%, #bf5fff 100%); box-shadow: 0 0 6px rgba(191,95,255,0.4); }
+  .progress-fill.life { background: linear-gradient(90deg, #aa4400 0%, #ff8833 100%); box-shadow: 0 0 6px rgba(255,136,51,0.4); }
   .progress-text {
     position: absolute;
     inset: 0;
@@ -139,24 +146,25 @@
     justify-content: center;
     font-size: 11px;
     color: #fff;
-    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+    text-shadow: 0 0 4px rgba(0,0,0,0.9);
     font-variant-numeric: tabular-nums;
   }
 
   .row button, .controls button {
-    background: rgba(60, 80, 140, 0.6);
-    border: 1px solid #4a5fa0;
-    color: #e0e6f0;
+    background: rgba(40, 10, 70, 0.7);
+    border: 1px solid #4a1a80;
+    color: #c8a0f0;
     padding: 4px 10px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
     font-family: inherit;
+    transition: all 0.15s;
   }
-  .row button:hover, .controls button:hover { background: rgba(80, 110, 180, 0.8); }
-  .row button:disabled { opacity: 0.4; cursor: not-allowed; }
-  .row button.active-btn { background: rgba(80, 140, 100, 0.6); border-color: #7eda9e; }
-  .row button.danger { background: rgba(140, 60, 60, 0.6); border-color: #c85555; }
+  .row button:hover, .controls button:hover { background: rgba(70, 20, 120, 0.9); border-color: #7a2aaa; color: #e0c8ff; }
+  .row button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .row button.active-btn { background: rgba(0, 60, 30, 0.7); border-color: #00aa55; color: #00ff88; }
+  .row button.danger { background: rgba(100, 10, 40, 0.7); border-color: #cc1144; color: #ff4477; }
 
   .controls {
     display: flex;
@@ -165,10 +173,11 @@
     flex-wrap: wrap;
   }
   .speed-btn {
-    background: rgba(40, 50, 90, 0.6);
-    border: 1px solid #2a3560;
+    background: rgba(40, 18, 70, 0.8);
+    border: 1px solid #5a2a90;
+    color: #9a78c0;
   }
-  .speed-btn.active { background: rgba(80, 110, 180, 0.6); }
+  .speed-btn.active { background: rgba(0, 50, 25, 0.7); border-color: #00aa55; color: #00ff88; }
 
   .grid-2 {
     display: grid;
@@ -184,81 +193,87 @@
   .death-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.92);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 100;
   }
   .death-modal {
-    background: linear-gradient(135deg, #1a1f3a 0%, #2a1f4a 100%);
-    border: 1px solid #5a4fa0;
+    background: linear-gradient(135deg, #080412 0%, #120830 100%);
+    border: 1px solid #5500aa;
     border-radius: 12px;
     padding: 32px;
     max-width: 480px;
     text-align: center;
+    box-shadow: 0 0 40px rgba(191,95,255,0.2);
   }
   .death-title {
     font-size: 24px;
-    color: #c89eff;
+    color: #bf5fff;
     margin-bottom: 16px;
+    text-shadow: 0 0 16px rgba(191,95,255,0.6);
   }
   .death-text {
-    color: #b0bcd8;
+    color: #8a9888;
     margin-bottom: 12px;
     line-height: 1.5;
   }
   .death-stat {
-    color: #f0c878;
+    color: #f0c850;
     font-size: 18px;
     margin: 16px 0;
   }
   .death-btn {
-    background: rgba(140, 100, 200, 0.6);
-    border: 1px solid #a05fc8;
-    color: #fff;
+    background: rgba(80, 10, 140, 0.7);
+    border: 1px solid #8800cc;
+    color: #e0b8ff;
     padding: 10px 24px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     font-family: inherit;
     margin-top: 12px;
+    transition: all 0.15s;
   }
-  .death-btn:hover { background: rgba(160, 120, 220, 0.8); }
+  .death-btn:hover { background: rgba(110, 20, 180, 0.9); box-shadow: 0 0 12px rgba(191,95,255,0.3); }
 
   .intro-modal {
-    background: linear-gradient(135deg, #0d1126 0%, #1a1f3a 60%, #2a1f4a 100%);
-    border: 1px solid #3a4a80;
+    background: linear-gradient(135deg, #060410 0%, #0e0820 60%, #060e0a 100%);
+    border: 1px solid #1a0f30;
+    border-top: 1px solid #002a14;
     border-radius: 12px;
     padding: 40px;
     max-width: 520px;
     text-align: center;
+    box-shadow: 0 0 60px rgba(0,255,136,0.06), 0 0 60px rgba(191,95,255,0.06);
   }
   .intro-title {
     font-size: 28px;
     font-weight: 600;
-    color: #8fb8ff;
+    color: #00ff88;
     margin-bottom: 6px;
     letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(0,255,136,0.5);
   }
   .intro-subtitle {
     font-size: 12px;
-    color: #4a5fa0;
+    color: #4a7060;
     letter-spacing: 1px;
     margin-bottom: 28px;
   }
   .intro-text {
-    color: #b0bcd8;
+    color: #8ab8a0;
     line-height: 1.8;
     font-size: 14px;
     margin-bottom: 16px;
     text-align: left;
   }
-  .intro-text em { color: #c89eff; font-style: italic; }
+  .intro-text em { color: #bf5fff; font-style: italic; }
   .intro-begin {
-    background: rgba(80, 120, 200, 0.5);
-    border: 1px solid #5a7fc8;
-    color: #e0e6ff;
+    background: rgba(0, 60, 30, 0.6);
+    border: 1px solid #00aa55;
+    color: #00ff88;
     padding: 12px 36px;
     border-radius: 6px;
     cursor: pointer;
@@ -266,11 +281,12 @@
     font-family: inherit;
     margin-top: 20px;
     letter-spacing: 1px;
+    transition: all 0.15s;
   }
-  .intro-begin:hover { background: rgba(100, 150, 220, 0.7); }
+  .intro-begin:hover { background: rgba(0, 90, 45, 0.8); box-shadow: 0 0 16px rgba(0,255,136,0.25); }
 
   .description {
-    color: #8a96b8;
+    color: #7a9888;
     font-size: 12px;
     margin-bottom: 12px;
     line-height: 1.5;
@@ -286,20 +302,34 @@
     .main-layout { grid-template-columns: 1fr; }
   }
   .sidebar { display: flex; flex-direction: column; gap: 8px; }
-  .sidebar .panel { padding: 12px 14px; }
+  .sidebar-card {
+    background: rgba(10, 5, 22, 0.6);
+    border: 1px solid #1e0f3a;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .sidebar-card .panel {
+    padding: 12px 14px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid #120830;
+  }
+  .sidebar-card .panel:last-child { border-bottom: none; }
   .sb-title {
     font-size: 10px;
-    color: #4a5880;
+    color: #5a8870;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 8px;
-    border-bottom: 1px solid #1e2848;
+    border-bottom: 1px solid #1a0a2a;
     padding-bottom: 4px;
   }
   .sb-big {
     font-size: 20px;
     font-weight: 600;
-    color: #e0e6f0;
+    color: #d8f0e8;
     margin: 2px 0 8px;
     line-height: 1;
   }
@@ -310,15 +340,15 @@
     font-size: 12px;
     margin-bottom: 3px;
   }
-  .sb-label { color: #5a6888; }
-  .sb-val { color: #c0c8e0; font-weight: 500; }
-  .sb-val.good { color: #7eda9e; }
-  .sb-val.bad { color: #e07a7a; }
-  .sb-val.cosmic { color: #c89eff; }
+  .sb-label { color: #5a7868; }
+  .sb-val { color: #a0c8b0; font-weight: 500; }
+  .sb-val.good { color: #00ff88; }
+  .sb-val.bad { color: #ff4477; }
+  .sb-val.cosmic { color: #bf5fff; }
   .sb-name {
     font-size: 13px;
     font-weight: 500;
-    color: #d0d8ef;
+    color: #c8e8d8;
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
@@ -326,9 +356,84 @@
   }
   .sb-sub {
     font-size: 10px;
-    color: #4a5880;
+    color: #4a6858;
     margin-bottom: 6px;
   }
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .toggle-label { color: #a0c8b0; }
+  .toggle-btn {
+    padding: 3px 10px;
+    border-radius: 10px;
+    border: 1px solid #1e4030;
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    background: rgba(6,3,14,0.8);
+    color: #3a5848;
+    transition: all 0.15s;
+    min-width: 42px;
+    text-align: center;
+  }
+  .toggle-btn.on {
+    background: rgba(0,60,30,0.7);
+    border-color: #00aa55;
+    color: #00ff88;
+    box-shadow: 0 0 6px rgba(0,255,136,0.2);
+  }
+  .skill-skip-label {
+    font-size: 11px;
+    color: #3a5848;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .skill-skip-label.skipped { color: #ff4477; text-decoration: line-through; }
+
+  .ticker-bar {
+    background: rgba(5, 3, 12, 0.9);
+    border: 1px solid #1a0a2a;
+    border-radius: 6px;
+    padding: 7px 14px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ticker-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #00cc66; flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(0,255,136,0.7);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .ticker-text {
+    color: #8ab8a0; font-style: italic;
+    animation: ticker-fade-in 0.6s ease-out;
+  }
+  @keyframes ticker-fade-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+  .stat-card {
+    background: rgba(6,3,14,0.6);
+    border: 1px solid #1a0830;
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .stat-card-label { font-size: 11px; color: #4a7060; margin-bottom: 4px; }
+  .stat-card-val   { font-size: 20px; color: #00ff88; font-weight: 600; line-height: 1; }
+  .stat-card-unit  { font-size: 11px; color: #2a5040; font-weight: 400; }
 </style>
 </head>
 <body>
@@ -355,30 +460,30 @@ const CAREERS = [
   // ── THE GARAGE (Independent — always available) ──────────────────────────
   { id: 'scrap_scavenger',        name: 'Scrap Scavenger',       path: 'garage',    basePay: 5,      baseXp: 10, prevReq: null,                  levelReq: 0   },
   { id: 'electronics_repair',     name: 'Electronics Repairman', path: 'garage',    basePay: 12,     baseXp: 11, prevReq: 'scrap_scavenger',     levelReq: 10  },
-  { id: 'hobbyist_engineer',      name: 'Hobbyist Engineer',     path: 'garage',    basePay: 22,     baseXp: 12, prevReq: 'electronics_repair',  levelReq: 40  },
-  { id: 'garage_inventor',        name: 'Garage Inventor',       path: 'garage',    basePay: 40,     baseXp: 14, prevReq: 'hobbyist_engineer',   levelReq: 80  },
-  { id: 'independent_researcher', name: 'Independent Researcher',path: 'garage',    basePay: 70,     baseXp: 17, prevReq: 'garage_inventor',     levelReq: 150 },
+  { id: 'hobbyist_engineer',      name: 'Hobbyist Engineer',     path: 'garage',    basePay: 31,     baseXp: 12, prevReq: 'electronics_repair',  levelReq: 40  },
+  { id: 'garage_inventor',        name: 'Garage Inventor',       path: 'garage',    basePay: 90,     baseXp: 14, prevReq: 'hobbyist_engineer',   levelReq: 80  },
+  { id: 'independent_researcher', name: 'Independent Researcher',path: 'garage',    basePay: 286,    baseXp: 17, prevReq: 'garage_inventor',     levelReq: 150 },
 
   // ── THE ACADEMY (Science — unlocks at Electronics Repair lv30) ───────────
-  { id: 'lab_assistant',          name: 'Lab Assistant',         path: 'academy',   basePay: 55,     baseXp: 14, prevReq: 'electronics_repair',  levelReq: 30  },
-  { id: 'research_associate',     name: 'Research Associate',    path: 'academy',   basePay: 120,    baseXp: 18, prevReq: 'lab_assistant',       levelReq: 25  },
-  { id: 'research_scientist',     name: 'Research Scientist',    path: 'academy',   basePay: 280,    baseXp: 25, prevReq: 'research_associate',  levelReq: 60  },
-  { id: 'senior_researcher',      name: 'Senior Researcher',     path: 'academy',   basePay: 650,    baseXp: 36, prevReq: 'research_scientist',  levelReq: 130 },
-  { id: 'department_chair',       name: 'Department Chair',      path: 'academy',   basePay: 1500,   baseXp: 52, prevReq: 'senior_researcher',   levelReq: 230 },
+  { id: 'lab_assistant',          name: 'Lab Assistant',         path: 'academy',   basePay: 20,     baseXp: 14, prevReq: 'electronics_repair',  levelReq: 30  },
+  { id: 'research_associate',     name: 'Research Associate',    path: 'academy',   basePay: 40,     baseXp: 18, prevReq: 'lab_assistant',       levelReq: 25  },
+  { id: 'research_scientist',     name: 'Research Scientist',    path: 'academy',   basePay: 90,     baseXp: 25, prevReq: 'research_associate',  levelReq: 60  },
+  { id: 'senior_researcher',      name: 'Senior Researcher',     path: 'academy',   basePay: 240,    baseXp: 36, prevReq: 'research_scientist',  levelReq: 130 },
+  { id: 'department_chair',       name: 'Department Chair',      path: 'academy',   basePay: 700,    baseXp: 52, prevReq: 'senior_researcher',   levelReq: 230 },
 
   // ── THE CORPS (Military — unlocks at Hobbyist Engineer lv25) ─────────────
-  { id: 'corps_cadet',            name: 'Space Corps Cadet',     path: 'corps',     basePay: 60,     baseXp: 13, prevReq: 'hobbyist_engineer',   levelReq: 25  },
-  { id: 'flight_officer',         name: 'Flight Officer',        path: 'corps',     basePay: 140,    baseXp: 17, prevReq: 'corps_cadet',         levelReq: 25  },
-  { id: 'squadron_leader',        name: 'Squadron Leader',       path: 'corps',     basePay: 340,    baseXp: 24, prevReq: 'flight_officer',      levelReq: 60  },
-  { id: 'wing_commander',         name: 'Wing Commander',        path: 'corps',     basePay: 800,    baseXp: 35, prevReq: 'squadron_leader',     levelReq: 130 },
-  { id: 'fleet_admiral',          name: 'Fleet Admiral',         path: 'corps',     basePay: 1800,   baseXp: 50, prevReq: 'wing_commander',      levelReq: 230 },
+  { id: 'corps_cadet',            name: 'Space Corps Cadet',     path: 'corps',     basePay: 55,     baseXp: 13, prevReq: 'hobbyist_engineer',   levelReq: 25  },
+  { id: 'flight_officer',         name: 'Flight Officer',        path: 'corps',     basePay: 110,    baseXp: 17, prevReq: 'corps_cadet',         levelReq: 25  },
+  { id: 'squadron_leader',        name: 'Squadron Leader',       path: 'corps',     basePay: 260,    baseXp: 24, prevReq: 'flight_officer',      levelReq: 60  },
+  { id: 'wing_commander',         name: 'Wing Commander',        path: 'corps',     basePay: 700,    baseXp: 35, prevReq: 'squadron_leader',     levelReq: 130 },
+  { id: 'fleet_admiral',          name: 'Fleet Admiral',         path: 'corps',     basePay: 2000,   baseXp: 50, prevReq: 'wing_commander',      levelReq: 230 },
 
   // ── THE SYNDICATE (Corporate — unlocks at Garage Inventor lv20) ──────────
-  { id: 'field_agent',            name: 'Field Agent',           path: 'syndicate', basePay: 65,     baseXp: 14, prevReq: 'garage_inventor',     levelReq: 20  },
-  { id: 'ops_manager',            name: 'Operations Manager',    path: 'syndicate', basePay: 175,    baseXp: 19, prevReq: 'field_agent',         levelReq: 25  },
-  { id: 'division_director',      name: 'Division Director',     path: 'syndicate', basePay: 420,    baseXp: 27, prevReq: 'ops_manager',         levelReq: 60  },
-  { id: 'vp_operations',          name: 'VP of Operations',      path: 'syndicate', basePay: 980,    baseXp: 40, prevReq: 'division_director',   levelReq: 130 },
-  { id: 'syndicate_ceo',          name: 'Syndicate CEO',         path: 'syndicate', basePay: 2200,   baseXp: 58, prevReq: 'vp_operations',       levelReq: 230 },
+  { id: 'field_agent',            name: 'Field Agent',           path: 'syndicate', basePay: 165,    baseXp: 14, prevReq: 'garage_inventor',     levelReq: 20  },
+  { id: 'ops_manager',            name: 'Operations Manager',    path: 'syndicate', basePay: 330,    baseXp: 19, prevReq: 'field_agent',         levelReq: 25  },
+  { id: 'division_director',      name: 'Division Director',     path: 'syndicate', basePay: 780,    baseXp: 27, prevReq: 'ops_manager',         levelReq: 60  },
+  { id: 'vp_operations',          name: 'VP of Operations',      path: 'syndicate', basePay: 2050,   baseXp: 40, prevReq: 'division_director',   levelReq: 130 },
+  { id: 'syndicate_ceo',          name: 'Syndicate CEO',         path: 'syndicate', basePay: 5800,   baseXp: 58, prevReq: 'vp_operations',       levelReq: 230 },
 
   // ── THE ASCENDED (post-rebirth — unlocks after Independent Researcher lv50) ─
   { id: 'xenolinguist',           name: 'Xenolinguist',          path: 'ascended',  basePay: 8000,   baseXp: 75, prevReq: 'independent_researcher', levelReq: 50, postRebirth: true },
@@ -389,46 +494,47 @@ const CAREERS = [
 ];
 
 const PATH_META = {
-  garage:    { label: 'The Garage',    desc: 'Self-taught. Scrappy. Starting from zero.',           color: '#8fb8ff' },
-  academy:   { label: 'The Academy',   desc: 'Institutions of science and structured discovery.',   color: '#7eda9e' },
-  corps:     { label: 'The Corps',     desc: 'Space Force. Discipline, rank, and command.',         color: '#f0a878' },
-  syndicate: { label: 'The Syndicate', desc: 'Corporate power, strategy, and influence.',           color: '#f0c878' },
-  ascended:  { label: 'The Ascended',  desc: 'Post-rebirth. Cosmic awareness unlocked.',            color: '#c89eff' },
+  garage:    { label: 'The Garage',    desc: 'Independent work. No degree, no rules — just results.',          color: '#8fb8ff' },
+  academy:   { label: 'The Academy',   desc: 'Research labs and universities. Slow to start, big payoff.',     color: '#7eda9e' },
+  corps:     { label: 'The Corps',     desc: 'Military structure. Rank up fast, earn more with every step.',   color: '#f0a878' },
+  syndicate: { label: 'The Syndicate', desc: 'High-risk, high-reward. The best SC rates in the game.',         color: '#f0c878' },
+  ascended:  { label: 'The Ascended',  desc: 'Unlocks after your first rebirth. Something has changed in you.',color: '#c89eff' },
 };
 
 // Skills
 const SKILLS = [
   // Fundamentals
-  { id: 'focus', name: 'Focus', category: 'Fundamentals', effect: 'XP gain on active job & skill', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
-  { id: 'ingenuity', name: 'Ingenuity', category: 'Fundamentals', effect: 'SC from all jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
-  { id: 'endurance', name: 'Endurance', category: 'Fundamentals', effect: 'Slower aging', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: null },
-  { id: 'memory', name: 'Memory', category: 'Fundamentals', effect: 'Cosmic Insight gain on rebirth', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
+  { id: 'focus', name: 'Focus', category: 'Fundamentals', effect: '+1% XP/lv on your active job & skill', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
+  { id: 'ingenuity', name: 'Ingenuity', category: 'Fundamentals', effect: '+1% SC/lv from every job', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
+  { id: 'endurance', name: 'Endurance', category: 'Fundamentals', effect: '+0.5% lifespan/lv — live longer each loop', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: null },
+  { id: 'memory', name: 'Memory', category: 'Fundamentals', effect: '+2% Cosmic Insight/lv earned on rebirth', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
+  { id: 'cryonics', name: 'Cryonics', category: 'Fundamentals', effect: '+2% Cryostasis lifespan bonus/lv', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
 
   // Hands-On
-  { id: 'dexterity', name: 'Dexterity', category: 'Hands-On', effect: 'XP on Garage & Industry jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
-  { id: 'mechanical_aptitude', name: 'Mechanical Aptitude', category: 'Hands-On', effect: 'SC from Garage & Industry jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
-  { id: 'tool_mastery', name: 'Tool Mastery', category: 'Hands-On', effect: 'Reduces Equipment costs', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'dexterity', name: 'Dexterity', category: 'Hands-On', effect: '+1% XP/lv for Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'mechanical_aptitude', name: 'Mechanical Aptitude', category: 'Hands-On', effect: '+1% SC/lv from Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'tool_mastery', name: 'Frugality', category: 'Hands-On', effect: 'Reduces SC/day cost of all purchases', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
 
   // Theoretical
-  { id: 'theory', name: 'Theory', category: 'Theoretical', effect: '+1% XP/lv for Academy jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
-  { id: 'mathematical_insight', name: 'Mathematical Insight', category: 'Theoretical', effect: '+1% SC/lv for Academy jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
-  { id: 'pattern_recognition', name: 'Pattern Recognition', category: 'Theoretical', effect: '+0.5% XP/lv for all skills', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'theory', name: 'Theory', category: 'Theoretical', effect: '+1% XP/lv for Academy path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'mathematical_insight', name: 'Mathematical Insight', category: 'Theoretical', effect: '+1% SC/lv from Academy path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'pattern_recognition', name: 'Pattern Recognition', category: 'Theoretical', effect: '+0.5% XP/lv on all skills', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: 'lab_assistant', prevReqLvl: 1 },
 
   // Command
-  { id: 'charisma', name: 'Charisma', category: 'Command', effect: '+1% SC/lv for Syndicate & Corps jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
+  { id: 'charisma', name: 'Charisma', category: 'Command', effect: '+1% SC/lv from Corps & Syndicate jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
   { id: 'strategic_vision', name: 'Strategic Vision', category: 'Command', effect: '+1% XP/lv for Corps & Syndicate jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
-  { id: 'composure', name: 'Composure', category: 'Command', effect: '-0.5% shop costs/lv', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'flight_officer', prevReqLvl: 1 },
+  { id: 'composure', name: 'Composure', category: 'Command', effect: 'Cuts all Shop SC/day costs per level', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'flight_officer', prevReqLvl: 1 },
 
   // Cosmic (post-rebirth)
-  { id: 'resonance', name: 'Resonance', category: 'Cosmic', effect: 'XP on Ascended jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
-  { id: 'xenocognition', name: 'Xenocognition', category: 'Cosmic', effect: 'SC from Ascended jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
-  { id: 'cube_attunement', name: 'Cube Attunement', category: 'Cosmic', effect: 'Multiplies Cosmic Insight gain', effectFn: (lvl) => 1 + lvl * 0.05, postRebirth: true },
+  { id: 'resonance', name: 'Resonance', category: 'Cosmic', effect: '+2% XP/lv for Ascended path jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
+  { id: 'xenocognition', name: 'Xenocognition', category: 'Cosmic', effect: '+2% SC/lv from Ascended path jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
+  { id: 'cube_attunement', name: 'Cube Attunement', category: 'Cosmic', effect: '+5% Cosmic Insight/lv earned on rebirth', effectFn: (lvl) => 1 + lvl * 0.05, postRebirth: true },
 ];
 
 // Shop items
 const SHOP = [
   // Living Quarters (one active) — happiness controls all XP gain
-  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,        happiness: 50, effect: 'No bonus',                    bonus: {},                     exclusive: 'Living' },
+  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,        happiness: 50, effect: 'Baseline — no bonus or penalty', bonus: {},                 exclusive: 'Living' },
   { id: 'garage_house',    name: 'Suburban Garage House',  category: 'Living', cost: 30,       happiness: 60, effect: 'Focus +50%',                  bonus: { focus: 1.5 },         exclusive: 'Living' },
   { id: 'uni_housing',     name: 'University Housing',     category: 'Living', cost: 200,      happiness: 68, effect: 'Theory +50%',                 bonus: { theory: 1.5 },        exclusive: 'Living' },
   { id: 'downtown_loft',   name: 'Downtown Loft',          category: 'Living', cost: 1500,     happiness: 75, effect: 'Charisma +50%',               bonus: { charisma: 1.5 },      exclusive: 'Living' },
@@ -439,7 +545,7 @@ const SHOP = [
   { id: 'cube_sanctum',    name: 'Cube-Resonant Sanctum',  category: 'Living', cost: 15000000, happiness: 100,effect: 'Cosmic skills +200%',         bonus: { cosmic: 3 },          exclusive: 'Living', postRebirth: true },
 
   // Equipment (multiple active)
-  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Default starter tools', bonus: {} },
+  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Free starter kit — already equipped', bonus: {} },
   { id: 'soldering_station', name: 'Soldering Station', category: 'Equipment', cost: 25, effect: 'Dexterity +50%', bonus: { dexterity: 1.5 } },
   { id: 'lab_bench', name: 'Lab Bench', category: 'Equipment', cost: 250, effect: 'Theory +50%', bonus: { theory: 1.5 } },
   { id: 'cad_workstation', name: 'CAD Workstation', category: 'Equipment', cost: 2200, effect: 'Mechanical Aptitude +75%', bonus: { mechanical_aptitude: 1.75 } },
@@ -456,8 +562,138 @@ const SHOP = [
   { id: 'journals', name: 'Trade Journals', category: 'Misc', cost: 350, effect: 'Pattern Recognition +30%', bonus: { pattern_recognition: 1.3 } },
   { id: 'sleep_opt', name: 'Sleep Optimization', category: 'Misc', cost: 4500, effect: 'All XP +20%', bonus: { all_xp: 1.2 } },
   { id: 'telescope', name: 'Astronomy Telescope', category: 'Misc', cost: 1200, effect: 'Memory +75%', bonus: { memory: 1.75 } },
+  { id: 'cryostasis', name: 'Cryostasis Pod', category: 'Misc', cost: 35000, effect: 'Lifespan ×1.5 — boosted by Cryonics skill', bonus: { cryo: 1.5 } },
   { id: 'the_cube', name: 'The Cube', category: 'Misc', cost: 0, effect: 'Cosmic Insight +50%/day passive', bonus: { insight_passive: 1.5 }, postRebirth: true },
 ];
+
+// ============================================================
+// STORY EVENTS
+// ============================================================
+const STORY_EVENTS = [
+  // Age gates
+  { id: 'age_18',  check: s => Math.floor(s.ageDays/365) >= 18, msg: "You're 18. The garage feels more workshop than hiding place tonight. Something is beginning." },
+  { id: 'age_25',  check: s => Math.floor(s.ageDays/365) >= 25, msg: "Quarter century. You've worn through three workbenches and lost count of the coffee mugs." },
+  { id: 'age_40',  check: s => Math.floor(s.ageDays/365) >= 40, msg: "Forty years in. The stars haven't moved — but your understanding of them has." },
+  { id: 'age_60',  check: s => Math.floor(s.ageDays/365) >= 60, msg: "Sixty. Whatever you were trying to prove, you've proved it — even if no one else knows yet." },
+  // Career paths entered
+  { id: 'enter_academy',   check: s => (s.careers.lab_assistant?.level   || 0) >= 1, msg: "The Academy badge feels strange on your chest. Like wearing someone else's future." },
+  { id: 'enter_corps',     check: s => (s.careers.corps_cadet?.level     || 0) >= 1, msg: "The Corps moves differently than the Garage — less chaos, more consequence." },
+  { id: 'enter_syndicate', check: s => (s.careers.field_agent?.level     || 0) >= 1, msg: "The Syndicate doesn't ask where you've been. Only what you can deliver." },
+  // Career depth
+  { id: 'career_lv10',  check: s => Object.values(s.careers).some(c => c.level >= 10),  msg: "Level 10. Something clicked. The motions are becoming intuition." },
+  { id: 'career_lv50',  check: s => Object.values(s.careers).some(c => c.level >= 50),  msg: "Fifty levels deep. You've stopped noticing the hours." },
+  { id: 'career_lv100', check: s => Object.values(s.careers).some(c => c.level >= 100), msg: "Level 100. You dream about this now. That can't be normal." },
+  { id: 'career_lv200', check: s => Object.values(s.careers).some(c => c.level >= 200), msg: "Level 200. A number that shouldn't mean anything. It means everything." },
+  // Skill depth
+  { id: 'skill_lv10', check: s => Object.values(s.skills).some(sk => sk.level >= 10), msg: "You're improving faster than expected. Something about this life is accelerating." },
+  { id: 'skill_lv30', check: s => Object.values(s.skills).some(sk => sk.level >= 30), msg: "Thirty skill levels. The gap between you and ordinary is getting hard to ignore." },
+  // SC milestones
+  { id: 'sc_10k',  check: s => s.sc >= 10000,    msg: "10,000 SC. You buy coffee without checking the price. Small victories." },
+  { id: 'sc_500k', check: s => s.sc >= 500000,   msg: "Half a million SC. The garage is still home — now it's home by choice." },
+  { id: 'sc_10m',  check: s => s.sc >= 10000000, msg: "Ten million SC. You've stopped thinking about money as a constraint. It's just fuel now." },
+  // Post-rebirth
+  { id: 'rebirth_back',    check: s => s.hasReborn && Math.floor(s.ageDays/365) <= 15,  msg: "Back in the garage. The workbench is exactly as you left it. It shouldn't be." },
+  { id: 'rebirth_memory',  check: s => s.hasReborn && Math.floor(s.ageDays/365) >= 25,  msg: "Twenty-five again, and you remember being seventy. You don't know what to do with that." },
+  { id: 'enter_ascended',  check: s => (s.careers.xenolinguist?.level    || 0) >= 1,    msg: "Xenolinguist. The word sits strangely in your mouth — but you understand it. You always have." },
+  { id: 'cosmic_100',      check: s => s.cosmicInsight >= 100,                           msg: "One hundred Cosmic Insight. The world looks different at this resolution." },
+];
+
+// ============================================================
+// ACHIEVEMENTS
+// ============================================================
+const ACHIEVEMENTS = [
+  // Career depth
+  { id: 'first_level',  icon: '▶', name: 'Off the Ground',  desc: 'Level up any career for the first time',    check: s => Object.values(s.careers).some(c => c.level >= 1)   },
+  { id: 'career_10',   icon: '↑', name: 'Getting Good',    desc: 'Reach level 10 in any career',              check: s => Object.values(s.careers).some(c => c.level >= 10)  },
+  { id: 'career_50',   icon: '⭐', name: 'Veteran',         desc: 'Reach level 50 in any career',              check: s => Object.values(s.careers).some(c => c.level >= 50)  },
+  { id: 'career_100',  icon: '⊹', name: 'Century',         desc: 'Reach level 100 in any career',             check: s => Object.values(s.careers).some(c => c.level >= 100) },
+  { id: 'career_200',  icon: '∞', name: 'Unstoppable',     desc: 'Reach level 200 in any career',             check: s => Object.values(s.careers).some(c => c.level >= 200) },
+  // Paths explored
+  { id: 'enter_academy',   icon: '◈', name: 'Admitted',    desc: 'Enter The Academy career path',             check: s => (s.careers.lab_assistant?.level  || 0) >= 1 },
+  { id: 'enter_corps',     icon: '◈', name: 'Enlisted',    desc: 'Join The Corps career path',                check: s => (s.careers.corps_cadet?.level    || 0) >= 1 },
+  { id: 'enter_syndicate', icon: '◈', name: 'Connected',   desc: 'Join The Syndicate career path',            check: s => (s.careers.field_agent?.level    || 0) >= 1 },
+  { id: 'all_paths',       icon: '◉', name: 'Path Finder', desc: 'Work careers in all 4 pre-rebirth paths',  check: s => (s.careers.lab_assistant?.level || 0) >= 1 && (s.careers.corps_cadet?.level || 0) >= 1 && (s.careers.field_agent?.level || 0) >= 1 },
+  // Skills
+  { id: 'skill_10',  icon: '◆', name: 'Quick Learner', desc: 'Train any skill to level 10',                  check: s => Object.values(s.skills).some(sk => sk.level >= 10) },
+  { id: 'skill_25',  icon: '◆', name: 'Dedicated',     desc: 'Train any skill to level 25',                  check: s => Object.values(s.skills).some(sk => sk.level >= 25) },
+  { id: 'polymath',  icon: '◆', name: 'Polymath',      desc: 'Have 3 different skills at level 10 or above', check: s => Object.values(s.skills).filter(sk => sk.level >= 10).length >= 3 },
+  // Money
+  { id: 'sc_1k',  icon: '◇', name: 'Pocket Change', desc: 'Accumulate 1,000 SC',     check: s => s.sc >= 1000    },
+  { id: 'sc_50k', icon: '◇', name: 'Comfortable',   desc: 'Accumulate 50,000 SC',    check: s => s.sc >= 50000   },
+  { id: 'sc_1m',  icon: '◇', name: 'Loaded',        desc: 'Accumulate 1,000,000 SC', check: s => s.sc >= 1000000 },
+  // Shop
+  { id: 'housing_up',      icon: '▲', name: 'Moving Up',  desc: 'Upgrade your Living Quarters above Cramped',  check: s => SHOP.some(i => i.category === 'Living' && i.id !== 'cramped_apt' && s.shop[i.id]) },
+  { id: 'three_equipment', icon: '▲', name: 'Tooled Up',  desc: 'Have 3 Equipment items active simultaneously', check: s => SHOP.filter(i => i.category === 'Equipment' && s.shop[i.id]).length >= 3 },
+  // Rebirth
+  { id: 'first_rebirth', icon: '↻', name: 'The Loop',        desc: 'Complete your first rebirth',  check: s => s.hasReborn },
+  { id: 'third_rebirth', icon: '↻', name: 'Seasoned Looper', desc: 'Begin your fourth life',        check: s => (s.lifeCount || 1) >= 4 },
+  { id: 'insight_100',   icon: '✦', name: 'Cosmic',          desc: 'Reach 100 Cosmic Insight',      check: s => s.cosmicInsight >= 100 },
+  // Life
+  { id: 'age_65', icon: '◌', name: 'Lived Well', desc: 'Reach age 65 in any life', check: s => Math.floor(s.ageDays / 365) >= 65 },
+];
+
+// ============================================================
+// SIGNAL EVENTS (Codex signal log — unlock once, persist across rebirths)
+// ============================================================
+const SIGNAL_EVENTS = [
+  { id: 'sig_01', check: s => Math.floor(s.ageDays/365) >= 16,
+    title: 'SIGNAL — Unknown Origin',  freq: '4.2 GHz',
+    msg: 'Intermittent. Repeating at irregular intervals. Pattern unclear. Most likely equipment noise.' },
+  { id: 'sig_02', check: s => Object.values(s.careers).some(c => c.level >= 20),
+    title: 'SIGNAL — Sector Unknown',  freq: '4.2 GHz',
+    msg: 'Same frequency. Different pattern. You ran the numbers three times. Not equipment noise.' },
+  { id: 'sig_03', check: s => Object.values(s.careers).some(c => c.level >= 50),
+    title: 'ANOMALY — Local Space',    freq: '7.7 GHz',
+    msg: 'A second frequency. Both signals share a mathematical relationship you cannot yet name.' },
+  { id: 'sig_04', check: s => s.sc >= 500000,
+    title: 'SIGNAL — Deep Space',      freq: '4.2 GHz',
+    msg: 'A third variation. The pattern changed after you upgraded the equipment. As if it responded.' },
+  { id: 'sig_05', check: s => Object.values(s.careers).some(c => c.level >= 100),
+    title: 'ANOMALY — Proxima Region', freq: '∞ GHz',
+    msg: 'The pattern is complete. You do not know what it means. You know it is meant for you.' },
+];
+
+// ============================================================
+// LORE FRAGMENTS (Codex — unlock at milestones, persist across rebirths)
+// ============================================================
+const LORE_FRAGMENTS = [
+  { id: 'lore_beginning', check: s => Math.floor(s.ageDays/365) >= 20,
+    title: 'Fragment I — The Garage Years',
+    text: 'What drives a person to keep building things no one asked for? Curiosity, maybe. Or something older. A feeling that the work itself is the point — that the answer is somewhere inside the next iteration, the next version, the next attempt.' },
+  { id: 'lore_signals', check: s => Object.values(s.careers).some(c => c.level >= 30),
+    title: 'Fragment II — The Frequencies',
+    text: 'You have been cataloguing the signals for months. They are not random. They are not natural. They have structure — mathematical structure — and it is growing more complex the more you look. Something is transmitting. Something that knows you are listening.' },
+  { id: 'lore_rebirth', check: s => s.hasReborn,
+    title: 'Fragment III — Something Is Wrong With Time',
+    text: 'The first time you understood what was happening, you didn\'t have words for it. You still don\'t. The memories are too clean. Too complete. No one should remember being seventy when they are fourteen. No one should know the weight of a workbench they have not yet owned.' },
+  { id: 'lore_cube', check: s => !!s.shop?.the_cube,
+    title: 'Fragment IV — The Object',
+    text: 'Triangular. Warm to the touch despite being left in the cold for years. No seams. No markings you can identify with certainty. And yet — you understand, without being told, what it is for. Not intellectually. Somewhere older than that.' },
+  { id: 'lore_contact', check: s => (s.careers.xenolinguist?.level || 0) >= 1,
+    title: 'Fragment V — First Contact',
+    text: 'They speak in mathematics first. Then geometry. Then something that isn\'t language at all — more like shared inference. They have been watching. Not patiently. With interest. They have been watching for a very long time.' },
+  { id: 'lore_test', check: s => s.cosmicInsight >= 200,
+    title: 'Fragment VI — The Test',
+    text: 'The loop isn\'t punishment. It isn\'t reward. It is evaluation — of a particular kind of mind. One that keeps going without being told to. One that builds without permission. They needed to be sure. That is all they have ever said about it. They needed to be sure.' },
+  { id: 'lore_many', check: s => (s.lifeCount || 1) >= 3,
+    title: 'Fragment VII — The Others',
+    text: 'You are not the first. The signals you catalogued in your early years — those were not from them. Those were from others like you, in other loops, on other worlds. They all found the frequencies. They all built something. Not all of them made it this far.' },
+];
+
+// ============================================================
+// BUILDINGS (passive income — persist through rebirth, PKR-scale costs)
+// ============================================================
+const BUILDINGS = [
+  { id: 'research_station', name: 'Research Station',    desc: 'An automated lab running experiments and analysis around the clock.', baseCost: 5e8,   income: 1500,   costGrowthFactor: 1.15 },
+  { id: 'orbital_platform', name: 'Orbital Platform',    desc: 'Zero-gravity manufacturing and long-range signal monitoring.', baseCost: 5e9,   income: 18000,  costGrowthFactor: 1.12 },
+  { id: 'dyson_segment',    name: 'Dyson Array Segment', desc: 'One piece of an impossibly large structure. Each segment compounds the last.', baseCost: 5e10,  income: 200000, costGrowthFactor: 1.10 },
+];
+
+const freshBuildings = () => {
+  const obj = {};
+  BUILDINGS.forEach(b => { obj[b.id] = { count: 0, nextCost: b.baseCost }; });
+  return obj;
+};
 
 // ============================================================
 // COSMIC INSIGHT MULTIPLIER
@@ -480,12 +716,12 @@ const calcInsightGain = (state) => {
 // ============================================================
 const initialCareers = () => {
   const obj = {};
-  CAREERS.forEach(c => { obj[c.id] = { level: 0, xp: 0 }; });
+  CAREERS.forEach(c => { obj[c.id] = { level: 0, xp: 0, maxLevel: 0 }; });
   return obj;
 };
 const initialSkills = () => {
   const obj = {};
-  SKILLS.forEach(s => { obj[s.id] = { level: 0, xp: 0 }; });
+  SKILLS.forEach(s => { obj[s.id] = { level: 0, xp: 0, maxLevel: 0 }; });
   return obj;
 };
 
@@ -500,6 +736,17 @@ const freshState = (insight = 0, hasReborn = false) => ({
   skills: initialSkills(),
   shop: { cramped_apt: true, hand_tools: true },
   totalDays: 0,
+  autoPromote: false,
+  autoLearn: false,
+  skillSkip: {},
+  storyLog: [],
+  firedEvents: {},
+  lifeCount: 1,
+  stats: { peakCosmicInsight: 0 },
+  achievements: {},
+  codexSignals: {},
+  codexLore: {},
+  buildings: freshBuildings(),
 });
 
 // ============================================================
@@ -518,9 +765,15 @@ function App() {
           return {
             ...fresh,
             ...parsed,
-            careers: { ...fresh.careers, ...parsed.careers },
-            skills:  { ...fresh.skills,  ...parsed.skills  },
-            shop:    parsed.shop || fresh.shop,
+            careers:     { ...fresh.careers, ...parsed.careers },
+            skills:      { ...fresh.skills,  ...parsed.skills  },
+            shop:        parsed.shop || fresh.shop,
+            skillSkip:    parsed.skillSkip    || {},
+            autoPromote:  parsed.autoPromote  || false,
+            autoLearn:    parsed.autoLearn    || false,
+            codexSignals: parsed.codexSignals || {},
+            codexLore:    parsed.codexLore    || {},
+            buildings:    { ...freshBuildings(), ...(parsed.buildings || {}) },
           };
         }
       }
@@ -533,6 +786,10 @@ function App() {
   const [showDeath, setShowDeath] = useState(false);
   const [pendingInsight, setPendingInsight] = useState(0);
   const [introSeen, setIntroSeen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [tickerMsg, setTickerMsg] = useState('');
+  const tickerQueueRef   = useRef([]);
+  const prevStoryLenRef  = useRef(0);
 
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -566,6 +823,7 @@ function App() {
     const resonance = SKILLS.find(x => x.id === 'resonance').effectFn(skillLevel('resonance'));
     const xenocog = SKILLS.find(x => x.id === 'xenocognition').effectFn(skillLevel('xenocognition'));
     const toolMastery = SKILLS.find(x => x.id === 'tool_mastery').effectFn(skillLevel('tool_mastery'));
+    const cryonics    = SKILLS.find(x => x.id === 'cryonics').effectFn(skillLevel('cryonics'));
 
     // Shop bonuses aggregated
     const shopBonus = { focus: 1, ingenuity: 1, theory: 1, charisma: 1, dexterity: 1, mechanical_aptitude: 1,
@@ -584,16 +842,21 @@ function App() {
     SHOP.forEach(item => {
       if (item.category === 'Living' && s.shop[item.id] && item.happiness != null) happiness = item.happiness;
     });
-    const happinessMult = happiness / 100;
+    const happinessMult = happiness / 50;
+
+    // Cryostasis lifespan multiplier (base × cryonics skill boost)
+    const cryoBase = s.shop?.cryostasis ? (shopBonus.cryo || 1.5) : 1;
+    const cryoMult = cryoBase === 1 ? 1 : cryoBase * cryonics;
 
     return {
       cosmicMult,
       happiness,
       happinessMult,
+      cryoMult,
       skills: { focus, ingenuity, endurance, dexterity, mechanical_aptitude: mechAptitude,
                 theory, mathematical_insight: mathInsight, pattern_recognition: patternRec,
                 charisma, strategic_vision: stratVision, composure, resonance,
-                xenocognition: xenocog, tool_mastery: toolMastery },
+                xenocognition: xenocog, tool_mastery: toolMastery, cryonics },
       shop: shopBonus,
     };
   };
@@ -605,6 +868,8 @@ function App() {
     if (job.path === 'corps')     m *= mults.skills.strategic_vision;
     if (job.path === 'syndicate') m *= mults.skills.charisma;
     if (job.path === 'ascended')  m *= mults.skills.resonance;
+    const maxLv = s.careers[job.id]?.maxLevel || 0;
+    if (maxLv > 0) m *= (1 + maxLv / 10);
     return m;
   };
   const jobPayMult = (s, mults, job) => {
@@ -622,6 +887,8 @@ function App() {
     if (bonus) m *= bonus;
     if (mults.shop.all) m *= mults.shop.all;
     if (skill.category === 'Cosmic' && mults.shop.cosmic) m *= mults.shop.cosmic;
+    const maxLv = s.skills[skill.id]?.maxLevel || 0;
+    if (maxLv > 0) m *= (1 + maxLv / 10);
     return m;
   };
   const shopDailyCost = (s, mults) => {
@@ -629,13 +896,32 @@ function App() {
     SHOP.forEach(item => {
       if (s.shop[item.id]) {
         let cost = item.cost;
-        if (item.category === 'Equipment') cost *= mults.skills.tool_mastery;
+        cost *= mults.skills.tool_mastery;
         cost *= mults.skills.composure;
         total += cost;
       }
     });
     return total;
   };
+
+  // ----- story ticker -----
+  useEffect(() => {
+    const log = state.storyLog || [];
+    if (log.length > prevStoryLenRef.current) {
+      const newMsgs = log.slice(prevStoryLenRef.current).map(e => e.msg);
+      tickerQueueRef.current.push(...newMsgs);
+      prevStoryLenRef.current = log.length;
+    }
+  }, [(state.storyLog || []).length]);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      const q = tickerQueueRef.current;
+      if (q.length > 3) tickerQueueRef.current = q.slice(-1); // too far behind — jump to latest
+      if (tickerQueueRef.current.length > 0) setTickerMsg(tickerQueueRef.current.shift());
+    }, 7000);
+    return () => clearInterval(t);
+  }, []);
 
   // ----- save -----
   useEffect(() => {
@@ -669,12 +955,12 @@ function App() {
           if (job) {
             const cur = s.careers[job.id];
             const xpGain = job.baseXp * jobXpMult(s, mults, job);
-            const payGain = job.basePay * jobPayMult(s, mults, job) * (1 + cur.level * 0.01);
+            const payGain = job.basePay * jobPayMult(s, mults, job) * (1 + Math.log10(cur.level + 1));
             s.sc += payGain;
             const newXp = cur.xp + xpGain;
             const need = xpToLevel(cur.level);
             if (newXp >= need) {
-              s.careers[job.id] = { level: cur.level + 1, xp: newXp - need };
+              s.careers[job.id] = { ...cur, level: cur.level + 1, xp: newXp - need };
             } else {
               s.careers[job.id] = { ...cur, xp: newXp };
             }
@@ -688,9 +974,40 @@ function App() {
             const newXp = cur.xp + xpGain;
             const need = xpToLevel(cur.level);
             if (newXp >= need) {
-              s.skills[skill.id] = { level: cur.level + 1, xp: newXp - need };
+              s.skills[skill.id] = { ...cur, level: cur.level + 1, xp: newXp - need };
             } else {
               s.skills[skill.id] = { ...cur, xp: newXp };
+            }
+          }
+
+          // Auto-promote: switch to next career when its level req is met
+          if (s.autoPromote) {
+            const next = CAREERS.find(c =>
+              c.prevReq === s.activeJob &&
+              (!c.postRebirth || s.hasReborn) &&
+              s.careers[s.activeJob]?.level >= c.levelReq
+            );
+            if (next) s.activeJob = next.id;
+          }
+
+          // Auto-learn: switch to unlocked non-skipped skill closest to leveling up
+          if (s.autoLearn) {
+            const candidates = SKILLS.filter(sk => {
+              if (s.skillSkip[sk.id]) return false;
+              if (sk.postRebirth && !s.hasReborn) return false;
+              if (sk.prevReq) {
+                const prev = s.careers[sk.prevReq];
+                if (!prev || prev.level < (sk.prevReqLvl || 1)) return false;
+              }
+              return true;
+            });
+            if (candidates.length > 0) {
+              const best = candidates.reduce((a, b) => {
+                const remA = xpToLevel(s.skills[a.id].level) - s.skills[a.id].xp;
+                const remB = xpToLevel(s.skills[b.id].level) - s.skills[b.id].xp;
+                return remA <= remB ? a : b;
+              });
+              s.activeSkill = best.id;
             }
           }
 
@@ -698,14 +1015,70 @@ function App() {
           const dailyCost = shopDailyCost(s, mults);
           s.sc -= dailyCost;
 
-          // Passive Cosmic Insight from The Cube (small per-day trickle)
-          if (s.shop.the_cube && s.hasReborn) {
-            // accumulated at rebirth time; this is just visual feedback in late game
-            // We'll bonus this into calcInsightGain via the cube shop flag
+          // Bankruptcy: can't go below 0 — strip paid items and drop to cramped apartment
+          if (s.sc < 0) {
+            s.sc = 0;
+            const stripped = { cramped_apt: true, hand_tools: true };
+            SHOP.forEach(item => {
+              if (item.cost === 0 && item.id !== 'cramped_apt' && item.id !== 'hand_tools') {
+                if (s.shop[item.id]) stripped[item.id] = true;
+              }
+            });
+            s.shop = stripped;
           }
 
+          // Achievements — persist across rebirths
+          ACHIEVEMENTS.forEach(ach => {
+            if (!s.achievements[ach.id] && ach.check(s)) {
+              s.achievements = { ...s.achievements, [ach.id]: true };
+              s.storyLog = [...(s.storyLog || []), {
+                msg: `⊹ Achievement unlocked: ${ach.name} — ${ach.desc}`,
+                ageY: Math.floor(s.ageDays / DAYS_PER_YEAR),
+                life: s.lifeCount || 1,
+                achievement: true,
+              }];
+            }
+          });
+
+          // Story events — fire once per life, add to log
+          STORY_EVENTS.forEach(ev => {
+            if (!s.firedEvents[ev.id] && ev.check(s)) {
+              s.firedEvents = { ...s.firedEvents, [ev.id]: true };
+              s.storyLog = [...(s.storyLog || []), {
+                msg: ev.msg,
+                ageY: Math.floor(s.ageDays / DAYS_PER_YEAR),
+                life: s.lifeCount || 1,
+              }];
+            }
+          });
+
+          // Building passive income
+          BUILDINGS.forEach(b => {
+            const bd = s.buildings?.[b.id];
+            if (bd && bd.count > 0) s.sc += b.income * bd.count;
+          });
+
+          // Codex signals — unlock once, persist across rebirths
+          SIGNAL_EVENTS.forEach(ev => {
+            if (!s.codexSignals?.[ev.id] && ev.check(s)) {
+              s.codexSignals = { ...(s.codexSignals || {}), [ev.id]: true };
+            }
+          });
+
+          // Lore fragments — unlock once, persist across rebirths
+          LORE_FRAGMENTS.forEach(frag => {
+            if (!s.codexLore?.[frag.id] && frag.check(s)) {
+              s.codexLore = { ...(s.codexLore || {}), [frag.id]: true };
+              s.storyLog = [...(s.storyLog || []), {
+                msg: `◈ Codex unlocked: ${frag.title}`,
+                ageY: Math.floor(s.ageDays / DAYS_PER_YEAR),
+                life: s.lifeCount || 1,
+              }];
+            }
+          });
+
           // Death check
-          if (s.ageDays >= DEATH_AGE_DAYS) {
+          if (s.ageDays >= DEATH_AGE_DAYS * mults.cryoMult) {
             const gained = calcInsightGain(s);
             setPendingInsight(gained);
             setShowDeath(true);
@@ -723,6 +1096,44 @@ function App() {
   // ----- actions -----
   const setActiveJob = (id) => setState(s => ({ ...s, activeJob: id }));
   const setActiveSkill = (id) => setState(s => ({ ...s, activeSkill: id }));
+  const toggleAutoPromote = () => setState(s => ({ ...s, autoPromote: !s.autoPromote }));
+  const toggleAutoLearn   = () => setState(s => ({ ...s, autoLearn:   !s.autoLearn   }));
+  const toggleSkillSkip   = (id) => setState(s => ({ ...s, skillSkip: { ...s.skillSkip, [id]: !s.skillSkip[id] } }));
+  const buyBuilding = (b) => setState(s => {
+    const bd = s.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+    if (s.sc < bd.nextCost) return s;
+    return {
+      ...s,
+      sc: s.sc - bd.nextCost,
+      buildings: { ...s.buildings, [b.id]: { count: bd.count + 1, nextCost: Math.floor(bd.nextCost * b.costGrowthFactor) } },
+    };
+  });
+  const exportSave = () => {
+    try {
+      const data = localStorage.getItem('stellar_ascent_save');
+      if (!data) return alert('No save data found. Play a bit first!');
+      const blob = new Blob([btoa(unescape(encodeURIComponent(data)))], { type: 'text/plain' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `stellar-ascent-${Date.now()}.sav`; a.click();
+      URL.revokeObjectURL(url);
+    } catch(e) { alert('Export failed: ' + e.message); }
+  };
+  const importSave = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const decoded = decodeURIComponent(escape(atob(ev.target.result.trim())));
+        const parsed  = JSON.parse(decoded);
+        if (!parsed.careers) throw new Error('Not a valid save');
+        localStorage.setItem('stellar_ascent_save', decoded);
+        window.location.reload();
+      } catch(err) { alert('Invalid save file: ' + err.message); }
+    };
+    reader.readAsText(file);
+  };
   const buyShop = (item) => {
     setState(s => {
       const newShop = { ...s.shop };
@@ -741,7 +1152,24 @@ function App() {
   };
 
   const doRebirth = () => {
-    setState(s => freshState(s.cosmicInsight + pendingInsight, true));
+    setState(s => {
+      const next = freshState(s.cosmicInsight + pendingInsight, true);
+      // Carry forward the highest level ever reached for each career and skill
+      CAREERS.forEach(c => {
+        next.careers[c.id].maxLevel = Math.max(s.careers[c.id]?.maxLevel || 0, s.careers[c.id]?.level || 0);
+      });
+      SKILLS.forEach(sk => {
+        next.skills[sk.id].maxLevel = Math.max(s.skills[sk.id]?.maxLevel || 0, s.skills[sk.id]?.level || 0);
+      });
+      next.lifeCount    = (s.lifeCount || 1) + 1;
+      next.storyLog     = s.storyLog || [];
+      next.stats        = { peakCosmicInsight: Math.max(s.stats?.peakCosmicInsight || 0, s.cosmicInsight + pendingInsight) };
+      next.achievements = s.achievements || {};
+      next.codexSignals = s.codexSignals || {};
+      next.codexLore    = s.codexLore    || {};
+      next.buildings    = s.buildings    || freshBuildings();
+      return next;
+    });
     setShowDeath(false);
     showDeathRef.current = false;
     setPendingInsight(0);
@@ -761,13 +1189,14 @@ function App() {
     const job = CAREERS.find(c => c.id === state.activeJob);
     if (!job) return 0;
     const cur = state.careers[job.id];
-    return job.basePay * jobPayMult(state, mults, job) * (1 + cur.level * 0.01);
+    return job.basePay * jobPayMult(state, mults, job) * (1 + Math.log10(cur.level + 1));
   }, [state, mults]);
   const dailyExpense = useMemo(() => shopDailyCost(state, mults), [state, mults]);
 
   const ageYears = Math.floor(state.ageDays / DAYS_PER_YEAR);
   const ageDayOfYear = Math.floor(state.ageDays % DAYS_PER_YEAR);
-  const lifePct = Math.min(100, (state.ageDays / DEATH_AGE_DAYS) * 100);
+  const effectiveDeathAge = DEATH_AGE_DAYS * mults.cryoMult;
+  const lifePct = Math.min(100, (state.ageDays / effectiveDeathAge) * 100);
 
   // ----- unlocking -----
   const isCareerUnlocked = (career) => {
@@ -799,33 +1228,72 @@ function App() {
   return (
     <div>
       <div className="header">
-        <div>
-          <div className="title">⊹ Stellar Ascent</div>
-          <div className="subtitle">v0.1.4 — The Garage Years</div>
+        <div style={{display:'flex', alignItems:'center', gap:10}}>
+          <div>
+            <div className="title">⊹ Stellar Ascent</div>
+            <div className="subtitle">v0.1.6 — Depth Update</div>
+          </div>
+          <button
+            onClick={() => setShowSettings(s => !s)}
+            style={{background:'none', border:'none', color: showSettings ? '#00ff88' : '#3a5a48',
+              fontSize:16, cursor:'pointer', padding:'4px 6px', lineHeight:1,
+              transition:'color 0.15s'}}
+            title="Settings">
+            ⚙
+          </button>
         </div>
       </div>
+
+      {tickerMsg && (
+        <div className="ticker-bar">
+          <div className="ticker-dot" />
+          <div className="ticker-text" key={tickerMsg}>{tickerMsg}</div>
+        </div>
+      )}
 
       <div className="main-layout">
         <StatusBar
           state={state} mults={mults}
           dailyIncome={dailyIncome} dailyExpense={dailyExpense}
-          ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct}
+          ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct} effectiveDeathAge={effectiveDeathAge}
           speed={speed} setSpeed={setSpeed} paused={paused} setPaused={setPaused}
           hardReset={hardReset}
+          toggleAutoPromote={toggleAutoPromote} toggleAutoLearn={toggleAutoLearn}
+          exportSave={exportSave} importSave={importSave}
         />
 
         <div>
           <div className="tabs">
-            <button className={`tab ${tab === 'careers' ? 'active' : ''}`} onClick={() => setTab('careers')}>Careers</button>
-            <button className={`tab ${tab === 'skills' ? 'active' : ''}`} onClick={() => setTab('skills')}>Skills</button>
-            <button className={`tab ${tab === 'shop' ? 'active' : ''}`} onClick={() => setTab('shop')}>Shop</button>
-            <button className={`tab ${tab === 'rebirth' ? 'active' : ''}`} onClick={() => setTab('rebirth')}>Rebirth</button>
+            {[
+              { id:'careers', label:'Careers', bg:'rgba(0,60,30,0.6)',   color:'#00ff88', border:'#00aa55', glow:'rgba(0,255,136,0.15)'   },
+              { id:'skills',  label:'Skills',  bg:'rgba(50,0,90,0.6)',   color:'#bf5fff', border:'#7700bb', glow:'rgba(191,95,255,0.15)'  },
+              { id:'shop',    label:'Shop',    bg:'rgba(0,30,80,0.6)',   color:'#00aaff', border:'#0055cc', glow:'rgba(0,170,255,0.15)'   },
+              { id:'build',   label:'Build',   bg:'rgba(0,40,50,0.6)',   color:'#00ddcc', border:'#009988', glow:'rgba(0,221,204,0.15)'   },
+              { id:'rebirth', label:'Rebirth', bg:'rgba(70,30,0,0.6)',   color:'#ff8800', border:'#aa5500', glow:'rgba(255,136,0,0.15)'   },
+              { id:'story',   label:'Story',   bg:'rgba(40,0,70,0.6)',   color:'#cc88ff', border:'#8800cc', glow:'rgba(204,136,255,0.15)'  },
+              { id:'stats',   label:'Stats',   bg:'rgba(0,50,40,0.6)',   color:'#00ccaa', border:'#009988', glow:'rgba(0,204,170,0.15)'    },
+              { id:'achieve', label:'Achieve', bg:'rgba(50,35,0,0.6)',   color:'#f0c850', border:'#aa8800', glow:'rgba(240,200,80,0.15)'   },
+              { id:'codex',   label:'Codex',   bg:'rgba(20,10,50,0.6)',  color:'#aa88ff', border:'#6644cc', glow:'rgba(170,136,255,0.15)'  },
+              { id:'notes',   label:'Notes',   bg:'rgba(25,15,0,0.6)',   color:'#907830', border:'#604800', glow:'rgba(144,120,48,0.15)'   },
+            ].map(t => (
+              <button key={t.id}
+                className={`tab ${tab === t.id ? 'active' : ''}`}
+                style={tab === t.id ? {background:t.bg, color:t.color, borderColor:t.border, boxShadow:`0 0 8px ${t.glow}`} : {}}
+                onClick={() => setTab(t.id)}
+              >{t.label}</button>
+            ))}
           </div>
 
           {tab === 'careers' && <CareersTab state={state} mults={mults} setActiveJob={setActiveJob} isCareerUnlocked={isCareerUnlocked} jobXpMult={jobXpMult} jobPayMult={jobPayMult} />}
-          {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} />}
+          {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} toggleSkillSkip={toggleSkillSkip} />}
           {tab === 'shop' && <ShopTab state={state} mults={mults} buyShop={buyShop} isShopUnlocked={isShopUnlocked} />}
+          {tab === 'build' && <BuildTab state={state} buyBuilding={buyBuilding} />}
           {tab === 'rebirth' && <RebirthTab state={state} pendingInsight={calcInsightGain(state)} />}
+          {tab === 'story'   && <StoryTab storyLog={state.storyLog || []} lifeCount={state.lifeCount || 1} />}
+          {tab === 'stats'   && <StatsTab state={state} mults={mults} />}
+          {tab === 'achieve' && <AchievementsTab state={state} />}
+          {tab === 'codex'   && <CodexTab state={state} />}
+          {tab === 'notes'   && <PatchNotesTab />}
         </div>
       </div>
 
@@ -833,7 +1301,7 @@ function App() {
         <div className="death-overlay">
           <div className="intro-modal">
             <div className="intro-title">⊹ STELLAR ASCENT</div>
-            <div className="intro-subtitle">v0.1 — THE GARAGE YEARS</div>
+            <div className="intro-subtitle">v0.1.6 — DEPTH UPDATE</div>
             <div className="intro-text">
               <p>You're in your garage. Again.</p>
               <br/>
@@ -844,6 +1312,65 @@ function App() {
               <p><em>Maybe this time, you'll go further.</em></p>
             </div>
             <button className="intro-begin" onClick={() => setIntroSeen(true)}>Begin</button>
+          </div>
+        </div>
+      )}
+
+      {showSettings && (
+        <div className="death-overlay" onClick={() => setShowSettings(false)} style={{zIndex:150}}>
+          <div onClick={e => e.stopPropagation()}
+            style={{background:'rgba(8,4,20,0.98)', border:'1px solid #2a1a4a', borderRadius:10,
+              padding:'24px', minWidth:320, maxWidth:420, boxShadow:'0 8px 40px rgba(0,0,0,0.8)'}}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20}}>
+              <div style={{fontSize:14, color:'#aa88ff', fontWeight:600, textTransform:'uppercase', letterSpacing:1}}>⚙ Settings</div>
+              <button onClick={() => setShowSettings(false)}
+                style={{background:'none', border:'none', color:'#3a2a5a', fontSize:18, cursor:'pointer', padding:'0 4px'}}>✕</button>
+            </div>
+
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:11, color:'#3a2a5a', textTransform:'uppercase', letterSpacing:1, marginBottom:10}}>Save File</div>
+              <div style={{display:'flex', flexDirection:'column', gap:6}}>
+                <button onClick={() => { exportSave(); setShowSettings(false); }}
+                  style={{padding:'8px 12px', borderRadius:5, fontSize:12, textAlign:'left'}}>
+                  Export Save — download a .sav backup
+                </button>
+                <label>
+                  <button onClick={() => document.getElementById('sa-import-modal').click()}
+                    style={{width:'100%', padding:'8px 12px', borderRadius:5, fontSize:12, textAlign:'left'}}>
+                    Import Save — restore from a .sav file
+                  </button>
+                  <input id="sa-import-modal" type="file" accept=".sav,.txt"
+                    onChange={(e) => { importSave(e); setShowSettings(false); }}
+                    style={{display:'none'}} />
+                </label>
+              </div>
+            </div>
+
+            <div style={{borderTop:'1px solid #1a0a2a', marginBottom:20}} />
+
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:11, color:'#3a2a5a', textTransform:'uppercase', letterSpacing:1, marginBottom:10}}>Tutorial</div>
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <div>
+                  <div style={{fontSize:12, color:'#5a4a7a'}}>First-time tutorial</div>
+                  <div style={{fontSize:10, color:'#2a1a3a', marginTop:2}}>Not yet implemented</div>
+                </div>
+                <button disabled style={{padding:'5px 14px', borderRadius:4, fontSize:11, color:'#2a1a3a', borderColor:'#1a0a2a', cursor:'not-allowed'}}>
+                  OFF
+                </button>
+              </div>
+            </div>
+
+            <div style={{borderTop:'1px solid #1a0a2a', marginBottom:20}} />
+
+            <div>
+              <div style={{fontSize:11, color:'#3a2a5a', textTransform:'uppercase', letterSpacing:1, marginBottom:10}}>Danger Zone</div>
+              <button onClick={() => { hardReset(); setShowSettings(false); }}
+                style={{width:'100%', padding:'8px 12px', borderRadius:5, fontSize:12,
+                  color:'#ff4466', borderColor:'#4a1020', background:'rgba(40,0,15,0.6)'}}>
+                Hard Reset — wipe all progress
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -871,7 +1398,7 @@ function App() {
 // ============================================================
 // SIDEBAR
 // ============================================================
-function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, speed, setSpeed, paused, setPaused, hardReset }) {
+function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, effectiveDeathAge, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn, exportSave, importSave }) {
   const job = CAREERS.find(c => c.id === state.activeJob);
   const skill = SKILLS.find(s => s.id === state.activeSkill);
   const jobData = job ? state.careers[job.id] : null;
@@ -885,80 +1412,99 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
 
   return (
     <div className="sidebar">
-      <div className="panel">
-        <div className="sb-title">Life</div>
-        <div className="sb-big">{ageYears}<span style={{fontSize:13,color:'#6878a0',fontWeight:400}}>y </span>{ageDayOfYear}<span style={{fontSize:13,color:'#6878a0',fontWeight:400}}>d</span></div>
-        <div className="progress-wrap" style={{height:13,marginBottom:8}}>
-          <div className="progress-fill life" style={{width:`${lifePct}%`}}></div>
-          <div className="progress-text">{ageYears} / 70 years</div>
+      <div className="sidebar-card">
+        <div className="panel">
+          <div className="sb-title">Life</div>
+          <div className="sb-big">{ageYears}<span style={{fontSize:13,color:'#2a4838',fontWeight:400}}>y </span>{ageDayOfYear}<span style={{fontSize:13,color:'#2a4838',fontWeight:400}}>d</span></div>
+          <div className="progress-wrap" style={{height:13,marginBottom:8}}>
+            <div className="progress-fill life" style={{width:`${lifePct}%`}}></div>
+            <div className="progress-text">{ageYears} / {Math.floor(effectiveDeathAge / DAYS_PER_YEAR)} years</div>
+          </div>
+          <div className="sb-row">
+            <span className="sb-label">Status</span>
+            <span className="sb-val" style={{color: state.hasReborn ? '#bf5fff' : '#00cc66'}}>{state.hasReborn ? 'Reborn' : 'First Life'}</span>
+          </div>
         </div>
-        <div className="sb-row">
-          <span className="sb-label">Status</span>
-          <span className="sb-val" style={{color: state.hasReborn ? '#c89eff' : '#8fb8ff'}}>{state.hasReborn ? 'Reborn' : 'First Life'}</span>
-        </div>
-      </div>
 
-      <div className="panel">
-        <div className="sb-title">Speed</div>
-        <div style={{display:'flex',gap:4}}>
-          {[1,3,10].map(s => (
-            <button key={s} className={`speed-btn ${!paused && speed === s ? 'active' : ''}`}
+        <div className="panel">
+          <div className="sb-title">Automation</div>
+          <div className="toggle-row">
+            <span className="toggle-label">Auto-Promote</span>
+            <button className={`toggle-btn ${state.autoPromote ? 'on' : ''}`} onClick={toggleAutoPromote}>
+              {state.autoPromote ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          <div className="toggle-row">
+            <span className="toggle-label">Auto-Learn</span>
+            <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
+              {state.autoLearn ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          {state.autoLearn && <div style={{fontSize:10,color:'#2a4838',marginTop:4}}>Trains whichever skill is closest to leveling up. Mark skills to skip in the Skills tab.</div>}
+        </div>
+
+        <div className="panel">
+          <div className="sb-title">Speed</div>
+          <div style={{display:'flex',gap:4}}>
+            {[1,3,10].map(s => (
+              <button key={s} className={`speed-btn ${!paused && speed === s ? 'active' : ''}`}
+                style={{flex:1,padding:'5px 0'}}
+                onClick={() => { setPaused(false); setSpeed(s); }}>{s}×</button>
+            ))}
+            <button className={`speed-btn ${paused ? 'active' : ''}`}
               style={{flex:1,padding:'5px 0'}}
-              onClick={() => { setPaused(false); setSpeed(s); }}>{s}×</button>
-          ))}
-          <button className={`speed-btn ${paused ? 'active' : ''}`}
-            style={{flex:1,padding:'5px 0'}}
-            onClick={() => setPaused(p => !p)}>{paused ? '▶' : '❚❚'}</button>
-        </div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Finances</div>
-        <div className="sb-big" style={{color:'#f0c878'}}>{formatNum(state.sc)} <span style={{fontSize:11,color:'#806030',fontWeight:400}}>SC</span></div>
-        <div className="sb-row"><span className="sb-label">Net / day</span><span className={`sb-val ${net>=0?'good':'bad'}`}>{net>=0?'+':''}{formatNum(net)}</span></div>
-        <div className="sb-row"><span className="sb-label">Income / day</span><span className="sb-val good">+{formatNum(dailyIncome)}</span></div>
-        <div className="sb-row"><span className="sb-label">Expense / day</span><span className="sb-val bad">-{formatNum(dailyExpense)}</span></div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Cosmic Insight</div>
-        <div className="sb-big" style={{color:'#c89eff'}}>{formatNum(state.cosmicInsight)}</div>
-        <div className="sb-row"><span className="sb-label">Global multiplier</span><span className="sb-val cosmic">×{mults.cosmicMult.toFixed(3)}</span></div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Happiness <span style={{color:'#7eda9e',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#4a5880',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
-        <div className="progress-wrap" style={{height:10,marginBottom:4}}>
-          <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#7eda9e 100%)'}}></div>
-        </div>
-        <div className="sb-row" style={{fontSize:10,color:'#4a5880'}}>Upgrade Living Quarters to raise happiness &amp; XP rate</div>
-      </div>
-
-      <div className="panel">
-        <div className="sb-title">Current Career</div>
-        {job && jobData ? (<>
-          <div className="sb-name">{job.name}</div>
-          <div className="sb-sub" style={{color: PATH_META[job.path]?.color || '#8a96b8'}}>{PATH_META[job.path]?.label} · Lv {jobData.level}</div>
-          <div className="progress-wrap" style={{height:13}}>
-            <div className="progress-fill" style={{width:`${jobPct}%`}}></div>
-            <div className="progress-text">{formatNum(jobData.xp)} / {formatNum(jobNeed)}</div>
+              onClick={() => setPaused(p => !p)}>{paused ? '▶' : '❚❚'}</button>
           </div>
-        </>) : <div className="sb-label">None</div>}
-      </div>
+        </div>
 
-      <div className="panel">
-        <div className="sb-title">Training</div>
-        {skill && skillData ? (<>
-          <div className="sb-name">{skill.name}</div>
-          <div className="sb-sub">{skill.category} · Lv {skillData.level}</div>
-          <div className="progress-wrap" style={{height:13}}>
-            <div className="progress-fill skill" style={{width:`${skillPct}%`}}></div>
-            <div className="progress-text">{formatNum(skillData.xp)} / {formatNum(skillNeed)}</div>
+        <div className="panel">
+          <div className="sb-title">Finances</div>
+          <div className="sb-big" style={{color:'#f0c850'}}>{formatNum(state.sc)} <span style={{fontSize:11,color:'#604820',fontWeight:400}}>SC</span></div>
+          <div className="sb-row"><span className="sb-label">Net / day</span><span className={`sb-val ${net>=0?'good':'bad'}`}>{net>=0?'+':''}{formatNum(net)}</span></div>
+          <div className="sb-row"><span className="sb-label">Income / day</span><span className="sb-val good">+{formatNum(dailyIncome)}</span></div>
+          <div className="sb-row"><span className="sb-label">Expense / day</span><span className="sb-val bad">-{formatNum(dailyExpense)}</span></div>
+        </div>
+
+        <div className="panel">
+          <div className="sb-title">Cosmic Insight</div>
+          <div className="sb-big" style={{color:'#bf5fff'}}>{formatNum(state.cosmicInsight)}</div>
+          <div className="sb-row"><span className="sb-label">Global multiplier</span><span className="sb-val cosmic">×{mults.cosmicMult.toFixed(3)}</span></div>
+        </div>
+
+        <div className="panel">
+          <div className="sb-title">Happiness <span style={{color:'#00ff88',fontWeight:600}}>{mults.happiness}</span> <span style={{color:'#4a7060',fontWeight:400}}>— XP ×{mults.happinessMult.toFixed(2)}</span></div>
+          <div className="progress-wrap" style={{height:10,marginBottom:4}}>
+            <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#00ff88 100%)'}}></div>
           </div>
-        </>) : <div className="sb-label">None</div>}
+          <div className="sb-row" style={{fontSize:10,color:'#4a6858'}}>Upgrade Living Quarters to boost your XP rate</div>
+        </div>
+
+        <div className="panel">
+          <div className="sb-title">Current Career</div>
+          {job && jobData ? (<>
+            <div className="sb-name">{job.name}</div>
+            <div className="sb-sub" style={{color: PATH_META[job.path]?.color || '#00cc66'}}>{PATH_META[job.path]?.label} · Lv {jobData.level}</div>
+            <div className="progress-wrap" style={{height:13}}>
+              <div className="progress-fill" style={{width:`${jobPct}%`}}></div>
+              <div className="progress-text">{formatNum(jobData.xp)} / {formatNum(jobNeed)}</div>
+            </div>
+          </>) : <div className="sb-label">None</div>}
+        </div>
+
+        <div className="panel">
+          <div className="sb-title" style={{color:'#7a3aaa'}}>Training</div>
+          {skill && skillData ? (<>
+            <div className="sb-name" style={{color:'#bf5fff'}}>{skill.name}</div>
+            <div className="sb-sub" style={{color:'#7a3aaa'}}>{skill.category} · Lv {skillData.level}</div>
+            <div className="progress-wrap" style={{height:13}}>
+              <div className="progress-fill skill" style={{width:`${skillPct}%`}}></div>
+              <div className="progress-text">{formatNum(skillData.xp)} / {formatNum(skillNeed)}</div>
+            </div>
+          </>) : <div className="sb-label">None</div>}
+        </div>
+
       </div>
 
-      <button className="danger" onClick={hardReset} style={{width:'100%',padding:'8px',borderRadius:6}}>Hard Reset</button>
     </div>
   );
 }
@@ -977,8 +1523,8 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
         const meta = PATH_META[path];
         return (
           <div key={path}>
-            <div className="category-header" style={{color: meta.color}}>
-              {meta.label} <span style={{color:'#4a5880',fontWeight:400,textTransform:'none',fontSize:10,letterSpacing:0}}>— {meta.desc}</span>
+            <div className="category-header" style={{color:'#00cc66'}}>
+              {meta.label} <span style={{color:'#00aa44',fontWeight:400,textTransform:'none',fontSize:10,letterSpacing:0}}>— {meta.desc}</span>
             </div>
             {inPath.map(career => {
               const cur = state.careers[career.id];
@@ -986,15 +1532,20 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
               const need = xpToLevel(cur.level);
               const pct = Math.min(100, (cur.xp / need) * 100);
               const isActive = state.activeJob === career.id;
-              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + cur.level * 0.01);
+              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + Math.log10(cur.level + 1));
               const xpGain = career.baseXp * jobXpMult(state, mults, career);
               const prevCareer = career.prevReq ? CAREERS.find(c => c.id === career.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${career.levelReq}` : '';
               return (
                 <div key={career.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
                   <div>
-                    <div className="row-name">{career.name}</div>
-                    <div className="row-level">Lv {cur.level}</div>
+                    <div className="row-name" style={{color:'#c0f0d8'}}>{career.name}</div>
+                    <div className="row-level" style={{color:'#00cc66'}}>
+                      Lv {cur.level}
+                      <span style={{color:'#2a7a4a', marginLeft:6, fontSize:11}}>
+                        best {Math.max(cur.maxLevel || 0, cur.level || 0)}
+                      </span>
+                    </div>
                   </div>
                   <div className="progress-wrap">
                     <div className="progress-fill" style={{width:`${pct}%`}}></div>
@@ -1004,11 +1555,15 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
                         : reqLabel}
                     </div>
                   </div>
-                  <div className="row-pay" title="Stellar Credits earned per game-day">+{formatNum(payGain)} SC/day</div>
+                  <div className="row-pay" style={{color:'#00cc66'}} title="Stellar Credits earned per game-day">+{formatNum(payGain)} SC/day</div>
                   <div></div>
                   <div>
                     {unlocked ? (
-                      <button className={isActive ? 'active-btn' : ''} onClick={() => setActiveJob(career.id)} disabled={isActive}>
+                      <button
+                        style={isActive
+                          ? {background:'rgba(0,60,30,0.7)', borderColor:'#00aa55', color:'#00ff88'}
+                          : {background:'rgba(0,40,20,0.5)', borderColor:'#005530', color:'#00cc66'}}
+                        onClick={() => setActiveJob(career.id)} disabled={isActive}>
                         {isActive ? 'Working' : 'Work'}
                       </button>
                     ) : (
@@ -1025,7 +1580,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
   );
 }
 
-function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult }) {
+function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult, toggleSkillSkip }) {
   const cats = ['Fundamentals', 'Hands-On', 'Theoretical', 'Command', 'Cosmic'];
   return (
     <div className="panel">
@@ -1035,7 +1590,7 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
         if (!anyUnlocked) return null;
         return (
           <div key={cat}>
-            <div className="category-header">{cat}</div>
+            <div className="category-header" style={{color:'#9960cc'}}>{cat}</div>
             {inCat.map(skill => {
               const cur = state.skills[skill.id];
               const unlocked = isSkillUnlocked(skill);
@@ -1047,10 +1602,14 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
               const prevCareer = skill.prevReq ? CAREERS.find(c => c.id === skill.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${skill.prevReqLvl || 1}` : '';
               return (
-                <div key={skill.id} className={`row ${isActive ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
+                <div key={skill.id} className={`row ${!unlocked ? 'locked' : ''}`}
+                  style={isActive ? {background:'rgba(40,0,70,0.5)', borderLeft:'3px solid #bf5fff', boxShadow:'inset 0 0 12px rgba(191,95,255,0.05)'} : {}}>
                   <div>
-                    <div className="row-name">{skill.name}</div>
-                    <div className="row-level">Lv {cur.level}</div>
+                    <div className="row-name" style={{color:'#e0c8ff'}}>{skill.name}</div>
+                    <div className="row-level" style={{color:'#bf5fff'}}>
+                      Lv {cur.level}
+                      {state.hasReborn && cur.maxLevel > 0 && <span style={{color:'#7a3aaa',marginLeft:5}}>↑{cur.maxLevel}</span>}
+                    </div>
                   </div>
                   <div className="progress-wrap">
                     <div className="progress-fill skill" style={{width: `${pct}%`}}></div>
@@ -1062,13 +1621,19 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
                   </div>
                   <div className="row-effect">×{effect.toFixed(2)}</div>
                   <div className="row-effect" style={{fontSize: 10, opacity: 0.8}}>{skill.effect}</div>
-                  <div>
+                  <div style={{display:'flex',flexDirection:'column',gap:4,alignItems:'flex-end'}}>
                     {unlocked ? (
-                      <button className={isActive ? 'active-btn' : ''} onClick={() => setActiveSkill(skill.id)} disabled={isActive}>
+                      <button style={isActive ? {background:'rgba(60,0,100,0.7)', borderColor:'#7700bb', color:'#bf5fff'} : {}} onClick={() => setActiveSkill(skill.id)} disabled={isActive}>
                         {isActive ? 'Training' : 'Train'}
                       </button>
                     ) : (
                       <button disabled>Locked</button>
+                    )}
+                    {unlocked && state.autoLearn && (
+                      <label className={`skill-skip-label${state.skillSkip[skill.id] ? ' skipped' : ''}`}>
+                        <input type="checkbox" checked={!!state.skillSkip[skill.id]} onChange={() => toggleSkillSkip(skill.id)} style={{accentColor:'#ff4477'}} />
+                        skip
+                      </label>
                     )}
                   </div>
                 </div>
@@ -1083,36 +1648,39 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult 
 
 function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
   const cats = [
-    { name: 'Living Quarters', key: 'Living', desc: 'One active. Happiness controls how fast you gain XP — upgrade to accelerate leveling.' },
-    { name: 'Equipment', key: 'Equipment', desc: 'Multiple active. Stack tools to combine their bonuses.' },
-    { name: 'Misc', key: 'Misc', desc: 'Multiple active. Lifestyle upgrades and consumables.' },
+    { name: 'Living Quarters', key: 'Living', desc: 'Only one active at a time. Better housing raises your Happiness, which multiplies all XP you earn.' },
+    { name: 'Equipment', key: 'Equipment', desc: 'Stack as many as you can afford — every active tool\'s bonus combines with the others.' },
+    { name: 'Misc', key: 'Misc', desc: 'Stackable lifestyle upgrades. Subscriptions, habits, and curiosities that compound over time.' },
   ];
   return (
     <div className="panel">
       {cats.map(cat => (
         <div key={cat.key}>
-          <div className="category-header">{cat.name}</div>
-          <div className="description">{cat.desc}</div>
+          <div className="category-header" style={{color:'#0088cc'}}>{cat.name}</div>
+          <div className="description" style={{color:'#5a8aaa'}}>{cat.desc}</div>
           {SHOP.filter(i => i.category === cat.key).map(item => {
             const unlocked = isShopUnlocked(item);
             const active = !!state.shop[item.id];
             let cost = item.cost;
-            if (item.category === 'Equipment') cost *= mults.skills.tool_mastery;
+            cost *= mults.skills.tool_mastery;
             cost *= mults.skills.composure;
             return (
-              <div key={item.id} className={`row ${active ? 'active' : ''} ${!unlocked ? 'locked' : ''}`}>
+              <div key={item.id} className={`row ${!unlocked ? 'locked' : ''}`}
+                style={active ? {background:'rgba(0,30,70,0.5)', borderLeft:'3px solid #00aaff', boxShadow:'inset 0 0 12px rgba(0,170,255,0.05)'} : {}}>
                 <div>
-                  <div className="row-name">{item.name}</div>
+                  <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
                   {item.happiness != null && (
-                    <div className="row-level" style={{color:'#7eda9e'}}>Happiness {item.happiness} → XP ×{(item.happiness/100).toFixed(2)}</div>
+                    <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/50).toFixed(2)}</div>
                   )}
                 </div>
-                <div className="row-effect">{item.effect}</div>
+                <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
                 <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
                 <div></div>
                 <div>
                   {unlocked ? (
-                    <button className={active ? 'active-btn' : ''} onClick={() => buyShop(item)}>
+                    <button
+                      style={active ? {background:'rgba(0,40,100,0.7)', borderColor:'#0055cc', color:'#00aaff'} : {}}
+                      onClick={() => buyShop(item)}>
                       {active ? (item.exclusive ? 'Active' : 'Drop') : (item.exclusive ? 'Choose' : 'Buy')}
                     </button>
                   ) : (
@@ -1133,32 +1701,421 @@ function RebirthTab({ state, pendingInsight }) {
   const nextMult = insightMultiplier(state.cosmicInsight + pendingInsight);
   return (
     <div className="panel">
-      <div className="section-title">⊹ Cosmic Insight</div>
-      <div className="description">
-        Each life ends with a black cube in your hand. Touching it brings you back to the garage, young again, with vague echoes of who you were.
-        Insight persists across rebirths and multiplies all your XP and SC gain.
+      <div className="section-title" style={{color:'#ff8800', textShadow:'0 0 8px rgba(255,136,0,0.3)'}}>⊹ Cosmic Insight</div>
+      <div className="description" style={{color:'#aa7700'}}>
+        Each life ends with a small black cube in your hand. You touch it — and wake up young again in the garage, echoes of the previous life fading.
+        Cosmic Insight carries forward and permanently multiplies all XP and SC you earn.
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16}}>
-        <div className="panel" style={{margin: 0, background: 'rgba(40, 30, 70, 0.4)'}}>
-          <div className="stat-label">Current Cosmic Insight</div>
-          <div style={{fontSize: 24, color: '#c89eff', margin: '8px 0'}}>{formatNum(state.cosmicInsight)}</div>
-          <div className="stat-label">Global multiplier: <span className="stat-value cosmic">×{mult.toFixed(3)}</span></div>
+        <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.5)', borderColor:'#552200'}}>
+          <div className="stat-label" style={{color:'#aa6600'}}>Current Cosmic Insight</div>
+          <div style={{fontSize: 24, color: '#ff8800', margin: '8px 0', textShadow:'0 0 10px rgba(255,136,0,0.4)'}}>{formatNum(state.cosmicInsight)}</div>
+          <div className="stat-label" style={{color:'#aa6600'}}>Global multiplier: <span style={{color:'#ff8800'}}>×{mult.toFixed(3)}</span></div>
         </div>
-        <div className="panel" style={{margin: 0, background: 'rgba(50, 35, 30, 0.4)'}}>
-          <div className="stat-label">Insight if you died now</div>
-          <div style={{fontSize: 24, color: '#f0c878', margin: '8px 0'}}>+{formatNum(pendingInsight)}</div>
-          <div className="stat-label">New multiplier: <span className="stat-value cosmic">×{nextMult.toFixed(3)}</span></div>
+        <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.3)', borderColor:'#442200'}}>
+          <div className="stat-label" style={{color:'#aa6600'}}>Insight if you died now</div>
+          <div style={{fontSize: 24, color: '#ffaa44', margin: '8px 0'}}>+{formatNum(pendingInsight)}</div>
+          <div className="stat-label" style={{color:'#aa6600'}}>New multiplier: <span style={{color:'#ffaa44'}}>×{nextMult.toFixed(3)}</span></div>
         </div>
       </div>
-      <div className="description" style={{marginTop: 16}}>
-        Insight is calculated from total career levels at death, multiplied by your Memory skill, your Cube Attunement skill, and whether you possess The Cube.
-        You cannot manually rebirth — your loops end naturally with age.
+      <div className="description" style={{marginTop: 16, color:'#aa7700'}}>
+        Insight at death is based on total career levels reached, boosted by your Memory skill, Cube Attunement, and owning The Cube.
+        You can't trigger a rebirth manually — each loop ends naturally when you reach old age.
       </div>
       {!state.hasReborn && (
-        <div className="description" style={{marginTop: 12, color: '#c89eff', fontStyle: 'italic'}}>
+        <div className="description" style={{marginTop: 12, color: '#ff8800', fontStyle: 'italic'}}>
           You have not yet completed a full loop. Reach the end of your life to discover the cube.
         </div>
       )}
+    </div>
+  );
+}
+
+function StoryTab({ storyLog, lifeCount }) {
+  if (!storyLog || storyLog.length === 0) {
+    return (
+      <div className="panel">
+        <div style={{color:'#5a3a7a', fontStyle:'italic', fontSize:13, padding:'8px 0'}}>
+          No entries yet. Live your life — the story will write itself.
+        </div>
+      </div>
+    );
+  }
+  const byLife = {};
+  storyLog.forEach(e => { (byLife[e.life] = byLife[e.life] || []).push(e); });
+  const lifeNums = Object.keys(byLife).map(Number).sort((a,b) => b - a);
+  return (
+    <div className="panel">
+      {lifeNums.map(ln => (
+        <div key={ln} style={{marginBottom: 20}}>
+          <div style={{fontSize:12, color:'#8800cc', fontWeight:600, letterSpacing:1, textTransform:'uppercase', marginBottom:8, borderBottom:'1px solid #2a0840', paddingBottom:4}}>
+            {ln === lifeCount ? `Life ${ln} — Current` : `Life ${ln}`}
+          </div>
+          {[...byLife[ln]].reverse().map((entry, i) => (
+            <div key={i} style={{padding:'7px 0', borderBottom:'1px solid #120824', display:'flex', gap:12, alignItems:'baseline'}}>
+              <span style={{color:'#5a3a7a', fontSize:11, flexShrink:0, whiteSpace:'nowrap'}}>Age {entry.ageY}</span>
+              <span style={{color:'#c0a8e0', fontSize:13, fontStyle:'italic', lineHeight:1.5}}>{entry.msg}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StatsTab({ state, mults }) {
+  const peakCareer = Math.max(0, ...Object.values(state.careers).map(c => Math.max(c.maxLevel || 0, c.level || 0)));
+  const peakSkill  = Math.max(0, ...Object.values(state.skills).map(sk => Math.max(sk.maxLevel || 0, sk.level || 0)));
+  const totalCareerLevels = Object.values(state.careers).reduce((s, c) => s + (c.level || 0), 0);
+  const peakCI = Math.max(state.stats?.peakCosmicInsight || 0, state.cosmicInsight);
+  const cards = [
+    { label: 'Lives Started',       val: state.lifeCount || 1,            unit: '' },
+    { label: 'Total Days Lived',    val: formatNum(state.totalDays || 0), unit: 'days' },
+    { label: 'Cosmic Insight',      val: formatNum(state.cosmicInsight),  unit: 'CI' },
+    { label: 'Peak Cosmic Insight', val: formatNum(peakCI),              unit: 'CI' },
+    { label: 'Career Levels (Now)', val: totalCareerLevels,               unit: '' },
+    { label: 'Highest Career Lv',   val: peakCareer,                      unit: '' },
+    { label: 'Highest Skill Lv',    val: peakSkill,                       unit: '' },
+    { label: 'Story Entries',       val: (state.storyLog || []).length,   unit: '' },
+    { label: 'Global Multiplier',   val: `×${mults.cosmicMult.toFixed(3)}`,unit: '' },
+    { label: 'XP Multiplier',       val: `×${mults.happinessMult.toFixed(2)}`, unit: '' },
+  ];
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#00ccaa', textShadow:'0 0 8px rgba(0,204,170,0.3)', marginBottom:12}}>⊹ Statistics</div>
+      <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+        {cards.map(c => (
+          <div key={c.label} className="stat-card">
+            <div className="stat-card-label">{c.label}</div>
+            <div className="stat-card-val">{c.val} <span className="stat-card-unit">{c.unit}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AchievementsTab({ state }) {
+  const unlocked = ACHIEVEMENTS.filter(a => state.achievements?.[a.id]);
+  const locked   = ACHIEVEMENTS.filter(a => !state.achievements?.[a.id]);
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#f0c850', textShadow:'0 0 8px rgba(240,200,80,0.3)', marginBottom:4}}>⊹ Achievements</div>
+      <div style={{color:'#5a7060', fontSize:12, marginBottom:14}}>{unlocked.length} / {ACHIEVEMENTS.length} unlocked</div>
+      <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom: locked.length ? 16 : 0}}>
+        {unlocked.map(a => (
+          <div key={a.id} style={{background:'rgba(40,28,0,0.6)', border:'1px solid #aa8800', borderRadius:6, padding:'10px 12px'}}>
+            <div style={{fontSize:16, color:'#f0c850', marginBottom:4}}>{a.icon}</div>
+            <div style={{fontSize:13, color:'#f0c850', fontWeight:600, marginBottom:3}}>{a.name}</div>
+            <div style={{fontSize:11, color:'#907830', lineHeight:1.4}}>{a.desc}</div>
+          </div>
+        ))}
+      </div>
+      {locked.length > 0 && (
+        <>
+          <div style={{fontSize:11, color:'#3a5048', textTransform:'uppercase', letterSpacing:1, marginBottom:8, borderTop:'1px solid #1a0830', paddingTop:12}}>Locked ({locked.length})</div>
+          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+            {locked.map(a => (
+              <div key={a.id} style={{background:'rgba(6,3,14,0.5)', border:'1px solid #1a0830', borderRadius:6, padding:'10px 12px', opacity:0.55}}>
+                <div style={{fontSize:16, color:'#2a3a30', marginBottom:4}}>?</div>
+                <div style={{fontSize:13, color:'#2a4030', fontWeight:600, marginBottom:3}}>???</div>
+                <div style={{fontSize:11, color:'#2a3a30', lineHeight:1.4}}>{a.desc}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function BuildTab({ state, buyBuilding }) {
+  const totalPassive = BUILDINGS.reduce((sum, b) => {
+    const bd = state.buildings?.[b.id];
+    return sum + (bd ? b.income * bd.count : 0);
+  }, 0);
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#00ddcc', textShadow:'0 0 8px rgba(0,221,204,0.3)', marginBottom:4}}>⊹ Installations</div>
+      <div className="description" style={{color:'#4a9a90', marginBottom:12}}>
+        Permanent structures that generate passive SC/day income. Persist through every rebirth.
+        {totalPassive > 0 && <span style={{color:'#00ddcc', marginLeft:8}}>+{formatNum(totalPassive)} SC/day total</span>}
+      </div>
+      {BUILDINGS.map(b => {
+        const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+        const canAfford = state.sc >= bd.nextCost;
+        return (
+          <div key={b.id} className="row" style={{marginBottom:8}}>
+            <div>
+              <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
+              <div className="row-level" style={{color:'#00ddcc'}}>
+                Owned: {bd.count}
+                {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
+              </div>
+            </div>
+            <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
+            <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
+              {formatNum(b.income)} SC/day each
+            </div>
+            <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
+              Cost: {formatNum(bd.nextCost)} SC
+            </div>
+            <div>
+              <button
+                style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
+                onClick={() => buyBuilding(b)}
+                disabled={!canAfford}>
+                Build
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CodexTab({ state }) {
+  const [section, setSection] = React.useState('mechanics');
+  const sections = ['mechanics','signals','lore','careers','skills'];
+  const sectionColors = { mechanics:'#aa88ff', signals:'#00ccaa', lore:'#cc88ff', careers:'#00cc66', skills:'#bf5fff' };
+
+  const navBtn = (id, label) => (
+    <button key={id} onClick={() => setSection(id)}
+      style={{padding:'5px 12px', fontSize:12, borderRadius:4, cursor:'pointer', fontFamily:'inherit',
+        background: section === id ? 'rgba(40,20,80,0.8)' : 'rgba(10,5,22,0.5)',
+        border: `1px solid ${section === id ? sectionColors[id] : '#2a1a4a'}`,
+        color: section === id ? sectionColors[id] : '#5a4a7a'}}>
+      {label}
+    </button>
+  );
+
+  const entry = (title, body, unlocked = true, key) => (
+    <div key={key || title} style={{marginBottom:14, paddingBottom:14, borderBottom:'1px solid #1a0a2a'}}>
+      <div style={{fontSize:12, color: unlocked ? '#aa88ff' : '#3a2a4a', fontWeight:600, marginBottom:4}}>{title}</div>
+      <div style={{fontSize:11, color: unlocked ? '#7a6a9a' : '#2a1a3a', lineHeight:1.6}}>
+        {unlocked ? body : '— Locked —'}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#aa88ff', textShadow:'0 0 8px rgba(170,136,255,0.3)', marginBottom:10}}>◈ Codex</div>
+      <div style={{display:'flex', gap:6, flexWrap:'wrap', marginBottom:14}}>
+        {navBtn('mechanics','Mechanics')}
+        {navBtn('signals','Signal Log')}
+        {navBtn('lore','Lore')}
+        {navBtn('careers','Careers')}
+        {navBtn('skills','Skills')}
+      </div>
+
+      {section === 'mechanics' && (
+        <div>
+          {entry('Stellar Credits (SC)', 'The game\'s currency. Earned each day from your active career — amount depends on that career\'s base pay, level, and active skill bonuses. Spent on Shop items with a daily SC/day upkeep cost.')}
+          {entry('XP & Leveling', 'Each career and skill levels up by accumulating XP each day. XP needed scales exponentially — early levels are fast, later levels demand sustained commitment. Higher level = more pay and stronger skill effects.')}
+          {entry('Happiness & XP Rate', 'Your Living Quarters sets your Happiness value (50–100). Happiness ÷ 50 = your XP multiplier for all careers and skills. Cramped Apartment = 1.0×. Cube-Resonant Sanctum = 2.0×. Always a bonus, never a penalty.')}
+          {entry('Endurance & Lifespan', 'Endurance slows how fast you age — instead of 1 day per tick, you age at 1 ÷ Endurance rate. A Cryostasis Pod multiplies your effective death age. Cryonics skill further boosts the pod\'s effect.')}
+          {entry('Cosmic Insight', 'Earned on rebirth based on total career levels reached. Each point of Insight gives a small global multiplier via log₁₀(insight+1) × 0.5. Persists every life — it compounds over many runs.')}
+          {entry('Career Memory (Max Level)', 'The highest level you ever reached in each career is remembered across rebirths. In future lives, that career\'s XP gain is multiplied by 1 + (maxLevel ÷ 10). A career you mastered at lv100 gives +10× XP bonus next life.')}
+          {entry('Skill Memory', 'Same formula as Career Memory — skills you\'ve trained deeply provide XP bonuses in future lives. Max level is shown as ↑N next to your current level in the Skills tab.')}
+          {entry('Auto-Promote', 'When enabled, automatically switches to the next unlocked career in your current path the moment the level requirement is met. Uses the same logic as manually selecting the next career.')}
+          {entry('Auto-Learn', 'When enabled, automatically trains whichever unlocked skill is closest to leveling up. You can mark individual skills to skip in the Skills tab — useful for ignoring skills you\'ve already maxed or don\'t need.')}
+          {entry('Bankruptcy', 'If your SC balance hits zero and you still have daily expenses, all paid Shop items are cancelled and your Living Quarters drops to Cramped Apartment. Free items (Hand Tools, The Cube) are preserved.')}
+          {entry('Installations', 'Permanent structures purchased in the Build tab that passively generate SC/day each tick. Unlike Shop items, buildings are bought with a one-time SC cost (that grows with each purchase) and survive every rebirth.')}
+          {entry('Rebirth', 'When you die of old age, you are offered a rebirth. You keep Cosmic Insight, max levels, storyLog, achievements, and buildings. Career and skill levels reset to 0 — but their XP memory bonuses apply immediately next life.')}
+        </div>
+      )}
+
+      {section === 'signals' && (
+        <div>
+          <div style={{fontSize:11, color:'#4a7068', marginBottom:12}}>
+            Anomalous readings detected over the course of your work. {Object.keys(state.codexSignals || {}).length} / {SIGNAL_EVENTS.length} received.
+          </div>
+          {SIGNAL_EVENTS.map(ev => {
+            const received = !!(state.codexSignals || {})[ev.id];
+            return (
+              <div key={ev.id} style={{marginBottom:12, paddingBottom:12, borderBottom:'1px solid #0a0818'}}>
+                <div style={{display:'flex', justifyContent:'space-between', marginBottom:3}}>
+                  <div style={{fontSize:11, color: received ? '#00ccaa' : '#2a4038', fontWeight:600}}>{received ? ev.title : '— SIGNAL PENDING —'}</div>
+                  {received && <div style={{fontSize:10, color:'#009988'}}>{ev.freq}</div>}
+                </div>
+                <div style={{fontSize:11, color: received ? '#5a9080' : '#1a2820', lineHeight:1.5}}>
+                  {received ? ev.msg : '···'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {section === 'lore' && (
+        <div>
+          <div style={{fontSize:11, color:'#5a4a7a', marginBottom:12}}>
+            Personal records. {Object.keys(state.codexLore || {}).length} / {LORE_FRAGMENTS.length} unlocked.
+          </div>
+          {LORE_FRAGMENTS.map(frag => {
+            const unlocked = !!(state.codexLore || {})[frag.id];
+            return entry(frag.title, frag.text, unlocked, frag.id);
+          })}
+        </div>
+      )}
+
+      {section === 'careers' && (
+        <div>
+          {Object.entries({
+            garage:    { label:'The Garage',    color:'#8fb8ff', entries:[
+              ['Scrap Scavenger','You pull value from other people\'s waste. Circuit boards, motors, the copper out of dead appliances. It\'s not glamorous. It\'s where everything starts.'],
+              ['Electronics Repairman','You fix what others throw away. The work is repetitive. The understanding it builds is not.'],
+              ['Hobbyist Engineer','You build things without being asked. That distinction matters more than it seems.'],
+              ['Garage Inventor','The garage is a lab now. You stopped explaining what you\'re building to people who won\'t understand the answer.'],
+              ['Independent Researcher','No institution, no oversight, no permission. You follow the problem wherever it leads.'],
+            ]},
+            academy:   { label:'The Academy',   color:'#7eda9e', entries:[
+              ['Lab Assistant','First week in a real lab. The equipment is better than yours. The questions are smaller.'],
+              ['Research Associate','You run experiments designed by people above you. You notice things they don\'t.'],
+              ['Research Scientist','Your name is on papers now. That changes how people listen.'],
+              ['Senior Researcher','You run the lab. The results confirm what you already suspected years ago.'],
+              ['Department Chair','You decide what gets studied. Quietly, you steer the department toward the frequencies.'],
+            ]},
+            corps:     { label:'The Corps',     color:'#f0a878', entries:[
+              ['Space Corps Cadet','Structure, discipline, chain of command. After the garage, it feels like a foreign language.'],
+              ['Flight Officer','You understand now why the Corps functions the way it does. You still don\'t like all of it.'],
+              ['Squadron Leader','People follow your orders. That\'s a different kind of responsibility than building things alone.'],
+              ['Wing Commander','You\'ve been in space. It is larger than you expected. You don\'t tell people what you saw.'],
+              ['Fleet Admiral','You command fleets. You still think about the garage.'],
+            ]},
+            syndicate: { label:'The Syndicate', color:'#f0c878', entries:[
+              ['Field Agent','The Syndicate doesn\'t care about your background. Only your results.'],
+              ['Operations Manager','You manage people who don\'t ask questions. You don\'t ask questions either.'],
+              ['Division Director','You control significant resources. The Syndicate rewards efficiency above everything.'],
+              ['VP of Operations','At this level, the Syndicate\'s reach is almost planetary. Almost.'],
+              ['Syndicate CEO','You built an empire on information asymmetry. You know things no government does.'],
+            ]},
+            ascended:  { label:'The Ascended',  color:'#c89eff', entries:[
+              ['Xenolinguist','You decode alien communication. The strangest part is how much of it you already understood.'],
+              ['Void Cartographer','You map regions of space that shouldn\'t be reachable. Some of them are already charted — by someone else.'],
+              ['Stellar Diplomat','You speak on behalf of humanity. You choose your words very carefully.'],
+              ['Cube Scholar','You study the object directly. It responds differently to you than to others. You don\'t mention this.'],
+              ['Galactic Custodian','You tend to something older and larger than human civilization. The weight of it is considerable.'],
+            ]},
+          }).map(([path, { label, color, entries }]) => (
+            <div key={path} style={{marginBottom:16}}>
+              <div className="category-header" style={{color}}>{label}</div>
+              {entries.map(([name, desc]) => (
+                <div key={name} style={{marginBottom:8}}>
+                  <div style={{fontSize:11, color:'#d0c0f0', fontWeight:600, marginBottom:2}}>{name}</div>
+                  <div style={{fontSize:11, color:'#6a5a8a', lineHeight:1.5}}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {section === 'skills' && (
+        <div>
+          {[
+            { cat:'Fundamentals', color:'#bf5fff', entries:[
+              ['Focus','The ability to be fully present in the work. Sounds simple. Isn\'t.'],
+              ['Ingenuity','Finding the non-obvious solution. The one that makes more money with the same effort.'],
+              ['Endurance','You outlast things. Problems, lifetimes, the slow accumulation of years.'],
+              ['Memory','You retain more of what you\'ve done. The Insight you carry grows accordingly.'],
+              ['Cryonics','Understanding of biological stasis. Extends how long your Cryostasis Pod keeps you viable.'],
+            ]},
+            { cat:'Hands-On', color:'#8fb8ff', entries:[
+              ['Dexterity','Precision. The difference between a working prototype and a pile of parts.'],
+              ['Mechanical Aptitude','You understand machines at the level of cause and effect. Income reflects it.'],
+              ['Frugality','You waste less. Every purchase goes further. The math compounds over a lifetime.'],
+            ]},
+            { cat:'Theoretical', color:'#7eda9e', entries:[
+              ['Theory','Formal reasoning. The Academy rewards this kind of thinking more than any other.'],
+              ['Mathematical Insight','Numbers reveal patterns. You see them faster than most.'],
+              ['Pattern Recognition','Something in you finds structure in noise. This applies to more than just data.'],
+            ]},
+            { cat:'Command', color:'#f0a878', entries:[
+              ['Charisma','People want to follow you. You\'re not entirely sure why. It pays well.'],
+              ['Strategic Vision','You see the board three moves ahead. The Corps and Syndicate pay for this.'],
+              ['Composure','Under pressure, you spend less. Not because you try to — because panic is expensive.'],
+            ]},
+            { cat:'Cosmic', color:'#c89eff', entries:[
+              ['Resonance','You tune to the Ascended path\'s frequency. XP flows faster.'],
+              ['Xenocognition','Alien thought patterns become navigable. The Ascended careers pay accordingly.'],
+              ['Cube Attunement','The object responds to your awareness of it. Insight compounds on rebirth.'],
+            ]},
+          ].map(({ cat, color, entries }) => (
+            <div key={cat} style={{marginBottom:16}}>
+              <div className="category-header" style={{color}}>{cat}</div>
+              {entries.map(([name, desc]) => (
+                <div key={name} style={{marginBottom:8}}>
+                  <div style={{fontSize:11, color:'#d0c0f0', fontWeight:600, marginBottom:2}}>{name}</div>
+                  <div style={{fontSize:11, color:'#6a5a8a', lineHeight:1.5}}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PatchNotesTab() {
+  const notes = [
+    { v: 'v0.1.6', title: 'Depth Update', items: [
+      'Codex tab — Mechanics reference, Signal Log (5 anomalies to discover), Lore Fragments (7 to unlock), Career & Skill flavour entries',
+      'Build tab — 3 Installations (Research Station, Orbital Platform, Dyson Array Segment) persist through every rebirth',
+      'Time Dilation — Cryostasis Pod shop item multiplies lifespan ×1.5; Cryonics skill amplifies the effect',
+      'Cryonics skill added to Fundamentals — boosts Cryostasis lifespan extension by 2%/level',
+      'Life bar now reflects effective lifespan (changes when Cryostasis is active)',
+    ]},
+    { v: 'v0.1.5', title: 'Story & Systems', items: [
+      'Story ticker — milestone events fire narrative flavor text below the header',
+      'Story tab — full log of every story beat, grouped by life',
+      'Statistics tab — cross-life metrics and current run numbers',
+      'Patch Notes tab (you are here)',
+      'Save export / import — base64 .sav file download and upload',
+    ]},
+    { v: 'v0.1.4', title: 'Pacing', items: [
+      'Day tick slowed 4× (TICK_MS 50 → 200ms). A first life is now ~68 minutes at 1× speed',
+    ]},
+    { v: 'v0.1.3', title: 'Equipment & Stability', items: [
+      'Equipment items now stack — multiple active simultaneously, bonuses combine',
+      'Fixed blank screen crash when loading saves from previous versions',
+    ]},
+    { v: 'v0.1.2', title: 'Paths & Happiness', items: [
+      '4 career paths — The Garage (always), The Academy, The Corps, The Syndicate',
+      'Happiness system — Living Quarters set happiness; happiness multiplies all XP',
+      'Better labels — Career rows show requirements, pay rates, and XP/day',
+      'Path-specific skill bonuses',
+    ]},
+    { v: 'v0.1.1', title: 'UI Pass', items: [
+      'Intro overlay on page load — game pauses until you click Begin',
+      'Left status sidebar — Life bar, Speed, Finances, Career & Skill progress',
+      'Hard Reset moved into sidebar',
+    ]},
+    { v: 'v0.1', title: 'Scaffold', items: [
+      'Initial release — 25 careers, 16 skills, 25 shop items',
+      'Rebirth loop with Cosmic Insight currency',
+      'Tier 5 careers and The Cube gated behind first rebirth',
+      'localStorage auto-save every 30 seconds',
+    ]},
+  ];
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#f0c850', textShadow:'0 0 8px rgba(240,200,80,0.3)', marginBottom:12}}>⊹ Patch Notes</div>
+      {notes.map(note => (
+        <div key={note.v} style={{marginBottom:18}}>
+          <div style={{fontSize:13, color:'#f0c850', fontWeight:600, marginBottom:6}}>
+            {note.v} <span style={{color:'#907830', fontWeight:400}}>— {note.title}</span>
+          </div>
+          <ul style={{paddingLeft:18, margin:0}}>
+            {note.items.map((item, i) => (
+              <li key={i} style={{fontSize:12, color:'#7a9888', marginBottom:4, lineHeight:1.5}}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
@@ -1170,6 +2127,7 @@ function formatNum(n) {
   if (n === undefined || n === null || isNaN(n)) return '0';
   const abs = Math.abs(n);
   if (abs < 1) return n.toFixed(2);
+  if (abs < 100) return n.toFixed(1);
   if (abs < 1000) return n.toFixed(0);
   if (abs < 1e6) return (n / 1e3).toFixed(1) + 'K';
   if (abs < 1e9) return (n / 1e6).toFixed(2) + 'M';
