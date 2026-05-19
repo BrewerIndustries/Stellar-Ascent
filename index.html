@@ -454,46 +454,46 @@ const CAREERS = [
 ];
 
 const PATH_META = {
-  garage:    { label: 'The Garage',    desc: 'Self-taught. Scrappy. Starting from zero.',           color: '#8fb8ff' },
-  academy:   { label: 'The Academy',   desc: 'Institutions of science and structured discovery.',   color: '#7eda9e' },
-  corps:     { label: 'The Corps',     desc: 'Space Force. Discipline, rank, and command.',         color: '#f0a878' },
-  syndicate: { label: 'The Syndicate', desc: 'Corporate power, strategy, and influence.',           color: '#f0c878' },
-  ascended:  { label: 'The Ascended',  desc: 'Post-rebirth. Cosmic awareness unlocked.',            color: '#c89eff' },
+  garage:    { label: 'The Garage',    desc: 'Independent work. No degree, no rules — just results.',          color: '#8fb8ff' },
+  academy:   { label: 'The Academy',   desc: 'Research labs and universities. Slow to start, big payoff.',     color: '#7eda9e' },
+  corps:     { label: 'The Corps',     desc: 'Military structure. Rank up fast, earn more with every step.',   color: '#f0a878' },
+  syndicate: { label: 'The Syndicate', desc: 'High-risk, high-reward. The best SC rates in the game.',         color: '#f0c878' },
+  ascended:  { label: 'The Ascended',  desc: 'Unlocks after your first rebirth. Something has changed in you.',color: '#c89eff' },
 };
 
 // Skills
 const SKILLS = [
   // Fundamentals
-  { id: 'focus', name: 'Focus', category: 'Fundamentals', effect: 'XP gain on active job & skill', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
-  { id: 'ingenuity', name: 'Ingenuity', category: 'Fundamentals', effect: 'SC from all jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
-  { id: 'endurance', name: 'Endurance', category: 'Fundamentals', effect: 'Slower aging', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: null },
-  { id: 'memory', name: 'Memory', category: 'Fundamentals', effect: 'Cosmic Insight gain on rebirth', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
+  { id: 'focus', name: 'Focus', category: 'Fundamentals', effect: '+1% XP/lv on your active job & skill', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
+  { id: 'ingenuity', name: 'Ingenuity', category: 'Fundamentals', effect: '+1% SC/lv from every job', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
+  { id: 'endurance', name: 'Endurance', category: 'Fundamentals', effect: '+0.5% lifespan/lv — live longer each loop', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: null },
+  { id: 'memory', name: 'Memory', category: 'Fundamentals', effect: '+2% Cosmic Insight/lv earned on rebirth', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
 
   // Hands-On
-  { id: 'dexterity', name: 'Dexterity', category: 'Hands-On', effect: 'XP on Garage & Industry jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
-  { id: 'mechanical_aptitude', name: 'Mechanical Aptitude', category: 'Hands-On', effect: 'SC from Garage & Industry jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
-  { id: 'tool_mastery', name: 'Tool Mastery', category: 'Hands-On', effect: 'Reduces Equipment costs', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'dexterity', name: 'Dexterity', category: 'Hands-On', effect: '+1% XP/lv for Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'mechanical_aptitude', name: 'Mechanical Aptitude', category: 'Hands-On', effect: '+1% SC/lv from Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'tool_mastery', name: 'Tool Mastery', category: 'Hands-On', effect: 'Reduces SC/day cost of Equipment', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
 
   // Theoretical
-  { id: 'theory', name: 'Theory', category: 'Theoretical', effect: '+1% XP/lv for Academy jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
-  { id: 'mathematical_insight', name: 'Mathematical Insight', category: 'Theoretical', effect: '+1% SC/lv for Academy jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
-  { id: 'pattern_recognition', name: 'Pattern Recognition', category: 'Theoretical', effect: '+0.5% XP/lv for all skills', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'theory', name: 'Theory', category: 'Theoretical', effect: '+1% XP/lv for Academy path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'mathematical_insight', name: 'Mathematical Insight', category: 'Theoretical', effect: '+1% SC/lv from Academy path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
+  { id: 'pattern_recognition', name: 'Pattern Recognition', category: 'Theoretical', effect: '+0.5% XP/lv on all skills', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: 'lab_assistant', prevReqLvl: 1 },
 
   // Command
-  { id: 'charisma', name: 'Charisma', category: 'Command', effect: '+1% SC/lv for Syndicate & Corps jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
+  { id: 'charisma', name: 'Charisma', category: 'Command', effect: '+1% SC/lv from Corps & Syndicate jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
   { id: 'strategic_vision', name: 'Strategic Vision', category: 'Command', effect: '+1% XP/lv for Corps & Syndicate jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'flight_officer', prevReqLvl: 1 },
-  { id: 'composure', name: 'Composure', category: 'Command', effect: '-0.5% shop costs/lv', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'flight_officer', prevReqLvl: 1 },
+  { id: 'composure', name: 'Composure', category: 'Command', effect: 'Cuts all Shop SC/day costs per level', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'flight_officer', prevReqLvl: 1 },
 
   // Cosmic (post-rebirth)
-  { id: 'resonance', name: 'Resonance', category: 'Cosmic', effect: 'XP on Ascended jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
-  { id: 'xenocognition', name: 'Xenocognition', category: 'Cosmic', effect: 'SC from Ascended jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
-  { id: 'cube_attunement', name: 'Cube Attunement', category: 'Cosmic', effect: 'Multiplies Cosmic Insight gain', effectFn: (lvl) => 1 + lvl * 0.05, postRebirth: true },
+  { id: 'resonance', name: 'Resonance', category: 'Cosmic', effect: '+2% XP/lv for Ascended path jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
+  { id: 'xenocognition', name: 'Xenocognition', category: 'Cosmic', effect: '+2% SC/lv from Ascended path jobs', effectFn: (lvl) => 1 + lvl * 0.02, postRebirth: true },
+  { id: 'cube_attunement', name: 'Cube Attunement', category: 'Cosmic', effect: '+5% Cosmic Insight/lv earned on rebirth', effectFn: (lvl) => 1 + lvl * 0.05, postRebirth: true },
 ];
 
 // Shop items
 const SHOP = [
   // Living Quarters (one active) — happiness controls all XP gain
-  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,        happiness: 50, effect: 'No bonus',                    bonus: {},                     exclusive: 'Living' },
+  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,        happiness: 50, effect: 'Baseline — no bonus or penalty', bonus: {},                 exclusive: 'Living' },
   { id: 'garage_house',    name: 'Suburban Garage House',  category: 'Living', cost: 30,       happiness: 60, effect: 'Focus +50%',                  bonus: { focus: 1.5 },         exclusive: 'Living' },
   { id: 'uni_housing',     name: 'University Housing',     category: 'Living', cost: 200,      happiness: 68, effect: 'Theory +50%',                 bonus: { theory: 1.5 },        exclusive: 'Living' },
   { id: 'downtown_loft',   name: 'Downtown Loft',          category: 'Living', cost: 1500,     happiness: 75, effect: 'Charisma +50%',               bonus: { charisma: 1.5 },      exclusive: 'Living' },
@@ -504,7 +504,7 @@ const SHOP = [
   { id: 'cube_sanctum',    name: 'Cube-Resonant Sanctum',  category: 'Living', cost: 15000000, happiness: 100,effect: 'Cosmic skills +200%',         bonus: { cosmic: 3 },          exclusive: 'Living', postRebirth: true },
 
   // Equipment (multiple active)
-  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Default starter tools', bonus: {} },
+  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Free starter kit — already equipped', bonus: {} },
   { id: 'soldering_station', name: 'Soldering Station', category: 'Equipment', cost: 25, effect: 'Dexterity +50%', bonus: { dexterity: 1.5 } },
   { id: 'lab_bench', name: 'Lab Bench', category: 'Equipment', cost: 250, effect: 'Theory +50%', bonus: { theory: 1.5 } },
   { id: 'cad_workstation', name: 'CAD Workstation', category: 'Equipment', cost: 2200, effect: 'Mechanical Aptitude +75%', bonus: { mechanical_aptitude: 1.75 } },
@@ -1089,7 +1089,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
           <div className="progress-wrap" style={{height:10,marginBottom:4}}>
             <div className="progress-fill" style={{width:`${mults.happiness}%`, background:'linear-gradient(90deg,#c85555 0%,#f0c878 50%,#00ff88 100%)'}}></div>
           </div>
-          <div className="sb-row" style={{fontSize:10,color:'#2a4838'}}>Upgrade Living Quarters to raise happiness &amp; XP rate</div>
+          <div className="sb-row" style={{fontSize:10,color:'#4a6858'}}>Upgrade Living Quarters to boost your XP rate</div>
         </div>
 
         <div className="panel">
@@ -1256,9 +1256,9 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
 
 function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
   const cats = [
-    { name: 'Living Quarters', key: 'Living', desc: 'One active. Happiness controls how fast you gain XP — upgrade to accelerate leveling.' },
-    { name: 'Equipment', key: 'Equipment', desc: 'Multiple active. Stack tools to combine their bonuses.' },
-    { name: 'Misc', key: 'Misc', desc: 'Multiple active. Lifestyle upgrades and consumables.' },
+    { name: 'Living Quarters', key: 'Living', desc: 'Only one active at a time. Better housing raises your Happiness, which multiplies all XP you earn.' },
+    { name: 'Equipment', key: 'Equipment', desc: 'Stack as many as you can afford — every active tool\'s bonus combines with the others.' },
+    { name: 'Misc', key: 'Misc', desc: 'Stackable lifestyle upgrades. Subscriptions, habits, and curiosities that compound over time.' },
   ];
   return (
     <div className="panel">
@@ -1311,8 +1311,8 @@ function RebirthTab({ state, pendingInsight }) {
     <div className="panel">
       <div className="section-title" style={{color:'#ff8800', textShadow:'0 0 8px rgba(255,136,0,0.3)'}}>⊹ Cosmic Insight</div>
       <div className="description" style={{color:'#aa7700'}}>
-        Each life ends with a black cube in your hand. Touching it brings you back to the garage, young again, with vague echoes of who you were.
-        Insight persists across rebirths and multiplies all your XP and SC gain.
+        Each life ends with a small black cube in your hand. You touch it — and wake up young again in the garage, echoes of the previous life fading.
+        Cosmic Insight carries forward and permanently multiplies all XP and SC you earn.
       </div>
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16}}>
         <div className="panel" style={{margin: 0, background: 'rgba(50, 25, 0, 0.5)', borderColor:'#552200'}}>
@@ -1327,8 +1327,8 @@ function RebirthTab({ state, pendingInsight }) {
         </div>
       </div>
       <div className="description" style={{marginTop: 16, color:'#aa7700'}}>
-        Insight is calculated from total career levels at death, multiplied by your Memory skill, your Cube Attunement skill, and whether you possess The Cube.
-        You cannot manually rebirth — your loops end naturally with age.
+        Insight at death is based on total career levels reached, boosted by your Memory skill, Cube Attunement, and owning The Cube.
+        You can't trigger a rebirth manually — each loop ends naturally when you reach old age.
       </div>
       {!state.hasReborn && (
         <div className="description" style={{marginTop: 12, color: '#ff8800', fontStyle: 'italic'}}>
