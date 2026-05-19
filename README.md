@@ -44,6 +44,8 @@ Cycle through lives as different roles, from scrap scavenger to starship captain
 - **Lifespan extension via Cosmic Insight** — post-rebirth upgrades that further extend effective death age beyond Cryostasis.
 
 ### Polish
+- **Settings menu** — dedicated Settings tab or modal with: hard reset, save export/import, speed defaults, and any future toggles. Currently these live scattered across the sidebar.
+- **First-time tutorial** — overlay-based walkthrough that fires on a fresh save (no prior play). Covers: what SC is, how to pick a career, what skills do, and what the rebirth loop is for. Should be re-triggerable at any time from the Settings menu.
 - Audio (Web Audio API, ambient + click feedback)
 - Mobile-friendly layout
 - Visual polish: animations on level-up, rebirth cinematic, particle effects
