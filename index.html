@@ -1233,51 +1233,14 @@ function App() {
             <div className="title">⊹ Stellar Ascent</div>
             <div className="subtitle">v0.1.6 — Depth Update</div>
           </div>
-          <div style={{position:'relative'}}>
-            <button
-              onClick={() => setShowSettings(s => !s)}
-              style={{background:'none', border:'none', color: showSettings ? '#00ff88' : '#3a5a48',
-                fontSize:16, cursor:'pointer', padding:'4px 6px', lineHeight:1,
-                transition:'color 0.15s'}}
-              title="Settings">
-              ⚙
-            </button>
-            {showSettings && (
-              <>
-                <div onClick={() => setShowSettings(false)}
-                  style={{position:'fixed', inset:0, zIndex:99}} />
-                <div style={{position:'absolute', top:'calc(100% + 6px)', left:0, zIndex:100,
-                  background:'rgba(8,4,18,0.97)', border:'1px solid #2a1a4a',
-                  borderRadius:8, padding:'10px', minWidth:160,
-                  boxShadow:'0 4px 24px rgba(0,0,0,0.6)'}}>
-                  <div style={{fontSize:10, color:'#3a2a5a', textTransform:'uppercase',
-                    letterSpacing:1, marginBottom:8}}>Settings</div>
-                  <button onClick={() => { exportSave(); setShowSettings(false); }}
-                    style={{display:'block', width:'100%', marginBottom:5, textAlign:'left',
-                      padding:'6px 10px', borderRadius:4, fontSize:12}}>
-                    Export Save
-                  </button>
-                  <label style={{display:'block', marginBottom:5}}>
-                    <button onClick={() => document.getElementById('sa-import-settings').click()}
-                      style={{display:'block', width:'100%', textAlign:'left',
-                        padding:'6px 10px', borderRadius:4, fontSize:12}}>
-                      Import Save
-                    </button>
-                    <input id="sa-import-settings" type="file" accept=".sav,.txt"
-                      onChange={(e) => { importSave(e); setShowSettings(false); }}
-                      style={{display:'none'}} />
-                  </label>
-                  <div style={{borderTop:'1px solid #1a0a2a', margin:'8px 0'}} />
-                  <button onClick={() => { hardReset(); setShowSettings(false); }}
-                    style={{display:'block', width:'100%', textAlign:'left',
-                      padding:'6px 10px', borderRadius:4, fontSize:12,
-                      color:'#ff4466', borderColor:'#4a1020'}}>
-                    Hard Reset
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+          <button
+            onClick={() => setShowSettings(s => !s)}
+            style={{background:'none', border:'none', color: showSettings ? '#00ff88' : '#3a5a48',
+              fontSize:16, cursor:'pointer', padding:'4px 6px', lineHeight:1,
+              transition:'color 0.15s'}}
+            title="Settings">
+            ⚙
+          </button>
         </div>
       </div>
 
@@ -1349,6 +1312,65 @@ function App() {
               <p><em>Maybe this time, you'll go further.</em></p>
             </div>
             <button className="intro-begin" onClick={() => setIntroSeen(true)}>Begin</button>
+          </div>
+        </div>
+      )}
+
+      {showSettings && (
+        <div className="death-overlay" onClick={() => setShowSettings(false)} style={{zIndex:150}}>
+          <div onClick={e => e.stopPropagation()}
+            style={{background:'rgba(8,4,20,0.98)', border:'1px solid #2a1a4a', borderRadius:10,
+              padding:'24px', minWidth:320, maxWidth:420, boxShadow:'0 8px 40px rgba(0,0,0,0.8)'}}>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20}}>
+              <div style={{fontSize:14, color:'#aa88ff', fontWeight:600, textTransform:'uppercase', letterSpacing:1}}>⚙ Settings</div>
+              <button onClick={() => setShowSettings(false)}
+                style={{background:'none', border:'none', color:'#3a2a5a', fontSize:18, cursor:'pointer', padding:'0 4px'}}>✕</button>
+            </div>
+
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:11, color:'#3a2a5a', textTransform:'uppercase', letterSpacing:1, marginBottom:10}}>Save File</div>
+              <div style={{display:'flex', flexDirection:'column', gap:6}}>
+                <button onClick={() => { exportSave(); setShowSettings(false); }}
+                  style={{padding:'8px 12px', borderRadius:5, fontSize:12, textAlign:'left'}}>
+                  Export Save — download a .sav backup
+                </button>
+                <label>
+                  <button onClick={() => document.getElementById('sa-import-modal').click()}
+                    style={{width:'100%', padding:'8px 12px', borderRadius:5, fontSize:12, textAlign:'left'}}>
+                    Import Save — restore from a .sav file
+                  </button>
+                  <input id="sa-import-modal" type="file" accept=".sav,.txt"
+                    onChange={(e) => { importSave(e); setShowSettings(false); }}
+                    style={{display:'none'}} />
+                </label>
+              </div>
+            </div>
+
+            <div style={{borderTop:'1px solid #1a0a2a', marginBottom:20}} />
+
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:11, color:'#3a2a5a', textTransform:'uppercase', letterSpacing:1, marginBottom:10}}>Tutorial</div>
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <div>
+                  <div style={{fontSize:12, color:'#5a4a7a'}}>First-time tutorial</div>
+                  <div style={{fontSize:10, color:'#2a1a3a', marginTop:2}}>Not yet implemented</div>
+                </div>
+                <button disabled style={{padding:'5px 14px', borderRadius:4, fontSize:11, color:'#2a1a3a', borderColor:'#1a0a2a', cursor:'not-allowed'}}>
+                  OFF
+                </button>
+              </div>
+            </div>
+
+            <div style={{borderTop:'1px solid #1a0a2a', marginBottom:20}} />
+
+            <div>
+              <div style={{fontSize:11, color:'#3a2a5a', textTransform:'uppercase', letterSpacing:1, marginBottom:10}}>Danger Zone</div>
+              <button onClick={() => { hardReset(); setShowSettings(false); }}
+                style={{width:'100%', padding:'8px 12px', borderRadius:5, fontSize:12,
+                  color:'#ff4466', borderColor:'#4a1020', background:'rgba(40,0,15,0.6)'}}>
+                Hard Reset — wipe all progress
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1483,20 +1505,6 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
 
       </div>
 
-      <div className="sidebar-card" style={{marginBottom:8}}>
-        <div className="panel">
-          <div className="sb-title">Save File</div>
-          <div style={{display:'flex',flexDirection:'column',gap:5}}>
-            <button onClick={exportSave} style={{width:'100%',padding:'6px',borderRadius:4,fontSize:11}}>Export Save</button>
-            <label style={{display:'block'}}>
-              <button onClick={() => document.getElementById('sa-import-file').click()} style={{width:'100%',padding:'6px',borderRadius:4,fontSize:11}}>Import Save</button>
-              <input id="sa-import-file" type="file" accept=".sav,.txt" onChange={importSave} style={{display:'none'}} />
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <button className="danger" onClick={hardReset} style={{width:'100%',padding:'8px',borderRadius:6}}>Hard Reset</button>
     </div>
   );
 }
