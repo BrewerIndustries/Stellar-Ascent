@@ -914,6 +914,8 @@ function App() {
 
   useEffect(() => {
     const t = setInterval(() => {
+      const q = tickerQueueRef.current;
+      if (q.length > 3) tickerQueueRef.current = q.slice(-1); // too far behind — jump to latest
       if (tickerQueueRef.current.length > 0) setTickerMsg(tickerQueueRef.current.shift());
     }, 7000);
     return () => clearInterval(t);
