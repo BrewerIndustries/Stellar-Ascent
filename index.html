@@ -786,6 +786,7 @@ function App() {
   const [showDeath, setShowDeath] = useState(false);
   const [pendingInsight, setPendingInsight] = useState(0);
   const [introSeen, setIntroSeen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [tickerMsg, setTickerMsg] = useState('');
   const tickerQueueRef   = useRef([]);
   const prevStoryLenRef  = useRef(0);
@@ -1227,9 +1228,56 @@ function App() {
   return (
     <div>
       <div className="header">
-        <div>
-          <div className="title">⊹ Stellar Ascent</div>
-          <div className="subtitle">v0.1.6 — Depth Update</div>
+        <div style={{display:'flex', alignItems:'center', gap:10}}>
+          <div>
+            <div className="title">⊹ Stellar Ascent</div>
+            <div className="subtitle">v0.1.6 — Depth Update</div>
+          </div>
+          <div style={{position:'relative'}}>
+            <button
+              onClick={() => setShowSettings(s => !s)}
+              style={{background:'none', border:'none', color: showSettings ? '#00ff88' : '#3a5a48',
+                fontSize:16, cursor:'pointer', padding:'4px 6px', lineHeight:1,
+                transition:'color 0.15s'}}
+              title="Settings">
+              ⚙
+            </button>
+            {showSettings && (
+              <>
+                <div onClick={() => setShowSettings(false)}
+                  style={{position:'fixed', inset:0, zIndex:99}} />
+                <div style={{position:'absolute', top:'calc(100% + 6px)', left:0, zIndex:100,
+                  background:'rgba(8,4,18,0.97)', border:'1px solid #2a1a4a',
+                  borderRadius:8, padding:'10px', minWidth:160,
+                  boxShadow:'0 4px 24px rgba(0,0,0,0.6)'}}>
+                  <div style={{fontSize:10, color:'#3a2a5a', textTransform:'uppercase',
+                    letterSpacing:1, marginBottom:8}}>Settings</div>
+                  <button onClick={() => { exportSave(); setShowSettings(false); }}
+                    style={{display:'block', width:'100%', marginBottom:5, textAlign:'left',
+                      padding:'6px 10px', borderRadius:4, fontSize:12}}>
+                    Export Save
+                  </button>
+                  <label style={{display:'block', marginBottom:5}}>
+                    <button onClick={() => document.getElementById('sa-import-settings').click()}
+                      style={{display:'block', width:'100%', textAlign:'left',
+                        padding:'6px 10px', borderRadius:4, fontSize:12}}>
+                      Import Save
+                    </button>
+                    <input id="sa-import-settings" type="file" accept=".sav,.txt"
+                      onChange={(e) => { importSave(e); setShowSettings(false); }}
+                      style={{display:'none'}} />
+                  </label>
+                  <div style={{borderTop:'1px solid #1a0a2a', margin:'8px 0'}} />
+                  <button onClick={() => { hardReset(); setShowSettings(false); }}
+                    style={{display:'block', width:'100%', textAlign:'left',
+                      padding:'6px 10px', borderRadius:4, fontSize:12,
+                      color:'#ff4466', borderColor:'#4a1020'}}>
+                    Hard Reset
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
