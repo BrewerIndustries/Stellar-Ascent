@@ -394,6 +394,45 @@
     gap: 5px;
   }
   .skill-skip-label.skipped { color: #ff4477; text-decoration: line-through; }
+
+  .ticker-bar {
+    background: rgba(5, 3, 12, 0.9);
+    border: 1px solid #1a0a2a;
+    border-radius: 6px;
+    padding: 7px 14px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ticker-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #00cc66; flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(0,255,136,0.7);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .ticker-text {
+    color: #8ab8a0; font-style: italic;
+    animation: ticker-fade-in 0.6s ease-out;
+  }
+  @keyframes ticker-fade-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+  .stat-card {
+    background: rgba(6,3,14,0.6);
+    border: 1px solid #1a0830;
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .stat-card-label { font-size: 11px; color: #4a7060; margin-bottom: 4px; }
+  .stat-card-val   { font-size: 20px; color: #00ff88; font-weight: 600; line-height: 1; }
+  .stat-card-unit  { font-size: 11px; color: #2a5040; font-weight: 400; }
 </style>
 </head>
 <body>
@@ -525,6 +564,38 @@ const SHOP = [
 ];
 
 // ============================================================
+// STORY EVENTS
+// ============================================================
+const STORY_EVENTS = [
+  // Age gates
+  { id: 'age_18',  check: s => Math.floor(s.ageDays/365) >= 18, msg: "You're 18. The garage feels more workshop than hiding place tonight. Something is beginning." },
+  { id: 'age_25',  check: s => Math.floor(s.ageDays/365) >= 25, msg: "Quarter century. You've worn through three workbenches and lost count of the coffee mugs." },
+  { id: 'age_40',  check: s => Math.floor(s.ageDays/365) >= 40, msg: "Forty years in. The stars haven't moved — but your understanding of them has." },
+  { id: 'age_60',  check: s => Math.floor(s.ageDays/365) >= 60, msg: "Sixty. Whatever you were trying to prove, you've proved it — even if no one else knows yet." },
+  // Career paths entered
+  { id: 'enter_academy',   check: s => (s.careers.lab_assistant?.level   || 0) >= 1, msg: "The Academy badge feels strange on your chest. Like wearing someone else's future." },
+  { id: 'enter_corps',     check: s => (s.careers.corps_cadet?.level     || 0) >= 1, msg: "The Corps moves differently than the Garage — less chaos, more consequence." },
+  { id: 'enter_syndicate', check: s => (s.careers.field_agent?.level     || 0) >= 1, msg: "The Syndicate doesn't ask where you've been. Only what you can deliver." },
+  // Career depth
+  { id: 'career_lv10',  check: s => Object.values(s.careers).some(c => c.level >= 10),  msg: "Level 10. Something clicked. The motions are becoming intuition." },
+  { id: 'career_lv50',  check: s => Object.values(s.careers).some(c => c.level >= 50),  msg: "Fifty levels deep. You've stopped noticing the hours." },
+  { id: 'career_lv100', check: s => Object.values(s.careers).some(c => c.level >= 100), msg: "Level 100. You dream about this now. That can't be normal." },
+  { id: 'career_lv200', check: s => Object.values(s.careers).some(c => c.level >= 200), msg: "Level 200. A number that shouldn't mean anything. It means everything." },
+  // Skill depth
+  { id: 'skill_lv10', check: s => Object.values(s.skills).some(sk => sk.level >= 10), msg: "You're improving faster than expected. Something about this life is accelerating." },
+  { id: 'skill_lv30', check: s => Object.values(s.skills).some(sk => sk.level >= 30), msg: "Thirty skill levels. The gap between you and ordinary is getting hard to ignore." },
+  // SC milestones
+  { id: 'sc_10k',  check: s => s.sc >= 10000,    msg: "10,000 SC. You buy coffee without checking the price. Small victories." },
+  { id: 'sc_500k', check: s => s.sc >= 500000,   msg: "Half a million SC. The garage is still home — now it's home by choice." },
+  { id: 'sc_10m',  check: s => s.sc >= 10000000, msg: "Ten million SC. You've stopped thinking about money as a constraint. It's just fuel now." },
+  // Post-rebirth
+  { id: 'rebirth_back',    check: s => s.hasReborn && Math.floor(s.ageDays/365) <= 15,  msg: "Back in the garage. The workbench is exactly as you left it. It shouldn't be." },
+  { id: 'rebirth_memory',  check: s => s.hasReborn && Math.floor(s.ageDays/365) >= 25,  msg: "Twenty-five again, and you remember being seventy. You don't know what to do with that." },
+  { id: 'enter_ascended',  check: s => (s.careers.xenolinguist?.level    || 0) >= 1,    msg: "Xenolinguist. The word sits strangely in your mouth — but you understand it. You always have." },
+  { id: 'cosmic_100',      check: s => s.cosmicInsight >= 100,                           msg: "One hundred Cosmic Insight. The world looks different at this resolution." },
+];
+
+// ============================================================
 // COSMIC INSIGHT MULTIPLIER
 // ============================================================
 // Each Insight point gives a small global multiplier
@@ -568,6 +639,10 @@ const freshState = (insight = 0, hasReborn = false) => ({
   autoPromote: false,
   autoLearn: false,
   skillSkip: {},
+  storyLog: [],
+  firedEvents: {},
+  lifeCount: 1,
+  stats: { peakCosmicInsight: 0 },
 });
 
 // ============================================================
@@ -604,6 +679,9 @@ function App() {
   const [showDeath, setShowDeath] = useState(false);
   const [pendingInsight, setPendingInsight] = useState(0);
   const [introSeen, setIntroSeen] = useState(false);
+  const [tickerMsg, setTickerMsg] = useState('');
+  const tickerQueueRef   = useRef([]);
+  const prevStoryLenRef  = useRef(0);
 
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -712,6 +790,23 @@ function App() {
     return total;
   };
 
+  // ----- story ticker -----
+  useEffect(() => {
+    const log = state.storyLog || [];
+    if (log.length > prevStoryLenRef.current) {
+      const newMsgs = log.slice(prevStoryLenRef.current).map(e => e.msg);
+      tickerQueueRef.current.push(...newMsgs);
+      prevStoryLenRef.current = log.length;
+    }
+  }, [(state.storyLog || []).length]);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (tickerQueueRef.current.length > 0) setTickerMsg(tickerQueueRef.current.shift());
+    }, 7000);
+    return () => clearInterval(t);
+  }, []);
+
   // ----- save -----
   useEffect(() => {
     const t = setInterval(() => {
@@ -816,11 +911,17 @@ function App() {
             s.shop = stripped;
           }
 
-          // Passive Cosmic Insight from The Cube (small per-day trickle)
-          if (s.shop.the_cube && s.hasReborn) {
-            // accumulated at rebirth time; this is just visual feedback in late game
-            // We'll bonus this into calcInsightGain via the cube shop flag
-          }
+          // Story events — fire once per life, add to log
+          STORY_EVENTS.forEach(ev => {
+            if (!s.firedEvents[ev.id] && ev.check(s)) {
+              s.firedEvents = { ...s.firedEvents, [ev.id]: true };
+              s.storyLog = [...(s.storyLog || []), {
+                msg: ev.msg,
+                ageY: Math.floor(s.ageDays / DAYS_PER_YEAR),
+                life: s.lifeCount || 1,
+              }];
+            }
+          });
 
           // Death check
           if (s.ageDays >= DEATH_AGE_DAYS) {
@@ -844,6 +945,32 @@ function App() {
   const toggleAutoPromote = () => setState(s => ({ ...s, autoPromote: !s.autoPromote }));
   const toggleAutoLearn   = () => setState(s => ({ ...s, autoLearn:   !s.autoLearn   }));
   const toggleSkillSkip   = (id) => setState(s => ({ ...s, skillSkip: { ...s.skillSkip, [id]: !s.skillSkip[id] } }));
+  const exportSave = () => {
+    try {
+      const data = localStorage.getItem('stellar_ascent_save');
+      if (!data) return alert('No save data found. Play a bit first!');
+      const blob = new Blob([btoa(unescape(encodeURIComponent(data)))], { type: 'text/plain' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `stellar-ascent-${Date.now()}.sav`; a.click();
+      URL.revokeObjectURL(url);
+    } catch(e) { alert('Export failed: ' + e.message); }
+  };
+  const importSave = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const decoded = decodeURIComponent(escape(atob(ev.target.result.trim())));
+        const parsed  = JSON.parse(decoded);
+        if (!parsed.careers) throw new Error('Not a valid save');
+        localStorage.setItem('stellar_ascent_save', decoded);
+        window.location.reload();
+      } catch(err) { alert('Invalid save file: ' + err.message); }
+    };
+    reader.readAsText(file);
+  };
   const buyShop = (item) => {
     setState(s => {
       const newShop = { ...s.shop };
@@ -871,6 +998,9 @@ function App() {
       SKILLS.forEach(sk => {
         next.skills[sk.id].maxLevel = Math.max(s.skills[sk.id]?.maxLevel || 0, s.skills[sk.id]?.level || 0);
       });
+      next.lifeCount = (s.lifeCount || 1) + 1;
+      next.storyLog  = s.storyLog || [];
+      next.stats     = { peakCosmicInsight: Math.max(s.stats?.peakCosmicInsight || 0, s.cosmicInsight + pendingInsight) };
       return next;
     });
     setShowDeath(false);
@@ -932,9 +1062,16 @@ function App() {
       <div className="header">
         <div>
           <div className="title">⊹ Stellar Ascent</div>
-          <div className="subtitle">v0.1.4 — The Garage Years</div>
+          <div className="subtitle">v0.1.5 — Story & Systems</div>
         </div>
       </div>
+
+      {tickerMsg && (
+        <div className="ticker-bar">
+          <div className="ticker-dot" />
+          <div className="ticker-text" key={tickerMsg}>{tickerMsg}</div>
+        </div>
+      )}
 
       <div className="main-layout">
         <StatusBar
@@ -944,6 +1081,7 @@ function App() {
           speed={speed} setSpeed={setSpeed} paused={paused} setPaused={setPaused}
           hardReset={hardReset}
           toggleAutoPromote={toggleAutoPromote} toggleAutoLearn={toggleAutoLearn}
+          exportSave={exportSave} importSave={importSave}
         />
 
         <div>
@@ -953,6 +1091,9 @@ function App() {
               { id:'skills',  label:'Skills',  bg:'rgba(50,0,90,0.6)',   color:'#bf5fff', border:'#7700bb', glow:'rgba(191,95,255,0.15)'  },
               { id:'shop',    label:'Shop',    bg:'rgba(0,30,80,0.6)',   color:'#00aaff', border:'#0055cc', glow:'rgba(0,170,255,0.15)'   },
               { id:'rebirth', label:'Rebirth', bg:'rgba(70,30,0,0.6)',   color:'#ff8800', border:'#aa5500', glow:'rgba(255,136,0,0.15)'   },
+              { id:'story',   label:'Story',   bg:'rgba(40,0,70,0.6)',   color:'#cc88ff', border:'#8800cc', glow:'rgba(204,136,255,0.15)'  },
+              { id:'stats',   label:'Stats',   bg:'rgba(0,50,40,0.6)',   color:'#00ccaa', border:'#009988', glow:'rgba(0,204,170,0.15)'    },
+              { id:'notes',   label:'Notes',   bg:'rgba(50,35,0,0.6)',   color:'#f0c850', border:'#aa8800', glow:'rgba(240,200,80,0.15)'   },
             ].map(t => (
               <button key={t.id}
                 className={`tab ${tab === t.id ? 'active' : ''}`}
@@ -966,6 +1107,9 @@ function App() {
           {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} toggleSkillSkip={toggleSkillSkip} />}
           {tab === 'shop' && <ShopTab state={state} mults={mults} buyShop={buyShop} isShopUnlocked={isShopUnlocked} />}
           {tab === 'rebirth' && <RebirthTab state={state} pendingInsight={calcInsightGain(state)} />}
+          {tab === 'story'   && <StoryTab storyLog={state.storyLog || []} lifeCount={state.lifeCount || 1} />}
+          {tab === 'stats'   && <StatsTab state={state} mults={mults} />}
+          {tab === 'notes'   && <PatchNotesTab />}
         </div>
       </div>
 
@@ -1011,7 +1155,7 @@ function App() {
 // ============================================================
 // SIDEBAR
 // ============================================================
-function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn }) {
+function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn, exportSave, importSave }) {
   const job = CAREERS.find(c => c.id === state.activeJob);
   const skill = SKILLS.find(s => s.id === state.activeSkill);
   const jobData = job ? state.careers[job.id] : null;
@@ -1116,6 +1260,19 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
           </>) : <div className="sb-label">None</div>}
         </div>
 
+      </div>
+
+      <div className="sidebar-card" style={{marginBottom:8}}>
+        <div className="panel">
+          <div className="sb-title">Save File</div>
+          <div style={{display:'flex',flexDirection:'column',gap:5}}>
+            <button onClick={exportSave} style={{width:'100%',padding:'6px',borderRadius:4,fontSize:11}}>Export Save</button>
+            <label style={{display:'block'}}>
+              <button onClick={() => document.getElementById('sa-import-file').click()} style={{width:'100%',padding:'6px',borderRadius:4,fontSize:11}}>Import Save</button>
+              <input id="sa-import-file" type="file" accept=".sav,.txt" onChange={importSave} style={{display:'none'}} />
+            </label>
+          </div>
+        </div>
       </div>
 
       <button className="danger" onClick={hardReset} style={{width:'100%',padding:'8px',borderRadius:6}}>Hard Reset</button>
@@ -1335,6 +1492,123 @@ function RebirthTab({ state, pendingInsight }) {
           You have not yet completed a full loop. Reach the end of your life to discover the cube.
         </div>
       )}
+    </div>
+  );
+}
+
+function StoryTab({ storyLog, lifeCount }) {
+  if (!storyLog || storyLog.length === 0) {
+    return (
+      <div className="panel">
+        <div style={{color:'#5a3a7a', fontStyle:'italic', fontSize:13, padding:'8px 0'}}>
+          No entries yet. Live your life — the story will write itself.
+        </div>
+      </div>
+    );
+  }
+  const byLife = {};
+  storyLog.forEach(e => { (byLife[e.life] = byLife[e.life] || []).push(e); });
+  const lifeNums = Object.keys(byLife).map(Number).sort((a,b) => b - a);
+  return (
+    <div className="panel">
+      {lifeNums.map(ln => (
+        <div key={ln} style={{marginBottom: 20}}>
+          <div style={{fontSize:12, color:'#8800cc', fontWeight:600, letterSpacing:1, textTransform:'uppercase', marginBottom:8, borderBottom:'1px solid #2a0840', paddingBottom:4}}>
+            {ln === lifeCount ? `Life ${ln} — Current` : `Life ${ln}`}
+          </div>
+          {[...byLife[ln]].reverse().map((entry, i) => (
+            <div key={i} style={{padding:'7px 0', borderBottom:'1px solid #120824', display:'flex', gap:12, alignItems:'baseline'}}>
+              <span style={{color:'#5a3a7a', fontSize:11, flexShrink:0, whiteSpace:'nowrap'}}>Age {entry.ageY}</span>
+              <span style={{color:'#c0a8e0', fontSize:13, fontStyle:'italic', lineHeight:1.5}}>{entry.msg}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StatsTab({ state, mults }) {
+  const peakCareer = Math.max(0, ...Object.values(state.careers).map(c => Math.max(c.maxLevel || 0, c.level || 0)));
+  const peakSkill  = Math.max(0, ...Object.values(state.skills).map(sk => Math.max(sk.maxLevel || 0, sk.level || 0)));
+  const totalCareerLevels = Object.values(state.careers).reduce((s, c) => s + (c.level || 0), 0);
+  const peakCI = Math.max(state.stats?.peakCosmicInsight || 0, state.cosmicInsight);
+  const cards = [
+    { label: 'Lives Started',       val: state.lifeCount || 1,            unit: '' },
+    { label: 'Total Days Lived',    val: formatNum(state.totalDays || 0), unit: 'days' },
+    { label: 'Cosmic Insight',      val: formatNum(state.cosmicInsight),  unit: 'CI' },
+    { label: 'Peak Cosmic Insight', val: formatNum(peakCI),              unit: 'CI' },
+    { label: 'Career Levels (Now)', val: totalCareerLevels,               unit: '' },
+    { label: 'Highest Career Lv',   val: peakCareer,                      unit: '' },
+    { label: 'Highest Skill Lv',    val: peakSkill,                       unit: '' },
+    { label: 'Story Entries',       val: (state.storyLog || []).length,   unit: '' },
+    { label: 'Global Multiplier',   val: `×${mults.cosmicMult.toFixed(3)}`,unit: '' },
+    { label: 'XP Multiplier',       val: `×${mults.happinessMult.toFixed(2)}`, unit: '' },
+  ];
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#00ccaa', textShadow:'0 0 8px rgba(0,204,170,0.3)', marginBottom:12}}>⊹ Statistics</div>
+      <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+        {cards.map(c => (
+          <div key={c.label} className="stat-card">
+            <div className="stat-card-label">{c.label}</div>
+            <div className="stat-card-val">{c.val} <span className="stat-card-unit">{c.unit}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PatchNotesTab() {
+  const notes = [
+    { v: 'v0.1.5', title: 'Story & Systems', items: [
+      'Story ticker — milestone events fire narrative flavor text below the header',
+      'Story tab — full log of every story beat, grouped by life',
+      'Statistics tab — cross-life metrics and current run numbers',
+      'Patch Notes tab (you are here)',
+      'Save export / import — base64 .sav file download and upload',
+    ]},
+    { v: 'v0.1.4', title: 'Pacing', items: [
+      'Day tick slowed 4× (TICK_MS 50 → 200ms). A first life is now ~68 minutes at 1× speed',
+    ]},
+    { v: 'v0.1.3', title: 'Equipment & Stability', items: [
+      'Equipment items now stack — multiple active simultaneously, bonuses combine',
+      'Fixed blank screen crash when loading saves from previous versions',
+    ]},
+    { v: 'v0.1.2', title: 'Paths & Happiness', items: [
+      '4 career paths — The Garage (always), The Academy, The Corps, The Syndicate',
+      'Happiness system — Living Quarters set happiness; happiness multiplies all XP',
+      'Better labels — Career rows show requirements, pay rates, and XP/day',
+      'Path-specific skill bonuses',
+    ]},
+    { v: 'v0.1.1', title: 'UI Pass', items: [
+      'Intro overlay on page load — game pauses until you click Begin',
+      'Left status sidebar — Life bar, Speed, Finances, Career & Skill progress',
+      'Hard Reset moved into sidebar',
+    ]},
+    { v: 'v0.1', title: 'Scaffold', items: [
+      'Initial release — 25 careers, 16 skills, 25 shop items',
+      'Rebirth loop with Cosmic Insight currency',
+      'Tier 5 careers and The Cube gated behind first rebirth',
+      'localStorage auto-save every 30 seconds',
+    ]},
+  ];
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#f0c850', textShadow:'0 0 8px rgba(240,200,80,0.3)', marginBottom:12}}>⊹ Patch Notes</div>
+      {notes.map(note => (
+        <div key={note.v} style={{marginBottom:18}}>
+          <div style={{fontSize:13, color:'#f0c850', fontWeight:600, marginBottom:6}}>
+            {note.v} <span style={{color:'#907830', fontWeight:400}}>— {note.title}</span>
+          </div>
+          <ul style={{paddingLeft:18, margin:0}}>
+            {note.items.map((item, i) => (
+              <li key={i} style={{fontSize:12, color:'#7a9888', marginBottom:4, lineHeight:1.5}}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
