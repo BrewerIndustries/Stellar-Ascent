@@ -511,7 +511,7 @@ const SKILLS = [
   // Hands-On
   { id: 'dexterity', name: 'Dexterity', category: 'Hands-On', effect: '+1% XP/lv for Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
   { id: 'mechanical_aptitude', name: 'Mechanical Aptitude', category: 'Hands-On', effect: '+1% SC/lv from Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
-  { id: 'tool_mastery', name: 'Tool Mastery', category: 'Hands-On', effect: 'Reduces SC/day cost of Equipment', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
+  { id: 'tool_mastery', name: 'Frugality', category: 'Hands-On', effect: 'Reduces SC/day cost of all purchases', effectFn: (lvl) => 1 / (1 + lvl * 0.005), prevReq: 'scrap_scavenger', prevReqLvl: 10 },
 
   // Theoretical
   { id: 'theory', name: 'Theory', category: 'Theoretical', effect: '+1% XP/lv for Academy path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'lab_assistant', prevReqLvl: 1 },
@@ -596,6 +596,40 @@ const STORY_EVENTS = [
 ];
 
 // ============================================================
+// ACHIEVEMENTS
+// ============================================================
+const ACHIEVEMENTS = [
+  // Career depth
+  { id: 'first_level',  icon: '▶', name: 'Off the Ground',  desc: 'Level up any career for the first time',    check: s => Object.values(s.careers).some(c => c.level >= 1)   },
+  { id: 'career_10',   icon: '↑', name: 'Getting Good',    desc: 'Reach level 10 in any career',              check: s => Object.values(s.careers).some(c => c.level >= 10)  },
+  { id: 'career_50',   icon: '⭐', name: 'Veteran',         desc: 'Reach level 50 in any career',              check: s => Object.values(s.careers).some(c => c.level >= 50)  },
+  { id: 'career_100',  icon: '⊹', name: 'Century',         desc: 'Reach level 100 in any career',             check: s => Object.values(s.careers).some(c => c.level >= 100) },
+  { id: 'career_200',  icon: '∞', name: 'Unstoppable',     desc: 'Reach level 200 in any career',             check: s => Object.values(s.careers).some(c => c.level >= 200) },
+  // Paths explored
+  { id: 'enter_academy',   icon: '◈', name: 'Admitted',    desc: 'Enter The Academy career path',             check: s => (s.careers.lab_assistant?.level  || 0) >= 1 },
+  { id: 'enter_corps',     icon: '◈', name: 'Enlisted',    desc: 'Join The Corps career path',                check: s => (s.careers.corps_cadet?.level    || 0) >= 1 },
+  { id: 'enter_syndicate', icon: '◈', name: 'Connected',   desc: 'Join The Syndicate career path',            check: s => (s.careers.field_agent?.level    || 0) >= 1 },
+  { id: 'all_paths',       icon: '◉', name: 'Path Finder', desc: 'Work careers in all 4 pre-rebirth paths',  check: s => (s.careers.lab_assistant?.level || 0) >= 1 && (s.careers.corps_cadet?.level || 0) >= 1 && (s.careers.field_agent?.level || 0) >= 1 },
+  // Skills
+  { id: 'skill_10',  icon: '◆', name: 'Quick Learner', desc: 'Train any skill to level 10',                  check: s => Object.values(s.skills).some(sk => sk.level >= 10) },
+  { id: 'skill_25',  icon: '◆', name: 'Dedicated',     desc: 'Train any skill to level 25',                  check: s => Object.values(s.skills).some(sk => sk.level >= 25) },
+  { id: 'polymath',  icon: '◆', name: 'Polymath',      desc: 'Have 3 different skills at level 10 or above', check: s => Object.values(s.skills).filter(sk => sk.level >= 10).length >= 3 },
+  // Money
+  { id: 'sc_1k',  icon: '◇', name: 'Pocket Change', desc: 'Accumulate 1,000 SC',     check: s => s.sc >= 1000    },
+  { id: 'sc_50k', icon: '◇', name: 'Comfortable',   desc: 'Accumulate 50,000 SC',    check: s => s.sc >= 50000   },
+  { id: 'sc_1m',  icon: '◇', name: 'Loaded',        desc: 'Accumulate 1,000,000 SC', check: s => s.sc >= 1000000 },
+  // Shop
+  { id: 'housing_up',      icon: '▲', name: 'Moving Up',  desc: 'Upgrade your Living Quarters above Cramped',  check: s => SHOP.some(i => i.category === 'Living' && i.id !== 'cramped_apt' && s.shop[i.id]) },
+  { id: 'three_equipment', icon: '▲', name: 'Tooled Up',  desc: 'Have 3 Equipment items active simultaneously', check: s => SHOP.filter(i => i.category === 'Equipment' && s.shop[i.id]).length >= 3 },
+  // Rebirth
+  { id: 'first_rebirth', icon: '↻', name: 'The Loop',        desc: 'Complete your first rebirth',  check: s => s.hasReborn },
+  { id: 'third_rebirth', icon: '↻', name: 'Seasoned Looper', desc: 'Begin your fourth life',        check: s => (s.lifeCount || 1) >= 4 },
+  { id: 'insight_100',   icon: '✦', name: 'Cosmic',          desc: 'Reach 100 Cosmic Insight',      check: s => s.cosmicInsight >= 100 },
+  // Life
+  { id: 'age_65', icon: '◌', name: 'Lived Well', desc: 'Reach age 65 in any life', check: s => Math.floor(s.ageDays / 365) >= 65 },
+];
+
+// ============================================================
 // COSMIC INSIGHT MULTIPLIER
 // ============================================================
 // Each Insight point gives a small global multiplier
@@ -643,6 +677,7 @@ const freshState = (insight = 0, hasReborn = false) => ({
   firedEvents: {},
   lifeCount: 1,
   stats: { peakCosmicInsight: 0 },
+  achievements: {},
 });
 
 // ============================================================
@@ -782,7 +817,7 @@ function App() {
     SHOP.forEach(item => {
       if (s.shop[item.id]) {
         let cost = item.cost;
-        if (item.category === 'Equipment') cost *= mults.skills.tool_mastery;
+        cost *= mults.skills.tool_mastery;
         cost *= mults.skills.composure;
         total += cost;
       }
@@ -844,7 +879,7 @@ function App() {
             const newXp = cur.xp + xpGain;
             const need = xpToLevel(cur.level);
             if (newXp >= need) {
-              s.careers[job.id] = { level: cur.level + 1, xp: newXp - need };
+              s.careers[job.id] = { ...cur, level: cur.level + 1, xp: newXp - need };
             } else {
               s.careers[job.id] = { ...cur, xp: newXp };
             }
@@ -858,7 +893,7 @@ function App() {
             const newXp = cur.xp + xpGain;
             const need = xpToLevel(cur.level);
             if (newXp >= need) {
-              s.skills[skill.id] = { level: cur.level + 1, xp: newXp - need };
+              s.skills[skill.id] = { ...cur, level: cur.level + 1, xp: newXp - need };
             } else {
               s.skills[skill.id] = { ...cur, xp: newXp };
             }
@@ -910,6 +945,19 @@ function App() {
             });
             s.shop = stripped;
           }
+
+          // Achievements — persist across rebirths
+          ACHIEVEMENTS.forEach(ach => {
+            if (!s.achievements[ach.id] && ach.check(s)) {
+              s.achievements = { ...s.achievements, [ach.id]: true };
+              s.storyLog = [...(s.storyLog || []), {
+                msg: `⊹ Achievement unlocked: ${ach.name} — ${ach.desc}`,
+                ageY: Math.floor(s.ageDays / DAYS_PER_YEAR),
+                life: s.lifeCount || 1,
+                achievement: true,
+              }];
+            }
+          });
 
           // Story events — fire once per life, add to log
           STORY_EVENTS.forEach(ev => {
@@ -998,9 +1046,10 @@ function App() {
       SKILLS.forEach(sk => {
         next.skills[sk.id].maxLevel = Math.max(s.skills[sk.id]?.maxLevel || 0, s.skills[sk.id]?.level || 0);
       });
-      next.lifeCount = (s.lifeCount || 1) + 1;
-      next.storyLog  = s.storyLog || [];
-      next.stats     = { peakCosmicInsight: Math.max(s.stats?.peakCosmicInsight || 0, s.cosmicInsight + pendingInsight) };
+      next.lifeCount    = (s.lifeCount || 1) + 1;
+      next.storyLog     = s.storyLog || [];
+      next.stats        = { peakCosmicInsight: Math.max(s.stats?.peakCosmicInsight || 0, s.cosmicInsight + pendingInsight) };
+      next.achievements = s.achievements || {};
       return next;
     });
     setShowDeath(false);
@@ -1093,7 +1142,8 @@ function App() {
               { id:'rebirth', label:'Rebirth', bg:'rgba(70,30,0,0.6)',   color:'#ff8800', border:'#aa5500', glow:'rgba(255,136,0,0.15)'   },
               { id:'story',   label:'Story',   bg:'rgba(40,0,70,0.6)',   color:'#cc88ff', border:'#8800cc', glow:'rgba(204,136,255,0.15)'  },
               { id:'stats',   label:'Stats',   bg:'rgba(0,50,40,0.6)',   color:'#00ccaa', border:'#009988', glow:'rgba(0,204,170,0.15)'    },
-              { id:'notes',   label:'Notes',   bg:'rgba(50,35,0,0.6)',   color:'#f0c850', border:'#aa8800', glow:'rgba(240,200,80,0.15)'   },
+              { id:'achieve',  label:'Achieve',  bg:'rgba(50,35,0,0.6)',  color:'#f0c850', border:'#aa8800', glow:'rgba(240,200,80,0.15)'   },
+              { id:'notes',   label:'Notes',   bg:'rgba(25,15,0,0.6)',   color:'#907830', border:'#604800', glow:'rgba(144,120,48,0.15)'   },
             ].map(t => (
               <button key={t.id}
                 className={`tab ${tab === t.id ? 'active' : ''}`}
@@ -1109,6 +1159,7 @@ function App() {
           {tab === 'rebirth' && <RebirthTab state={state} pendingInsight={calcInsightGain(state)} />}
           {tab === 'story'   && <StoryTab storyLog={state.storyLog || []} lifeCount={state.lifeCount || 1} />}
           {tab === 'stats'   && <StatsTab state={state} mults={mults} />}
+          {tab === 'achieve' && <AchievementsTab state={state} />}
           {tab === 'notes'   && <PatchNotesTab />}
         </div>
       </div>
@@ -1303,7 +1354,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
               const need = xpToLevel(cur.level);
               const pct = Math.min(100, (cur.xp / need) * 100);
               const isActive = state.activeJob === career.id;
-              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + Math.log10(cur.level + 1));
+              const payGain = career.basePay * (1 + Math.log10(cur.level + 1));
               const xpGain = career.baseXp * jobXpMult(state, mults, career);
               const prevCareer = career.prevReq ? CAREERS.find(c => c.id === career.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${career.levelReq}` : '';
@@ -1427,7 +1478,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
             const unlocked = isShopUnlocked(item);
             const active = !!state.shop[item.id];
             let cost = item.cost;
-            if (item.category === 'Equipment') cost *= mults.skills.tool_mastery;
+            cost *= mults.skills.tool_mastery;
             cost *= mults.skills.composure;
             return (
               <div key={item.id} className={`row ${!unlocked ? 'locked' : ''}`}
@@ -1556,6 +1607,40 @@ function StatsTab({ state, mults }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function AchievementsTab({ state }) {
+  const unlocked = ACHIEVEMENTS.filter(a => state.achievements?.[a.id]);
+  const locked   = ACHIEVEMENTS.filter(a => !state.achievements?.[a.id]);
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#f0c850', textShadow:'0 0 8px rgba(240,200,80,0.3)', marginBottom:4}}>⊹ Achievements</div>
+      <div style={{color:'#5a7060', fontSize:12, marginBottom:14}}>{unlocked.length} / {ACHIEVEMENTS.length} unlocked</div>
+      <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom: locked.length ? 16 : 0}}>
+        {unlocked.map(a => (
+          <div key={a.id} style={{background:'rgba(40,28,0,0.6)', border:'1px solid #aa8800', borderRadius:6, padding:'10px 12px'}}>
+            <div style={{fontSize:16, color:'#f0c850', marginBottom:4}}>{a.icon}</div>
+            <div style={{fontSize:13, color:'#f0c850', fontWeight:600, marginBottom:3}}>{a.name}</div>
+            <div style={{fontSize:11, color:'#907830', lineHeight:1.4}}>{a.desc}</div>
+          </div>
+        ))}
+      </div>
+      {locked.length > 0 && (
+        <>
+          <div style={{fontSize:11, color:'#3a5048', textTransform:'uppercase', letterSpacing:1, marginBottom:8, borderTop:'1px solid #1a0830', paddingTop:12}}>Locked ({locked.length})</div>
+          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8}}>
+            {locked.map(a => (
+              <div key={a.id} style={{background:'rgba(6,3,14,0.5)', border:'1px solid #1a0830', borderRadius:6, padding:'10px 12px', opacity:0.55}}>
+                <div style={{fontSize:16, color:'#2a3a30', marginBottom:4}}>?</div>
+                <div style={{fontSize:13, color:'#2a4030', fontWeight:600, marginBottom:3}}>???</div>
+                <div style={{fontSize:11, color:'#2a3a30', lineHeight:1.4}}>{a.desc}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
