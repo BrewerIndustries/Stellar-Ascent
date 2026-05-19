@@ -1475,7 +1475,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
               const need = xpToLevel(cur.level);
               const pct = Math.min(100, (cur.xp / need) * 100);
               const isActive = state.activeJob === career.id;
-              const payGain = career.basePay * (1 + Math.log10(cur.level + 1));
+              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + Math.log10(cur.level + 1));
               const xpGain = career.baseXp * jobXpMult(state, mults, career);
               const prevCareer = career.prevReq ? CAREERS.find(c => c.id === career.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${career.levelReq}` : '';
