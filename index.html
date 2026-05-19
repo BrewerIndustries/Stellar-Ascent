@@ -507,6 +507,7 @@ const SKILLS = [
   { id: 'ingenuity', name: 'Ingenuity', category: 'Fundamentals', effect: '+1% SC/lv from every job', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: null },
   { id: 'endurance', name: 'Endurance', category: 'Fundamentals', effect: '+0.5% lifespan/lv — live longer each loop', effectFn: (lvl) => 1 + lvl * 0.005, prevReq: null },
   { id: 'memory', name: 'Memory', category: 'Fundamentals', effect: '+2% Cosmic Insight/lv earned on rebirth', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
+  { id: 'cryonics', name: 'Cryonics', category: 'Fundamentals', effect: '+2% Cryostasis lifespan bonus/lv', effectFn: (lvl) => 1 + lvl * 0.02, prevReq: null },
 
   // Hands-On
   { id: 'dexterity', name: 'Dexterity', category: 'Hands-On', effect: '+1% XP/lv for Garage path jobs', effectFn: (lvl) => 1 + lvl * 0.01, prevReq: 'scrap_scavenger', prevReqLvl: 10 },
@@ -560,6 +561,7 @@ const SHOP = [
   { id: 'journals', name: 'Trade Journals', category: 'Misc', cost: 350, effect: 'Pattern Recognition +30%', bonus: { pattern_recognition: 1.3 } },
   { id: 'sleep_opt', name: 'Sleep Optimization', category: 'Misc', cost: 4500, effect: 'All XP +20%', bonus: { all_xp: 1.2 } },
   { id: 'telescope', name: 'Astronomy Telescope', category: 'Misc', cost: 1200, effect: 'Memory +75%', bonus: { memory: 1.75 } },
+  { id: 'cryostasis', name: 'Cryostasis Pod', category: 'Misc', cost: 35000, effect: 'Lifespan ×1.5 — boosted by Cryonics skill', bonus: { cryo: 1.5 } },
   { id: 'the_cube', name: 'The Cube', category: 'Misc', cost: 0, effect: 'Cosmic Insight +50%/day passive', bonus: { insight_passive: 1.5 }, postRebirth: true },
 ];
 
@@ -630,6 +632,69 @@ const ACHIEVEMENTS = [
 ];
 
 // ============================================================
+// SIGNAL EVENTS (Codex signal log — unlock once, persist across rebirths)
+// ============================================================
+const SIGNAL_EVENTS = [
+  { id: 'sig_01', check: s => Math.floor(s.ageDays/365) >= 16,
+    title: 'SIGNAL — Unknown Origin',  freq: '4.2 GHz',
+    msg: 'Intermittent. Repeating at irregular intervals. Pattern unclear. Most likely equipment noise.' },
+  { id: 'sig_02', check: s => Object.values(s.careers).some(c => c.level >= 20),
+    title: 'SIGNAL — Sector Unknown',  freq: '4.2 GHz',
+    msg: 'Same frequency. Different pattern. You ran the numbers three times. Not equipment noise.' },
+  { id: 'sig_03', check: s => Object.values(s.careers).some(c => c.level >= 50),
+    title: 'ANOMALY — Local Space',    freq: '7.7 GHz',
+    msg: 'A second frequency. Both signals share a mathematical relationship you cannot yet name.' },
+  { id: 'sig_04', check: s => s.sc >= 500000,
+    title: 'SIGNAL — Deep Space',      freq: '4.2 GHz',
+    msg: 'A third variation. The pattern changed after you upgraded the equipment. As if it responded.' },
+  { id: 'sig_05', check: s => Object.values(s.careers).some(c => c.level >= 100),
+    title: 'ANOMALY — Proxima Region', freq: '∞ GHz',
+    msg: 'The pattern is complete. You do not know what it means. You know it is meant for you.' },
+];
+
+// ============================================================
+// LORE FRAGMENTS (Codex — unlock at milestones, persist across rebirths)
+// ============================================================
+const LORE_FRAGMENTS = [
+  { id: 'lore_beginning', check: s => Math.floor(s.ageDays/365) >= 20,
+    title: 'Fragment I — The Garage Years',
+    text: 'What drives a person to keep building things no one asked for? Curiosity, maybe. Or something older. A feeling that the work itself is the point — that the answer is somewhere inside the next iteration, the next version, the next attempt.' },
+  { id: 'lore_signals', check: s => Object.values(s.careers).some(c => c.level >= 30),
+    title: 'Fragment II — The Frequencies',
+    text: 'You have been cataloguing the signals for months. They are not random. They are not natural. They have structure — mathematical structure — and it is growing more complex the more you look. Something is transmitting. Something that knows you are listening.' },
+  { id: 'lore_rebirth', check: s => s.hasReborn,
+    title: 'Fragment III — Something Is Wrong With Time',
+    text: 'The first time you understood what was happening, you didn\'t have words for it. You still don\'t. The memories are too clean. Too complete. No one should remember being seventy when they are fourteen. No one should know the weight of a workbench they have not yet owned.' },
+  { id: 'lore_cube', check: s => !!s.shop?.the_cube,
+    title: 'Fragment IV — The Object',
+    text: 'Triangular. Warm to the touch despite being left in the cold for years. No seams. No markings you can identify with certainty. And yet — you understand, without being told, what it is for. Not intellectually. Somewhere older than that.' },
+  { id: 'lore_contact', check: s => (s.careers.xenolinguist?.level || 0) >= 1,
+    title: 'Fragment V — First Contact',
+    text: 'They speak in mathematics first. Then geometry. Then something that isn\'t language at all — more like shared inference. They have been watching. Not patiently. With interest. They have been watching for a very long time.' },
+  { id: 'lore_test', check: s => s.cosmicInsight >= 200,
+    title: 'Fragment VI — The Test',
+    text: 'The loop isn\'t punishment. It isn\'t reward. It is evaluation — of a particular kind of mind. One that keeps going without being told to. One that builds without permission. They needed to be sure. That is all they have ever said about it. They needed to be sure.' },
+  { id: 'lore_many', check: s => (s.lifeCount || 1) >= 3,
+    title: 'Fragment VII — The Others',
+    text: 'You are not the first. The signals you catalogued in your early years — those were not from them. Those were from others like you, in other loops, on other worlds. They all found the frequencies. They all built something. Not all of them made it this far.' },
+];
+
+// ============================================================
+// BUILDINGS (passive income — persist through rebirth, PKR-scale costs)
+// ============================================================
+const BUILDINGS = [
+  { id: 'research_station', name: 'Research Station',    desc: 'An automated lab running experiments and analysis around the clock.', baseCost: 5e8,   income: 1500,   costGrowthFactor: 1.15 },
+  { id: 'orbital_platform', name: 'Orbital Platform',    desc: 'Zero-gravity manufacturing and long-range signal monitoring.', baseCost: 5e9,   income: 18000,  costGrowthFactor: 1.12 },
+  { id: 'dyson_segment',    name: 'Dyson Array Segment', desc: 'One piece of an impossibly large structure. Each segment compounds the last.', baseCost: 5e10,  income: 200000, costGrowthFactor: 1.10 },
+];
+
+const freshBuildings = () => {
+  const obj = {};
+  BUILDINGS.forEach(b => { obj[b.id] = { count: 0, nextCost: b.baseCost }; });
+  return obj;
+};
+
+// ============================================================
 // COSMIC INSIGHT MULTIPLIER
 // ============================================================
 // Each Insight point gives a small global multiplier
@@ -678,6 +743,9 @@ const freshState = (insight = 0, hasReborn = false) => ({
   lifeCount: 1,
   stats: { peakCosmicInsight: 0 },
   achievements: {},
+  codexSignals: {},
+  codexLore: {},
+  buildings: freshBuildings(),
 });
 
 // ============================================================
@@ -699,9 +767,12 @@ function App() {
             careers:     { ...fresh.careers, ...parsed.careers },
             skills:      { ...fresh.skills,  ...parsed.skills  },
             shop:        parsed.shop || fresh.shop,
-            skillSkip:   parsed.skillSkip || {},
-            autoPromote: parsed.autoPromote || false,
-            autoLearn:   parsed.autoLearn   || false,
+            skillSkip:    parsed.skillSkip    || {},
+            autoPromote:  parsed.autoPromote  || false,
+            autoLearn:    parsed.autoLearn    || false,
+            codexSignals: parsed.codexSignals || {},
+            codexLore:    parsed.codexLore    || {},
+            buildings:    { ...freshBuildings(), ...(parsed.buildings || {}) },
           };
         }
       }
@@ -750,6 +821,7 @@ function App() {
     const resonance = SKILLS.find(x => x.id === 'resonance').effectFn(skillLevel('resonance'));
     const xenocog = SKILLS.find(x => x.id === 'xenocognition').effectFn(skillLevel('xenocognition'));
     const toolMastery = SKILLS.find(x => x.id === 'tool_mastery').effectFn(skillLevel('tool_mastery'));
+    const cryonics    = SKILLS.find(x => x.id === 'cryonics').effectFn(skillLevel('cryonics'));
 
     // Shop bonuses aggregated
     const shopBonus = { focus: 1, ingenuity: 1, theory: 1, charisma: 1, dexterity: 1, mechanical_aptitude: 1,
@@ -770,14 +842,19 @@ function App() {
     });
     const happinessMult = happiness / 50;
 
+    // Cryostasis lifespan multiplier (base × cryonics skill boost)
+    const cryoBase = s.shop?.cryostasis ? (shopBonus.cryo || 1.5) : 1;
+    const cryoMult = cryoBase === 1 ? 1 : cryoBase * cryonics;
+
     return {
       cosmicMult,
       happiness,
       happinessMult,
+      cryoMult,
       skills: { focus, ingenuity, endurance, dexterity, mechanical_aptitude: mechAptitude,
                 theory, mathematical_insight: mathInsight, pattern_recognition: patternRec,
                 charisma, strategic_vision: stratVision, composure, resonance,
-                xenocognition: xenocog, tool_mastery: toolMastery },
+                xenocognition: xenocog, tool_mastery: toolMastery, cryonics },
       shop: shopBonus,
     };
   };
@@ -971,8 +1048,33 @@ function App() {
             }
           });
 
+          // Building passive income
+          BUILDINGS.forEach(b => {
+            const bd = s.buildings?.[b.id];
+            if (bd && bd.count > 0) s.sc += b.income * bd.count;
+          });
+
+          // Codex signals — unlock once, persist across rebirths
+          SIGNAL_EVENTS.forEach(ev => {
+            if (!s.codexSignals?.[ev.id] && ev.check(s)) {
+              s.codexSignals = { ...(s.codexSignals || {}), [ev.id]: true };
+            }
+          });
+
+          // Lore fragments — unlock once, persist across rebirths
+          LORE_FRAGMENTS.forEach(frag => {
+            if (!s.codexLore?.[frag.id] && frag.check(s)) {
+              s.codexLore = { ...(s.codexLore || {}), [frag.id]: true };
+              s.storyLog = [...(s.storyLog || []), {
+                msg: `◈ Codex unlocked: ${frag.title}`,
+                ageY: Math.floor(s.ageDays / DAYS_PER_YEAR),
+                life: s.lifeCount || 1,
+              }];
+            }
+          });
+
           // Death check
-          if (s.ageDays >= DEATH_AGE_DAYS) {
+          if (s.ageDays >= DEATH_AGE_DAYS * mults.cryoMult) {
             const gained = calcInsightGain(s);
             setPendingInsight(gained);
             setShowDeath(true);
@@ -993,6 +1095,15 @@ function App() {
   const toggleAutoPromote = () => setState(s => ({ ...s, autoPromote: !s.autoPromote }));
   const toggleAutoLearn   = () => setState(s => ({ ...s, autoLearn:   !s.autoLearn   }));
   const toggleSkillSkip   = (id) => setState(s => ({ ...s, skillSkip: { ...s.skillSkip, [id]: !s.skillSkip[id] } }));
+  const buyBuilding = (b) => setState(s => {
+    const bd = s.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+    if (s.sc < bd.nextCost) return s;
+    return {
+      ...s,
+      sc: s.sc - bd.nextCost,
+      buildings: { ...s.buildings, [b.id]: { count: bd.count + 1, nextCost: Math.floor(bd.nextCost * b.costGrowthFactor) } },
+    };
+  });
   const exportSave = () => {
     try {
       const data = localStorage.getItem('stellar_ascent_save');
@@ -1050,6 +1161,9 @@ function App() {
       next.storyLog     = s.storyLog || [];
       next.stats        = { peakCosmicInsight: Math.max(s.stats?.peakCosmicInsight || 0, s.cosmicInsight + pendingInsight) };
       next.achievements = s.achievements || {};
+      next.codexSignals = s.codexSignals || {};
+      next.codexLore    = s.codexLore    || {};
+      next.buildings    = s.buildings    || freshBuildings();
       return next;
     });
     setShowDeath(false);
@@ -1077,7 +1191,8 @@ function App() {
 
   const ageYears = Math.floor(state.ageDays / DAYS_PER_YEAR);
   const ageDayOfYear = Math.floor(state.ageDays % DAYS_PER_YEAR);
-  const lifePct = Math.min(100, (state.ageDays / DEATH_AGE_DAYS) * 100);
+  const effectiveDeathAge = DEATH_AGE_DAYS * mults.cryoMult;
+  const lifePct = Math.min(100, (state.ageDays / effectiveDeathAge) * 100);
 
   // ----- unlocking -----
   const isCareerUnlocked = (career) => {
@@ -1111,7 +1226,7 @@ function App() {
       <div className="header">
         <div>
           <div className="title">⊹ Stellar Ascent</div>
-          <div className="subtitle">v0.1.5 — Story & Systems</div>
+          <div className="subtitle">v0.1.6 — Depth Update</div>
         </div>
       </div>
 
@@ -1126,7 +1241,7 @@ function App() {
         <StatusBar
           state={state} mults={mults}
           dailyIncome={dailyIncome} dailyExpense={dailyExpense}
-          ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct}
+          ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct} effectiveDeathAge={effectiveDeathAge}
           speed={speed} setSpeed={setSpeed} paused={paused} setPaused={setPaused}
           hardReset={hardReset}
           toggleAutoPromote={toggleAutoPromote} toggleAutoLearn={toggleAutoLearn}
@@ -1139,10 +1254,12 @@ function App() {
               { id:'careers', label:'Careers', bg:'rgba(0,60,30,0.6)',   color:'#00ff88', border:'#00aa55', glow:'rgba(0,255,136,0.15)'   },
               { id:'skills',  label:'Skills',  bg:'rgba(50,0,90,0.6)',   color:'#bf5fff', border:'#7700bb', glow:'rgba(191,95,255,0.15)'  },
               { id:'shop',    label:'Shop',    bg:'rgba(0,30,80,0.6)',   color:'#00aaff', border:'#0055cc', glow:'rgba(0,170,255,0.15)'   },
+              { id:'build',   label:'Build',   bg:'rgba(0,40,50,0.6)',   color:'#00ddcc', border:'#009988', glow:'rgba(0,221,204,0.15)'   },
               { id:'rebirth', label:'Rebirth', bg:'rgba(70,30,0,0.6)',   color:'#ff8800', border:'#aa5500', glow:'rgba(255,136,0,0.15)'   },
               { id:'story',   label:'Story',   bg:'rgba(40,0,70,0.6)',   color:'#cc88ff', border:'#8800cc', glow:'rgba(204,136,255,0.15)'  },
               { id:'stats',   label:'Stats',   bg:'rgba(0,50,40,0.6)',   color:'#00ccaa', border:'#009988', glow:'rgba(0,204,170,0.15)'    },
-              { id:'achieve',  label:'Achieve',  bg:'rgba(50,35,0,0.6)',  color:'#f0c850', border:'#aa8800', glow:'rgba(240,200,80,0.15)'   },
+              { id:'achieve', label:'Achieve', bg:'rgba(50,35,0,0.6)',   color:'#f0c850', border:'#aa8800', glow:'rgba(240,200,80,0.15)'   },
+              { id:'codex',   label:'Codex',   bg:'rgba(20,10,50,0.6)',  color:'#aa88ff', border:'#6644cc', glow:'rgba(170,136,255,0.15)'  },
               { id:'notes',   label:'Notes',   bg:'rgba(25,15,0,0.6)',   color:'#907830', border:'#604800', glow:'rgba(144,120,48,0.15)'   },
             ].map(t => (
               <button key={t.id}
@@ -1156,10 +1273,12 @@ function App() {
           {tab === 'careers' && <CareersTab state={state} mults={mults} setActiveJob={setActiveJob} isCareerUnlocked={isCareerUnlocked} jobXpMult={jobXpMult} jobPayMult={jobPayMult} />}
           {tab === 'skills' && <SkillsTab state={state} mults={mults} setActiveSkill={setActiveSkill} isSkillUnlocked={isSkillUnlocked} skillXpMult={skillXpMult} toggleSkillSkip={toggleSkillSkip} />}
           {tab === 'shop' && <ShopTab state={state} mults={mults} buyShop={buyShop} isShopUnlocked={isShopUnlocked} />}
+          {tab === 'build' && <BuildTab state={state} buyBuilding={buyBuilding} />}
           {tab === 'rebirth' && <RebirthTab state={state} pendingInsight={calcInsightGain(state)} />}
           {tab === 'story'   && <StoryTab storyLog={state.storyLog || []} lifeCount={state.lifeCount || 1} />}
           {tab === 'stats'   && <StatsTab state={state} mults={mults} />}
           {tab === 'achieve' && <AchievementsTab state={state} />}
+          {tab === 'codex'   && <CodexTab state={state} />}
           {tab === 'notes'   && <PatchNotesTab />}
         </div>
       </div>
@@ -1206,7 +1325,7 @@ function App() {
 // ============================================================
 // SIDEBAR
 // ============================================================
-function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn, exportSave, importSave }) {
+function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, effectiveDeathAge, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn, exportSave, importSave }) {
   const job = CAREERS.find(c => c.id === state.activeJob);
   const skill = SKILLS.find(s => s.id === state.activeSkill);
   const jobData = job ? state.careers[job.id] : null;
@@ -1226,7 +1345,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
           <div className="sb-big">{ageYears}<span style={{fontSize:13,color:'#2a4838',fontWeight:400}}>y </span>{ageDayOfYear}<span style={{fontSize:13,color:'#2a4838',fontWeight:400}}>d</span></div>
           <div className="progress-wrap" style={{height:13,marginBottom:8}}>
             <div className="progress-fill life" style={{width:`${lifePct}%`}}></div>
-            <div className="progress-text">{ageYears} / 70 years</div>
+            <div className="progress-text">{ageYears} / {Math.floor(effectiveDeathAge / DAYS_PER_YEAR)} years</div>
           </div>
           <div className="sb-row">
             <span className="sb-label">Status</span>
@@ -1645,8 +1764,246 @@ function AchievementsTab({ state }) {
   );
 }
 
+function BuildTab({ state, buyBuilding }) {
+  const totalPassive = BUILDINGS.reduce((sum, b) => {
+    const bd = state.buildings?.[b.id];
+    return sum + (bd ? b.income * bd.count : 0);
+  }, 0);
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#00ddcc', textShadow:'0 0 8px rgba(0,221,204,0.3)', marginBottom:4}}>⊹ Installations</div>
+      <div className="description" style={{color:'#4a9a90', marginBottom:12}}>
+        Permanent structures that generate passive SC/day income. Persist through every rebirth.
+        {totalPassive > 0 && <span style={{color:'#00ddcc', marginLeft:8}}>+{formatNum(totalPassive)} SC/day total</span>}
+      </div>
+      {BUILDINGS.map(b => {
+        const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+        const canAfford = state.sc >= bd.nextCost;
+        return (
+          <div key={b.id} className="row" style={{marginBottom:8}}>
+            <div>
+              <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
+              <div className="row-level" style={{color:'#00ddcc'}}>
+                Owned: {bd.count}
+                {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
+              </div>
+            </div>
+            <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
+            <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
+              {formatNum(b.income)} SC/day each
+            </div>
+            <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
+              Cost: {formatNum(bd.nextCost)} SC
+            </div>
+            <div>
+              <button
+                style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
+                onClick={() => buyBuilding(b)}
+                disabled={!canAfford}>
+                Build
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CodexTab({ state }) {
+  const [section, setSection] = React.useState('mechanics');
+  const sections = ['mechanics','signals','lore','careers','skills'];
+  const sectionColors = { mechanics:'#aa88ff', signals:'#00ccaa', lore:'#cc88ff', careers:'#00cc66', skills:'#bf5fff' };
+
+  const navBtn = (id, label) => (
+    <button key={id} onClick={() => setSection(id)}
+      style={{padding:'5px 12px', fontSize:12, borderRadius:4, cursor:'pointer', fontFamily:'inherit',
+        background: section === id ? 'rgba(40,20,80,0.8)' : 'rgba(10,5,22,0.5)',
+        border: `1px solid ${section === id ? sectionColors[id] : '#2a1a4a'}`,
+        color: section === id ? sectionColors[id] : '#5a4a7a'}}>
+      {label}
+    </button>
+  );
+
+  const entry = (title, body, unlocked = true, key) => (
+    <div key={key || title} style={{marginBottom:14, paddingBottom:14, borderBottom:'1px solid #1a0a2a'}}>
+      <div style={{fontSize:12, color: unlocked ? '#aa88ff' : '#3a2a4a', fontWeight:600, marginBottom:4}}>{title}</div>
+      <div style={{fontSize:11, color: unlocked ? '#7a6a9a' : '#2a1a3a', lineHeight:1.6}}>
+        {unlocked ? body : '— Locked —'}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="panel">
+      <div className="section-title" style={{color:'#aa88ff', textShadow:'0 0 8px rgba(170,136,255,0.3)', marginBottom:10}}>◈ Codex</div>
+      <div style={{display:'flex', gap:6, flexWrap:'wrap', marginBottom:14}}>
+        {navBtn('mechanics','Mechanics')}
+        {navBtn('signals','Signal Log')}
+        {navBtn('lore','Lore')}
+        {navBtn('careers','Careers')}
+        {navBtn('skills','Skills')}
+      </div>
+
+      {section === 'mechanics' && (
+        <div>
+          {entry('Stellar Credits (SC)', 'The game\'s currency. Earned each day from your active career — amount depends on that career\'s base pay, level, and active skill bonuses. Spent on Shop items with a daily SC/day upkeep cost.')}
+          {entry('XP & Leveling', 'Each career and skill levels up by accumulating XP each day. XP needed scales exponentially — early levels are fast, later levels demand sustained commitment. Higher level = more pay and stronger skill effects.')}
+          {entry('Happiness & XP Rate', 'Your Living Quarters sets your Happiness value (50–100). Happiness ÷ 50 = your XP multiplier for all careers and skills. Cramped Apartment = 1.0×. Cube-Resonant Sanctum = 2.0×. Always a bonus, never a penalty.')}
+          {entry('Endurance & Lifespan', 'Endurance slows how fast you age — instead of 1 day per tick, you age at 1 ÷ Endurance rate. A Cryostasis Pod multiplies your effective death age. Cryonics skill further boosts the pod\'s effect.')}
+          {entry('Cosmic Insight', 'Earned on rebirth based on total career levels reached. Each point of Insight gives a small global multiplier via log₁₀(insight+1) × 0.5. Persists every life — it compounds over many runs.')}
+          {entry('Career Memory (Max Level)', 'The highest level you ever reached in each career is remembered across rebirths. In future lives, that career\'s XP gain is multiplied by 1 + (maxLevel ÷ 10). A career you mastered at lv100 gives +10× XP bonus next life.')}
+          {entry('Skill Memory', 'Same formula as Career Memory — skills you\'ve trained deeply provide XP bonuses in future lives. Max level is shown as ↑N next to your current level in the Skills tab.')}
+          {entry('Auto-Promote', 'When enabled, automatically switches to the next unlocked career in your current path the moment the level requirement is met. Uses the same logic as manually selecting the next career.')}
+          {entry('Auto-Learn', 'When enabled, automatically trains whichever unlocked skill is closest to leveling up. You can mark individual skills to skip in the Skills tab — useful for ignoring skills you\'ve already maxed or don\'t need.')}
+          {entry('Bankruptcy', 'If your SC balance hits zero and you still have daily expenses, all paid Shop items are cancelled and your Living Quarters drops to Cramped Apartment. Free items (Hand Tools, The Cube) are preserved.')}
+          {entry('Installations', 'Permanent structures purchased in the Build tab that passively generate SC/day each tick. Unlike Shop items, buildings are bought with a one-time SC cost (that grows with each purchase) and survive every rebirth.')}
+          {entry('Rebirth', 'When you die of old age, you are offered a rebirth. You keep Cosmic Insight, max levels, storyLog, achievements, and buildings. Career and skill levels reset to 0 — but their XP memory bonuses apply immediately next life.')}
+        </div>
+      )}
+
+      {section === 'signals' && (
+        <div>
+          <div style={{fontSize:11, color:'#4a7068', marginBottom:12}}>
+            Anomalous readings detected over the course of your work. {Object.keys(state.codexSignals || {}).length} / {SIGNAL_EVENTS.length} received.
+          </div>
+          {SIGNAL_EVENTS.map(ev => {
+            const received = !!(state.codexSignals || {})[ev.id];
+            return (
+              <div key={ev.id} style={{marginBottom:12, paddingBottom:12, borderBottom:'1px solid #0a0818'}}>
+                <div style={{display:'flex', justifyContent:'space-between', marginBottom:3}}>
+                  <div style={{fontSize:11, color: received ? '#00ccaa' : '#2a4038', fontWeight:600}}>{received ? ev.title : '— SIGNAL PENDING —'}</div>
+                  {received && <div style={{fontSize:10, color:'#009988'}}>{ev.freq}</div>}
+                </div>
+                <div style={{fontSize:11, color: received ? '#5a9080' : '#1a2820', lineHeight:1.5}}>
+                  {received ? ev.msg : '···'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {section === 'lore' && (
+        <div>
+          <div style={{fontSize:11, color:'#5a4a7a', marginBottom:12}}>
+            Personal records. {Object.keys(state.codexLore || {}).length} / {LORE_FRAGMENTS.length} unlocked.
+          </div>
+          {LORE_FRAGMENTS.map(frag => {
+            const unlocked = !!(state.codexLore || {})[frag.id];
+            return entry(frag.title, frag.text, unlocked, frag.id);
+          })}
+        </div>
+      )}
+
+      {section === 'careers' && (
+        <div>
+          {Object.entries({
+            garage:    { label:'The Garage',    color:'#8fb8ff', entries:[
+              ['Scrap Scavenger','You pull value from other people\'s waste. Circuit boards, motors, the copper out of dead appliances. It\'s not glamorous. It\'s where everything starts.'],
+              ['Electronics Repairman','You fix what others throw away. The work is repetitive. The understanding it builds is not.'],
+              ['Hobbyist Engineer','You build things without being asked. That distinction matters more than it seems.'],
+              ['Garage Inventor','The garage is a lab now. You stopped explaining what you\'re building to people who won\'t understand the answer.'],
+              ['Independent Researcher','No institution, no oversight, no permission. You follow the problem wherever it leads.'],
+            ]},
+            academy:   { label:'The Academy',   color:'#7eda9e', entries:[
+              ['Lab Assistant','First week in a real lab. The equipment is better than yours. The questions are smaller.'],
+              ['Research Associate','You run experiments designed by people above you. You notice things they don\'t.'],
+              ['Research Scientist','Your name is on papers now. That changes how people listen.'],
+              ['Senior Researcher','You run the lab. The results confirm what you already suspected years ago.'],
+              ['Department Chair','You decide what gets studied. Quietly, you steer the department toward the frequencies.'],
+            ]},
+            corps:     { label:'The Corps',     color:'#f0a878', entries:[
+              ['Space Corps Cadet','Structure, discipline, chain of command. After the garage, it feels like a foreign language.'],
+              ['Flight Officer','You understand now why the Corps functions the way it does. You still don\'t like all of it.'],
+              ['Squadron Leader','People follow your orders. That\'s a different kind of responsibility than building things alone.'],
+              ['Wing Commander','You\'ve been in space. It is larger than you expected. You don\'t tell people what you saw.'],
+              ['Fleet Admiral','You command fleets. You still think about the garage.'],
+            ]},
+            syndicate: { label:'The Syndicate', color:'#f0c878', entries:[
+              ['Field Agent','The Syndicate doesn\'t care about your background. Only your results.'],
+              ['Operations Manager','You manage people who don\'t ask questions. You don\'t ask questions either.'],
+              ['Division Director','You control significant resources. The Syndicate rewards efficiency above everything.'],
+              ['VP of Operations','At this level, the Syndicate\'s reach is almost planetary. Almost.'],
+              ['Syndicate CEO','You built an empire on information asymmetry. You know things no government does.'],
+            ]},
+            ascended:  { label:'The Ascended',  color:'#c89eff', entries:[
+              ['Xenolinguist','You decode alien communication. The strangest part is how much of it you already understood.'],
+              ['Void Cartographer','You map regions of space that shouldn\'t be reachable. Some of them are already charted — by someone else.'],
+              ['Stellar Diplomat','You speak on behalf of humanity. You choose your words very carefully.'],
+              ['Cube Scholar','You study the object directly. It responds differently to you than to others. You don\'t mention this.'],
+              ['Galactic Custodian','You tend to something older and larger than human civilization. The weight of it is considerable.'],
+            ]},
+          }).map(([path, { label, color, entries }]) => (
+            <div key={path} style={{marginBottom:16}}>
+              <div className="category-header" style={{color}}>{label}</div>
+              {entries.map(([name, desc]) => (
+                <div key={name} style={{marginBottom:8}}>
+                  <div style={{fontSize:11, color:'#d0c0f0', fontWeight:600, marginBottom:2}}>{name}</div>
+                  <div style={{fontSize:11, color:'#6a5a8a', lineHeight:1.5}}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {section === 'skills' && (
+        <div>
+          {[
+            { cat:'Fundamentals', color:'#bf5fff', entries:[
+              ['Focus','The ability to be fully present in the work. Sounds simple. Isn\'t.'],
+              ['Ingenuity','Finding the non-obvious solution. The one that makes more money with the same effort.'],
+              ['Endurance','You outlast things. Problems, lifetimes, the slow accumulation of years.'],
+              ['Memory','You retain more of what you\'ve done. The Insight you carry grows accordingly.'],
+              ['Cryonics','Understanding of biological stasis. Extends how long your Cryostasis Pod keeps you viable.'],
+            ]},
+            { cat:'Hands-On', color:'#8fb8ff', entries:[
+              ['Dexterity','Precision. The difference between a working prototype and a pile of parts.'],
+              ['Mechanical Aptitude','You understand machines at the level of cause and effect. Income reflects it.'],
+              ['Frugality','You waste less. Every purchase goes further. The math compounds over a lifetime.'],
+            ]},
+            { cat:'Theoretical', color:'#7eda9e', entries:[
+              ['Theory','Formal reasoning. The Academy rewards this kind of thinking more than any other.'],
+              ['Mathematical Insight','Numbers reveal patterns. You see them faster than most.'],
+              ['Pattern Recognition','Something in you finds structure in noise. This applies to more than just data.'],
+            ]},
+            { cat:'Command', color:'#f0a878', entries:[
+              ['Charisma','People want to follow you. You\'re not entirely sure why. It pays well.'],
+              ['Strategic Vision','You see the board three moves ahead. The Corps and Syndicate pay for this.'],
+              ['Composure','Under pressure, you spend less. Not because you try to — because panic is expensive.'],
+            ]},
+            { cat:'Cosmic', color:'#c89eff', entries:[
+              ['Resonance','You tune to the Ascended path\'s frequency. XP flows faster.'],
+              ['Xenocognition','Alien thought patterns become navigable. The Ascended careers pay accordingly.'],
+              ['Cube Attunement','The object responds to your awareness of it. Insight compounds on rebirth.'],
+            ]},
+          ].map(({ cat, color, entries }) => (
+            <div key={cat} style={{marginBottom:16}}>
+              <div className="category-header" style={{color}}>{cat}</div>
+              {entries.map(([name, desc]) => (
+                <div key={name} style={{marginBottom:8}}>
+                  <div style={{fontSize:11, color:'#d0c0f0', fontWeight:600, marginBottom:2}}>{name}</div>
+                  <div style={{fontSize:11, color:'#6a5a8a', lineHeight:1.5}}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PatchNotesTab() {
   const notes = [
+    { v: 'v0.1.6', title: 'Depth Update', items: [
+      'Codex tab — Mechanics reference, Signal Log (5 anomalies to discover), Lore Fragments (7 to unlock), Career & Skill flavour entries',
+      'Build tab — 3 Installations (Research Station, Orbital Platform, Dyson Array Segment) persist through every rebirth',
+      'Time Dilation — Cryostasis Pod shop item multiplies lifespan ×1.5; Cryonics skill amplifies the effect',
+      'Cryonics skill added to Fundamentals — boosts Cryostasis lifespan extension by 2%/level',
+      'Life bar now reflects effective lifespan (changes when Cryostasis is active)',
+    ]},
     { v: 'v0.1.5', title: 'Story & Systems', items: [
       'Story ticker — milestone events fire narrative flavor text below the header',
       'Story tab — full log of every story beat, grouped by life',
