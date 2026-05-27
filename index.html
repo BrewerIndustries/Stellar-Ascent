@@ -806,6 +806,12 @@ const LORE_FRAGMENTS = [
 // BUILDINGS (passive income — persist through rebirth, PKR-scale costs)
 // ============================================================
 const BUILDINGS = [
+  // Early game — introduce passive income concept
+  { id: 'auto_clicker',    name: 'Auto Clicker',        desc: 'A repurposed input rig that farms low-yield micro-tasks around the clock. Nothing exciting — but it never stops.', baseCost: 250,    income: 1,    costGrowthFactor: 1.20 },
+  { id: 'desktop_robot',   name: 'Desktop Robot',       desc: 'A salvage-yard arm bolted to your workbench. Assembles small components and runs overnight contracts while you sleep.', baseCost: 3000,   income: 8,    costGrowthFactor: 1.18 },
+  { id: 'ai_model',        name: 'AI Model',            desc: 'A narrow model trained on your speciality. Handles data contracts and micro-jobs in the background while you focus elsewhere.', baseCost: 50000,  income: 65,   costGrowthFactor: 1.16 },
+  { id: 'ai_agent',        name: 'AI Agent',            desc: "A semi-autonomous pipeline that scouts, negotiates, and delivers — no supervision needed. Doesn't sleep. Doesn't complain.", baseCost: 600000, income: 550,  costGrowthFactor: 1.14 },
+  // Late game — large installations
   { id: 'research_station', name: 'Research Station',    desc: 'An automated lab running experiments and analysis around the clock.', baseCost: 5e8,   income: 1500,   costGrowthFactor: 1.15 },
   { id: 'orbital_platform', name: 'Orbital Platform',    desc: 'Zero-gravity manufacturing and long-range signal monitoring.', baseCost: 5e9,   income: 18000,  costGrowthFactor: 1.12 },
   { id: 'dyson_segment',    name: 'Dyson Array Segment', desc: 'One piece of an impossibly large structure. Each segment compounds the last.', baseCost: 5e10,  income: 200000, costGrowthFactor: 1.10 },
@@ -2020,6 +2026,41 @@ function BuildTab({ state, buyBuilding }) {
     const bd = state.buildings?.[b.id];
     return sum + (bd ? b.income * bd.count : 0);
   }, 0);
+
+  const earlyBuilds = BUILDINGS.filter(b => ['auto_clicker','desktop_robot','ai_model','ai_agent'].includes(b.id));
+  const lateBuilds  = BUILDINGS.filter(b => !['auto_clicker','desktop_robot','ai_model','ai_agent'].includes(b.id));
+
+  function BuildRow({ b }) {
+    const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+    const canAfford = state.sc >= bd.nextCost;
+    return (
+      <div className="row" style={{marginBottom:8}}>
+        <div>
+          <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
+          <div className="row-level" style={{color:'#00ddcc'}}>
+            Owned: {bd.count}
+            {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
+          </div>
+        </div>
+        <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
+        <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
+          {formatNum(b.income)} SC/day each
+        </div>
+        <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
+          Cost: {formatNum(bd.nextCost)} SC
+        </div>
+        <div>
+          <button
+            style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
+            onClick={() => buyBuilding(b)}
+            disabled={!canAfford}>
+            Build
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="panel">
       <div className="section-title" style={{color:'#00ddcc', textShadow:'0 0 8px rgba(0,221,204,0.3)', marginBottom:4}}>⊹ Installations</div>
@@ -2027,36 +2068,16 @@ function BuildTab({ state, buyBuilding }) {
         Permanent structures that generate passive SC/day income. Persist through every rebirth.
         {totalPassive > 0 && <span style={{color:'#00ddcc', marginLeft:8}}>+{formatNum(totalPassive)} SC/day total</span>}
       </div>
-      {BUILDINGS.map(b => {
-        const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
-        const canAfford = state.sc >= bd.nextCost;
-        return (
-          <div key={b.id} className="row" style={{marginBottom:8}}>
-            <div>
-              <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
-              <div className="row-level" style={{color:'#00ddcc'}}>
-                Owned: {bd.count}
-                {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
-              </div>
-            </div>
-            <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
-            <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
-              {formatNum(b.income)} SC/day each
-            </div>
-            <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
-              Cost: {formatNum(bd.nextCost)} SC
-            </div>
-            <div>
-              <button
-                style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
-                onClick={() => buyBuilding(b)}
-                disabled={!canAfford}>
-                Build
-              </button>
-            </div>
-          </div>
-        );
-      })}
+
+      <div style={{fontSize:11, fontWeight:600, color:'#2a7a70', letterSpacing:'0.08em', textTransform:'uppercase', padding:'4px 0 2px', borderBottom:'1px solid rgba(0,180,160,0.15)', marginBottom:6}}>
+        Automation
+      </div>
+      {earlyBuilds.map(b => <BuildRow key={b.id} b={b} />)}
+
+      <div style={{fontSize:11, fontWeight:600, color:'#2a7a70', letterSpacing:'0.08em', textTransform:'uppercase', padding:'12px 0 2px', borderBottom:'1px solid rgba(0,180,160,0.15)', marginBottom:6}}>
+        Installations
+      </div>
+      {lateBuilds.map(b => <BuildRow key={b.id} b={b} />)}
     </div>
   );
 }
