@@ -1800,6 +1800,39 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
   );
 }
 
+function ShopRow({ item, state, mults, buyShop, isShopUnlocked }) {
+  const unlocked = isShopUnlocked(item);
+  const active = !!state.shop[item.id];
+  let cost = item.cost;
+  cost *= mults.skills.tool_mastery;
+  cost *= mults.skills.composure;
+  return (
+    <div className={`row ${!unlocked ? 'locked' : ''}`}
+      style={active ? {background:'rgba(0,30,70,0.5)', borderLeft:'3px solid #00aaff', boxShadow:'inset 0 0 12px rgba(0,170,255,0.05)'} : {}}>
+      <div>
+        <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
+        {item.happiness != null && (
+          <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/50).toFixed(2)}</div>
+        )}
+      </div>
+      <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
+      <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
+      <div></div>
+      <div>
+        {unlocked ? (
+          <button
+            style={active ? {background:'rgba(0,40,100,0.7)', borderColor:'#0055cc', color:'#00aaff'} : {}}
+            onClick={() => buyShop(item)}>
+            {active ? (item.exclusive ? 'Active' : 'Drop') : (item.exclusive ? 'Choose' : 'Buy')}
+          </button>
+        ) : (
+          <button disabled>Locked</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
   const academyUnlocked = (state.careers.lab_assistant?.level || 0) >= 1;
   const corpsUnlocked   = (state.careers.corps_cadet?.level   || 0) >= 1;
@@ -1814,38 +1847,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
     { key: 'rebirth',   label: 'Post-Rebirth',   unlocked: rebirthUnlocked, teaser: 'Unlocks after completing your first full loop' },
   ];
 
-  function ShopRow({ item }) {
-    const unlocked = isShopUnlocked(item);
-    const active = !!state.shop[item.id];
-    let cost = item.cost;
-    cost *= mults.skills.tool_mastery;
-    cost *= mults.skills.composure;
-    return (
-      <div className={`row ${!unlocked ? 'locked' : ''}`}
-        style={active ? {background:'rgba(0,30,70,0.5)', borderLeft:'3px solid #00aaff', boxShadow:'inset 0 0 12px rgba(0,170,255,0.05)'} : {}}>
-        <div>
-          <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
-          {item.happiness != null && (
-            <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/50).toFixed(2)}</div>
-          )}
-        </div>
-        <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
-        <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
-        <div></div>
-        <div>
-          {unlocked ? (
-            <button
-              style={active ? {background:'rgba(0,40,100,0.7)', borderColor:'#0055cc', color:'#00aaff'} : {}}
-              onClick={() => buyShop(item)}>
-              {active ? (item.exclusive ? 'Active' : 'Drop') : (item.exclusive ? 'Choose' : 'Buy')}
-            </button>
-          ) : (
-            <button disabled>Locked</button>
-          )}
-        </div>
-      </div>
-    );
-  }
+  const rowProps = { state, mults, buyShop, isShopUnlocked };
 
   return (
     <div className="panel">
@@ -1861,7 +1863,7 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
               {group.label}
             </div>
             {group.unlocked ? (
-              items.map(item => <ShopRow key={item.id} item={item} />)
+              items.map(item => <ShopRow key={item.id} item={item} {...rowProps} />)
             ) : (
               <div className="row locked" style={{opacity: 0.45, fontStyle: 'italic', color: '#2a5060', fontSize: 12}}>
                 <div style={{gridColumn:'1 / -1'}}>{group.teaser}</div>
@@ -1875,14 +1877,14 @@ function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
       <div style={{marginTop: 16}}>
         <div className="category-header" style={{color:'#0088cc'}}>Equipment</div>
         <div className="description" style={{color:'#5a8aaa'}}>Stack as many as you can afford — every active tool's bonus combines with the others.</div>
-        {SHOP.filter(i => i.category === 'Equipment').map(item => <ShopRow key={item.id} item={item} />)}
+        {SHOP.filter(i => i.category === 'Equipment').map(item => <ShopRow key={item.id} item={item} {...rowProps} />)}
       </div>
 
       {/* Misc */}
       <div style={{marginTop: 16}}>
         <div className="category-header" style={{color:'#0088cc'}}>Misc</div>
         <div className="description" style={{color:'#5a8aaa'}}>Stackable lifestyle upgrades. Subscriptions, habits, and curiosities that compound over time.</div>
-        {SHOP.filter(i => i.category === 'Misc').map(item => <ShopRow key={item.id} item={item} />)}
+        {SHOP.filter(i => i.category === 'Misc').map(item => <ShopRow key={item.id} item={item} {...rowProps} />)}
       </div>
     </div>
   );
@@ -2021,6 +2023,37 @@ function AchievementsTab({ state }) {
   );
 }
 
+function BuildRow({ b, state, buyBuilding }) {
+  const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+  const canAfford = state.sc >= bd.nextCost;
+  return (
+    <div className="row" style={{marginBottom:8}}>
+      <div>
+        <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
+        <div className="row-level" style={{color:'#00ddcc'}}>
+          Owned: {bd.count}
+          {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
+        </div>
+      </div>
+      <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
+      <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
+        {formatNum(b.income)} SC/day each
+      </div>
+      <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
+        Cost: {formatNum(bd.nextCost)} SC
+      </div>
+      <div>
+        <button
+          style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
+          onClick={() => buyBuilding(b)}
+          disabled={!canAfford}>
+          Build
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function BuildTab({ state, buyBuilding }) {
   const totalPassive = BUILDINGS.reduce((sum, b) => {
     const bd = state.buildings?.[b.id];
@@ -2029,37 +2062,7 @@ function BuildTab({ state, buyBuilding }) {
 
   const earlyBuilds = BUILDINGS.filter(b => ['auto_clicker','desktop_robot','ai_model','ai_agent'].includes(b.id));
   const lateBuilds  = BUILDINGS.filter(b => !['auto_clicker','desktop_robot','ai_model','ai_agent'].includes(b.id));
-
-  function BuildRow({ b }) {
-    const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
-    const canAfford = state.sc >= bd.nextCost;
-    return (
-      <div className="row" style={{marginBottom:8}}>
-        <div>
-          <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
-          <div className="row-level" style={{color:'#00ddcc'}}>
-            Owned: {bd.count}
-            {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
-          </div>
-        </div>
-        <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
-        <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
-          {formatNum(b.income)} SC/day each
-        </div>
-        <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
-          Cost: {formatNum(bd.nextCost)} SC
-        </div>
-        <div>
-          <button
-            style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
-            onClick={() => buyBuilding(b)}
-            disabled={!canAfford}>
-            Build
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const rowProps = { state, buyBuilding };
 
   return (
     <div className="panel">
@@ -2072,12 +2075,12 @@ function BuildTab({ state, buyBuilding }) {
       <div style={{fontSize:11, fontWeight:600, color:'#2a7a70', letterSpacing:'0.08em', textTransform:'uppercase', padding:'4px 0 2px', borderBottom:'1px solid rgba(0,180,160,0.15)', marginBottom:6}}>
         Automation
       </div>
-      {earlyBuilds.map(b => <BuildRow key={b.id} b={b} />)}
+      {earlyBuilds.map(b => <BuildRow key={b.id} b={b} {...rowProps} />)}
 
       <div style={{fontSize:11, fontWeight:600, color:'#2a7a70', letterSpacing:'0.08em', textTransform:'uppercase', padding:'12px 0 2px', borderBottom:'1px solid rgba(0,180,160,0.15)', marginBottom:6}}>
         Installations
       </div>
-      {lateBuilds.map(b => <BuildRow key={b.id} b={b} />)}
+      {lateBuilds.map(b => <BuildRow key={b.id} b={b} {...rowProps} />)}
     </div>
   );
 }
