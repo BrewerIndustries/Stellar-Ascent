@@ -1325,6 +1325,10 @@ function App() {
     return job.basePay * jobPayMult(state, mults, job) * (1 + 0.5 * Math.log10(cur.level + 1));
   }, [state, mults]);
   const dailyExpense = useMemo(() => shopDailyCost(state, mults), [state, mults]);
+  const dailyPassive = useMemo(() => BUILDINGS.reduce((sum, b) => {
+    const bd = state.buildings?.[b.id];
+    return sum + (bd ? b.income * bd.count : 0);
+  }, 0), [state.buildings]);
 
   const ageYears = Math.floor(state.ageDays / DAYS_PER_YEAR);
   const ageDayOfYear = Math.floor(state.ageDays % DAYS_PER_YEAR);
@@ -1386,7 +1390,7 @@ function App() {
       <div className="main-layout">
         <StatusBar
           state={state} mults={mults}
-          dailyIncome={dailyIncome} dailyExpense={dailyExpense}
+          dailyIncome={dailyIncome} dailyExpense={dailyExpense} dailyPassive={dailyPassive}
           ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct} effectiveDeathAge={effectiveDeathAge}
           speed={speed} setSpeed={setSpeed} paused={paused} setPaused={setPaused}
           hardReset={hardReset}
@@ -1530,7 +1534,7 @@ function App() {
 // ============================================================
 // SIDEBAR
 // ============================================================
-function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, effectiveDeathAge, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoPromotePathLock, toggleAutoLearn, exportSave, importSave }) {
+function StatusBar({ state, mults, dailyIncome, dailyExpense, dailyPassive, ageYears, ageDayOfYear, lifePct, effectiveDeathAge, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoPromotePathLock, toggleAutoLearn, exportSave, importSave }) {
   const job = CAREERS.find(c => c.id === state.activeJob);
   const skill = SKILLS.find(s => s.id === state.activeSkill);
   const jobData = job ? state.careers[job.id] : null;
@@ -1540,7 +1544,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
   const jobPct = jobData ? Math.min(100, (jobData.xp / jobNeed) * 100) : 0;
   const skillNeed = skillData ? xpToLevel(skillData.level) : 1;
   const skillPct = skillData ? Math.min(100, (skillData.xp / skillNeed) * 100) : 0;
-  const net = dailyIncome - dailyExpense;
+  const net = dailyIncome + (dailyPassive || 0) - dailyExpense;
 
   return (
     <div className="sidebar">
@@ -1601,6 +1605,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
           <div className="sb-big" style={{color:'#f0c850'}}>{formatNum(state.sc)} <span style={{fontSize:11,color:'#604820',fontWeight:400}}>SC</span></div>
           <div className="sb-row"><span className="sb-label">Net / day</span><span className={`sb-val ${net>=0?'good':'bad'}`}>{net>=0?'+':''}{formatNum(net)}</span></div>
           <div className="sb-row"><span className="sb-label">Income / day</span><span className="sb-val good">+{formatNum(dailyIncome)}</span></div>
+          {dailyPassive > 0 && <div className="sb-row"><span className="sb-label">Passive / day</span><span className="sb-val" style={{color:'#00ddcc'}}>+{formatNum(dailyPassive)}</span></div>}
           <div className="sb-row"><span className="sb-label">Expense / day</span><span className="sb-val bad">-{formatNum(dailyExpense)}</span></div>
         </div>
 
