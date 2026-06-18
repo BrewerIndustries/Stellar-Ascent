@@ -1378,6 +1378,13 @@ function App() {
             ⚙
           </button>
         </div>
+        {window.location.pathname.startsWith('/dev') && (
+          <div style={{fontSize:10, fontWeight:700, letterSpacing:'0.12em', color:'#ffaa00',
+            background:'rgba(80,40,0,0.5)', border:'1px solid #aa6600',
+            borderRadius:4, padding:'3px 8px', textTransform:'uppercase', userSelect:'none'}}>
+            DEV
+          </div>
+        )}
       </div>
 
       {tickerMsg && (
