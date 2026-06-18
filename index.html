@@ -194,26 +194,32 @@
   @media (max-width: 600px) {
     #root { padding: 8px; }
 
+    /* Hard-stop any horizontal overflow at the root level */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    #root, .main-layout, .main-content, .sidebar, .panel, .sidebar-card {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
     /* Header */
     .header { padding: 10px 12px; gap: 8px; }
     .title { font-size: 18px; }
     .stats { gap: 10px; font-size: 12px; }
     .stat-label { display: none; }
 
-    /* Tabs — horizontally scrollable, no wrap */
+    /* Tabs — wrap into 2 rows, no horizontal scroll */
     .tabs {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      flex-wrap: wrap;
+      overflow-x: visible;
       gap: 4px;
-      padding-bottom: 2px;
+      width: 100%;
     }
-    .tabs::-webkit-scrollbar { display: none; }
     .tab {
-      flex-shrink: 0;
-      padding: 8px 14px;
-      font-size: 12px;
+      flex: 1 1 auto;
+      min-width: calc(20% - 4px);
+      padding: 7px 6px;
+      font-size: 11px;
+      text-align: center;
     }
 
     /* Rows — stack name+progress above button */
@@ -407,7 +413,8 @@
   @media (max-width: 900px) {
     .main-layout { grid-template-columns: 1fr; }
   }
-  .sidebar { display: flex; flex-direction: column; gap: 8px; }
+  .sidebar { display: flex; flex-direction: column; gap: 8px; position: sticky; top: 8px; max-height: calc(100vh - 16px); overflow-y: auto; scrollbar-width: none; }
+  .sidebar::-webkit-scrollbar { display: none; }
   .sidebar-card {
     background: rgba(10, 5, 22, 0.6);
     border: 1px solid #1e0f3a;
@@ -640,36 +647,45 @@ const SKILLS = [
 // Shop items
 const SHOP = [
   // Living Quarters (one active) — happiness controls all XP gain
-  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,        happiness: 50, effect: 'Baseline — no bonus or penalty', bonus: {},                 exclusive: 'Living' },
-  { id: 'garage_house',    name: 'Suburban Garage House',  category: 'Living', cost: 30,       happiness: 60, effect: 'Focus +50%',                  bonus: { focus: 1.5 },         exclusive: 'Living' },
-  { id: 'uni_housing',     name: 'University Housing',     category: 'Living', cost: 200,      happiness: 68, effect: 'Theory +50%',                 bonus: { theory: 1.5 },        exclusive: 'Living' },
-  { id: 'downtown_loft',   name: 'Downtown Loft',          category: 'Living', cost: 1500,     happiness: 75, effect: 'Charisma +50%',               bonus: { charisma: 1.5 },      exclusive: 'Living' },
-  { id: 'private_estate',  name: 'Private Estate',         category: 'Living', cost: 15000,    happiness: 82, effect: 'Ingenuity +100%',             bonus: { ingenuity: 2 },       exclusive: 'Living' },
-  { id: 'corp_compound',   name: 'Corporate Compound',     category: 'Living', cost: 75000,    happiness: 88, effect: 'Strategic Vision +100%',      bonus: { strategic_vision: 2 },exclusive: 'Living' },
-  { id: 'orbital_habitat', name: 'Orbital Habitat',        category: 'Living', cost: 400000,   happiness: 93, effect: 'Endurance +200%',             bonus: { endurance: 3 },       exclusive: 'Living', corpsReq: true },
-  { id: 'captain_quarters',name: "Captain's Quarters",     category: 'Living', cost: 2500000,  happiness: 97, effect: 'All skills +100%',            bonus: { all: 2 },             exclusive: 'Living', corpsReq: true },
-  { id: 'cube_sanctum',    name: 'Cube-Resonant Sanctum',  category: 'Living', cost: 15000000, happiness: 100,effect: 'Cosmic skills +200%',         bonus: { cosmic: 3 },          exclusive: 'Living', postRebirth: true },
+  // housingGroup: 'basic' | 'academy' | 'corps' | 'syndicate' | 'rebirth'
+  { id: 'cramped_apt',     name: 'Cramped Apartment',      category: 'Living', cost: 0,       happiness: 50, effect: 'Baseline — no bonus or penalty', bonus: {},                 exclusive: 'Living', housingGroup: 'basic' },
+  { id: 'garage_house',    name: 'Suburban Garage House',  category: 'Living', cost: 10,      happiness: 60, effect: 'Focus +50%',                  bonus: { focus: 1.5 },         exclusive: 'Living', housingGroup: 'basic' },
+  { id: 'downtown_loft',   name: 'Downtown Loft',          category: 'Living', cost: 35,      happiness: 65, effect: 'Charisma +50%',               bonus: { charisma: 1.5 },      exclusive: 'Living', housingGroup: 'basic' },
+  { id: 'uni_housing',     name: 'University Housing',     category: 'Living', cost: 15,      happiness: 68, effect: 'Theory +50%',                 bonus: { theory: 1.5 },        exclusive: 'Living', housingGroup: 'academy', academyReq: true },
+  { id: 'academic_suite',  name: 'Academic Suite',         category: 'Living', cost: 80,      happiness: 72, effect: 'Mathematical Insight +75%',    bonus: { mathematical_insight: 1.75 }, exclusive: 'Living', housingGroup: 'academy', academyReq: true },
+  { id: 'officers_billet', name: "Officer's Billet",        category: 'Living', cost: 40,      happiness: 75, effect: 'Strategic Vision +75%',       bonus: { strategic_vision: 1.75 },    exclusive: 'Living', housingGroup: 'corps',   corpsReq: true },
+  { id: 'orbital_habitat', name: 'Orbital Habitat',         category: 'Living', cost: 300,     happiness: 80, effect: 'Endurance +200%',             bonus: { endurance: 3 },              exclusive: 'Living', housingGroup: 'corps',   corpsReq: true },
+  { id: 'captain_quarters',name: "Captain's Quarters",      category: 'Living', cost: 1200,    happiness: 85, effect: 'All skills +100%',            bonus: { all: 2 },                    exclusive: 'Living', housingGroup: 'corps',   corpsReq: true },
+  { id: 'exec_penthouse',  name: 'Executive Penthouse',     category: 'Living', cost: 120,     happiness: 82, effect: 'Charisma +150%',              bonus: { charisma: 2.5 },             exclusive: 'Living', housingGroup: 'syndicate', syndicateReq: true },
+  { id: 'corp_compound',   name: 'Corporate Compound',      category: 'Living', cost: 800,     happiness: 88, effect: 'Strategic Vision +100%',      bonus: { strategic_vision: 2 },       exclusive: 'Living', housingGroup: 'syndicate', syndicateReq: true },
+  { id: 'private_estate',  name: 'Private Estate',          category: 'Living', cost: 4000,    happiness: 93, effect: 'Ingenuity +100%',             bonus: { ingenuity: 2 },              exclusive: 'Living', housingGroup: 'syndicate', syndicateReq: true },
+  { id: 'cube_sanctum',    name: 'Cube-Resonant Sanctum',   category: 'Living', cost: 25000,   happiness: 100,effect: 'Cosmic skills +200%',         bonus: { cosmic: 3 },                 exclusive: 'Living', housingGroup: 'rebirth',  postRebirth: true },
 
   // Equipment (multiple active)
-  { id: 'hand_tools', name: 'Hand Tools', category: 'Equipment', cost: 0, effect: 'Free starter kit — already equipped', bonus: {} },
-  { id: 'soldering_station', name: 'Soldering Station', category: 'Equipment', cost: 25, effect: 'Dexterity +50%', bonus: { dexterity: 1.5 } },
-  { id: 'lab_bench', name: 'Lab Bench', category: 'Equipment', cost: 250, effect: 'Theory +50%', bonus: { theory: 1.5 } },
-  { id: 'cad_workstation', name: 'CAD Workstation', category: 'Equipment', cost: 2200, effect: 'Mechanical Aptitude +75%', bonus: { mechanical_aptitude: 1.75 } },
-  { id: 'research_cluster', name: 'Research Cluster', category: 'Equipment', cost: 20000, effect: 'Pattern Recognition +100%', bonus: { pattern_recognition: 2 } },
-  { id: 'aerospace_sim', name: 'Aerospace Simulator', category: 'Equipment', cost: 120000, effect: 'Strategic Vision +100%', bonus: { strategic_vision: 2 } },
-  { id: 'quantum_lab', name: 'Quantum Lab', category: 'Equipment', cost: 800000, effect: 'All skills +75%', bonus: { all: 1.75 }, corpsReq: true },
-  { id: 'alien_workbench', name: 'Alien Artifact Workbench', category: 'Equipment', cost: 8000000, effect: 'Cosmic skills +200%', bonus: { cosmic: 3 }, postRebirth: true },
+  { id: 'hand_tools',       name: 'Hand Tools',              category: 'Equipment', cost: 0,        effect: 'Free starter kit — already equipped',    bonus: {} },
+  { id: 'soldering_station',name: 'Soldering Station',       category: 'Equipment', cost: 25,       effect: 'Dexterity +50%',                         bonus: { dexterity: 1.5 } },
+  { id: 'lab_bench',        name: 'Lab Bench',               category: 'Equipment', cost: 250,      effect: 'Theory +50%',                            bonus: { theory: 1.5 } },
+  { id: 'field_kit',        name: 'Field Operations Kit',    category: 'Equipment', cost: 45,       effect: 'Dexterity +75% · Endurance +25%',        bonus: { dexterity: 1.75, endurance: 1.25 }, corpsReq: true },
+  { id: 'cad_workstation',  name: 'CAD Workstation',         category: 'Equipment', cost: 2200,     effect: 'Mechanical Aptitude +75%',               bonus: { mechanical_aptitude: 1.75 } },
+  { id: 'analyst_terminal', name: 'Analyst Terminal',        category: 'Equipment', cost: 130,      effect: 'Pattern Recognition +50% · Charisma +50%',bonus: { pattern_recognition: 1.5, charisma: 1.5 }, syndicateReq: true },
+  { id: 'research_cluster', name: 'Research Cluster',        category: 'Equipment', cost: 20000,    effect: 'Pattern Recognition +100%',              bonus: { pattern_recognition: 2 } },
+  { id: 'aerospace_sim',    name: 'Aerospace Simulator',     category: 'Equipment', cost: 120000,   effect: 'Strategic Vision +100%',                 bonus: { strategic_vision: 2 }, corpsReq: true },
+  { id: 'quantum_lab',      name: 'Quantum Lab',             category: 'Equipment', cost: 800000,   effect: 'All skills +75%',                        bonus: { all: 1.75 }, corpsReq: true },
+  { id: 'alien_workbench',  name: 'Alien Artifact Workbench',category: 'Equipment', cost: 8000000,  effect: 'Cosmic skills +200%',                    bonus: { cosmic: 3 }, postRebirth: true },
 
   // Misc (multiple)
-  { id: 'textbooks', name: 'Textbook Subscription', category: 'Misc', cost: 10, effect: 'Theory +25%', bonus: { theory: 1.25 } },
-  { id: 'energy_drinks', name: 'Energy Drinks', category: 'Misc', cost: 15, effect: 'Focus +25%', bonus: { focus: 1.25 } },
-  { id: 'gym', name: 'Gym Membership', category: 'Misc', cost: 60, effect: 'Endurance +50%', bonus: { endurance: 1.5 } },
-  { id: 'network', name: 'Professional Network', category: 'Misc', cost: 800, effect: 'Charisma +50%', bonus: { charisma: 1.5 } },
-  { id: 'journals', name: 'Trade Journals', category: 'Misc', cost: 350, effect: 'Pattern Recognition +30%', bonus: { pattern_recognition: 1.3 } },
-  { id: 'sleep_opt', name: 'Sleep Optimization', category: 'Misc', cost: 4500, effect: 'All XP +20%', bonus: { all_xp: 1.2 } },
-  { id: 'telescope', name: 'Astronomy Telescope', category: 'Misc', cost: 1200, effect: 'Memory +75%', bonus: { memory: 1.75 } },
-  { id: 'cryostasis', name: 'Cryostasis Pod', category: 'Misc', cost: 35000, effect: 'Lifespan ×1.5 — boosted by Cryonics skill', bonus: { cryo: 1.5 } },
-  { id: 'the_cube', name: 'The Cube', category: 'Misc', cost: 0, effect: 'Cosmic Insight +50%/day passive', bonus: { insight_passive: 1.5 }, postRebirth: true },
+  { id: 'textbooks',     name: 'Textbook Subscription',  category: 'Misc', cost: 10,    effect: 'Theory +25%',                             bonus: { theory: 1.25 } },
+  { id: 'energy_drinks', name: 'Energy Drinks',          category: 'Misc', cost: 15,    effect: 'Focus +25%',                              bonus: { focus: 1.25 } },
+  { id: 'gym',           name: 'Gym Membership',         category: 'Misc', cost: 60,    effect: 'Endurance +50%',                          bonus: { endurance: 1.5 } },
+  { id: 'academy_pass',  name: 'Academy Library Pass',   category: 'Misc', cost: 18,    effect: 'Mathematical Insight +50% · Theory +25%', bonus: { mathematical_insight: 1.5, theory: 1.25 }, academyReq: true },
+  { id: 'journals',      name: 'Trade Journals',         category: 'Misc', cost: 350,   effect: 'Pattern Recognition +30%',                bonus: { pattern_recognition: 1.3 } },
+  { id: 'network',       name: 'Professional Network',   category: 'Misc', cost: 800,   effect: 'Charisma +50%',                           bonus: { charisma: 1.5 } },
+  { id: 'corps_rations', name: 'Corps Combat Rations',   category: 'Misc', cost: 45,    effect: 'Endurance +75% · Focus +25%',             bonus: { endurance: 1.75, focus: 1.25 }, corpsReq: true },
+  { id: 'telescope',     name: 'Astronomy Telescope',    category: 'Misc', cost: 1200,  effect: 'Memory +75%',                             bonus: { memory: 1.75 } },
+  { id: 'sleep_opt',     name: 'Sleep Optimization',     category: 'Misc', cost: 4500,  effect: 'All XP +20%',                             bonus: { all_xp: 1.2 } },
+  { id: 'syndi_expense', name: 'Syndicate Expense Account',category:'Misc', cost: 140,   effect: 'Charisma +100% · Ingenuity +50%',        bonus: { charisma: 2, ingenuity: 1.5 }, syndicateReq: true },
+  { id: 'cryostasis',    name: 'Cryostasis Pod',         category: 'Misc', cost: 35000, effect: 'Lifespan ×1.5 — boosted by Cryonics skill',bonus: { cryo: 1.5 } },
+  { id: 'the_cube',      name: 'The Cube',               category: 'Misc', cost: 0,     effect: 'Cosmic Insight +50%/day passive',         bonus: { insight_passive: 1.5 }, postRebirth: true },
 ];
 
 // ============================================================
@@ -790,6 +806,12 @@ const LORE_FRAGMENTS = [
 // BUILDINGS (passive income — persist through rebirth, PKR-scale costs)
 // ============================================================
 const BUILDINGS = [
+  // Early game — introduce passive income concept
+  { id: 'auto_clicker',    name: 'Auto Clicker',        desc: 'A repurposed input rig that farms low-yield micro-tasks around the clock. Nothing exciting — but it never stops.', baseCost: 250,    income: 1,    costGrowthFactor: 1.20 },
+  { id: 'desktop_robot',   name: 'Desktop Robot',       desc: 'A salvage-yard arm bolted to your workbench. Assembles small components and runs overnight contracts while you sleep.', baseCost: 3000,   income: 8,    costGrowthFactor: 1.18 },
+  { id: 'ai_model',        name: 'AI Model',            desc: 'A narrow model trained on your speciality. Handles data contracts and micro-jobs in the background while you focus elsewhere.', baseCost: 50000,  income: 65,   costGrowthFactor: 1.16 },
+  { id: 'ai_agent',        name: 'AI Agent',            desc: "A semi-autonomous pipeline that scouts, negotiates, and delivers — no supervision needed. Doesn't sleep. Doesn't complain.", baseCost: 600000, income: 550,  costGrowthFactor: 1.14 },
+  // Late game — large installations
   { id: 'research_station', name: 'Research Station',    desc: 'An automated lab running experiments and analysis around the clock.', baseCost: 5e8,   income: 1500,   costGrowthFactor: 1.15 },
   { id: 'orbital_platform', name: 'Orbital Platform',    desc: 'Zero-gravity manufacturing and long-range signal monitoring.', baseCost: 5e9,   income: 18000,  costGrowthFactor: 1.12 },
   { id: 'dyson_segment',    name: 'Dyson Array Segment', desc: 'One piece of an impossibly large structure. Each segment compounds the last.', baseCost: 5e10,  income: 200000, costGrowthFactor: 1.10 },
@@ -843,6 +865,7 @@ const freshState = (insight = 0, hasReborn = false) => ({
   shop: { cramped_apt: true, hand_tools: true },
   totalDays: 0,
   autoPromote: false,
+  autoPromotePathLock: false,
   autoLearn: false,
   skillSkip: {},
   storyLog: [],
@@ -876,6 +899,7 @@ function App() {
             shop:        parsed.shop || fresh.shop,
             skillSkip:    parsed.skillSkip    || {},
             autoPromote:  parsed.autoPromote  || false,
+            autoPromotePathLock: parsed.autoPromotePathLock || false,
             autoLearn:    parsed.autoLearn    || false,
             codexSignals: parsed.codexSignals || {},
             codexLore:    parsed.codexLore    || {},
@@ -1061,7 +1085,7 @@ function App() {
           if (job) {
             const cur = s.careers[job.id];
             const xpGain = job.baseXp * jobXpMult(s, mults, job);
-            const payGain = job.basePay * jobPayMult(s, mults, job) * (1 + Math.log10(cur.level + 1));
+            const payGain = job.basePay * jobPayMult(s, mults, job) * (1 + 0.5 * Math.log10(cur.level + 1));
             s.sc += payGain;
             const newXp = cur.xp + xpGain;
             const need = xpToLevel(cur.level);
@@ -1088,10 +1112,12 @@ function App() {
 
           // Auto-promote: switch to next career when its level req is met
           if (s.autoPromote) {
+            const currentPath = CAREERS.find(c => c.id === s.activeJob)?.path;
             const next = CAREERS.find(c =>
               c.prevReq === s.activeJob &&
               (!c.postRebirth || s.hasReborn) &&
-              s.careers[s.activeJob]?.level >= c.levelReq
+              s.careers[s.activeJob]?.level >= c.levelReq &&
+              (!s.autoPromotePathLock || c.path === currentPath)
             );
             if (next) s.activeJob = next.id;
           }
@@ -1203,6 +1229,7 @@ function App() {
   const setActiveJob = (id) => setState(s => ({ ...s, activeJob: id }));
   const setActiveSkill = (id) => setState(s => ({ ...s, activeSkill: id }));
   const toggleAutoPromote = () => setState(s => ({ ...s, autoPromote: !s.autoPromote }));
+  const toggleAutoPromotePathLock = () => setState(s => ({ ...s, autoPromotePathLock: !s.autoPromotePathLock }));
   const toggleAutoLearn   = () => setState(s => ({ ...s, autoLearn:   !s.autoLearn   }));
   const toggleSkillSkip   = (id) => setState(s => ({ ...s, skillSkip: { ...s.skillSkip, [id]: !s.skillSkip[id] } }));
   const buyBuilding = (b) => setState(s => {
@@ -1295,9 +1322,13 @@ function App() {
     const job = CAREERS.find(c => c.id === state.activeJob);
     if (!job) return 0;
     const cur = state.careers[job.id];
-    return job.basePay * jobPayMult(state, mults, job) * (1 + Math.log10(cur.level + 1));
+    return job.basePay * jobPayMult(state, mults, job) * (1 + 0.5 * Math.log10(cur.level + 1));
   }, [state, mults]);
   const dailyExpense = useMemo(() => shopDailyCost(state, mults), [state, mults]);
+  const dailyPassive = useMemo(() => BUILDINGS.reduce((sum, b) => {
+    const bd = state.buildings?.[b.id];
+    return sum + (bd ? b.income * bd.count : 0);
+  }, 0), [state.buildings]);
 
   const ageYears = Math.floor(state.ageDays / DAYS_PER_YEAR);
   const ageDayOfYear = Math.floor(state.ageDays % DAYS_PER_YEAR);
@@ -1323,10 +1354,9 @@ function App() {
   };
   const isShopUnlocked = (item) => {
     if (item.postRebirth && !state.hasReborn) return false;
-    if (item.corpsReq) {
-      const cadet = state.careers.corps_cadet;
-      if (!cadet || cadet.level < 1) return false;
-    }
+    if (item.academyReq && !(state.careers.lab_assistant?.level >= 1)) return false;
+    if (item.corpsReq && !(state.careers.corps_cadet?.level >= 1)) return false;
+    if (item.syndicateReq && !(state.careers.field_agent?.level >= 1)) return false;
     return true;
   };
 
@@ -1348,6 +1378,13 @@ function App() {
             ⚙
           </button>
         </div>
+        {window.location.pathname.startsWith('/dev') && (
+          <div style={{fontSize:10, fontWeight:700, letterSpacing:'0.12em', color:'#ffaa00',
+            background:'rgba(80,40,0,0.5)', border:'1px solid #aa6600',
+            borderRadius:4, padding:'3px 8px', textTransform:'uppercase', userSelect:'none'}}>
+            DEV
+          </div>
+        )}
       </div>
 
       {tickerMsg && (
@@ -1360,11 +1397,11 @@ function App() {
       <div className="main-layout">
         <StatusBar
           state={state} mults={mults}
-          dailyIncome={dailyIncome} dailyExpense={dailyExpense}
+          dailyIncome={dailyIncome} dailyExpense={dailyExpense} dailyPassive={dailyPassive}
           ageYears={ageYears} ageDayOfYear={ageDayOfYear} lifePct={lifePct} effectiveDeathAge={effectiveDeathAge}
           speed={speed} setSpeed={setSpeed} paused={paused} setPaused={setPaused}
           hardReset={hardReset}
-          toggleAutoPromote={toggleAutoPromote} toggleAutoLearn={toggleAutoLearn}
+          toggleAutoPromote={toggleAutoPromote} toggleAutoPromotePathLock={toggleAutoPromotePathLock} toggleAutoLearn={toggleAutoLearn}
           exportSave={exportSave} importSave={importSave}
         />
 
@@ -1504,7 +1541,7 @@ function App() {
 // ============================================================
 // SIDEBAR
 // ============================================================
-function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOfYear, lifePct, effectiveDeathAge, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoLearn, exportSave, importSave }) {
+function StatusBar({ state, mults, dailyIncome, dailyExpense, dailyPassive, ageYears, ageDayOfYear, lifePct, effectiveDeathAge, speed, setSpeed, paused, setPaused, hardReset, toggleAutoPromote, toggleAutoPromotePathLock, toggleAutoLearn, exportSave, importSave }) {
   const job = CAREERS.find(c => c.id === state.activeJob);
   const skill = SKILLS.find(s => s.id === state.activeSkill);
   const jobData = job ? state.careers[job.id] : null;
@@ -1514,7 +1551,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
   const jobPct = jobData ? Math.min(100, (jobData.xp / jobNeed) * 100) : 0;
   const skillNeed = skillData ? xpToLevel(skillData.level) : 1;
   const skillPct = skillData ? Math.min(100, (skillData.xp / skillNeed) * 100) : 0;
-  const net = dailyIncome - dailyExpense;
+  const net = dailyIncome + (dailyPassive || 0) - dailyExpense;
 
   return (
     <div className="sidebar">
@@ -1540,6 +1577,13 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
               {state.autoPromote ? 'ON' : 'OFF'}
             </button>
           </div>
+          {state.autoPromote && (
+            <label style={{display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#4a7060', cursor:'pointer', marginBottom:4, marginLeft:2}}>
+              <input type="checkbox" checked={!!state.autoPromotePathLock} onChange={toggleAutoPromotePathLock}
+                style={{accentColor:'#00ff88', width:12, height:12}} />
+              Stay within current path
+            </label>
+          )}
           <div className="toggle-row">
             <span className="toggle-label">Auto-Learn</span>
             <button className={`toggle-btn ${state.autoLearn ? 'on' : ''}`} onClick={toggleAutoLearn}>
@@ -1568,6 +1612,7 @@ function StatusBar({ state, mults, dailyIncome, dailyExpense, ageYears, ageDayOf
           <div className="sb-big" style={{color:'#f0c850'}}>{formatNum(state.sc)} <span style={{fontSize:11,color:'#604820',fontWeight:400}}>SC</span></div>
           <div className="sb-row"><span className="sb-label">Net / day</span><span className={`sb-val ${net>=0?'good':'bad'}`}>{net>=0?'+':''}{formatNum(net)}</span></div>
           <div className="sb-row"><span className="sb-label">Income / day</span><span className="sb-val good">+{formatNum(dailyIncome)}</span></div>
+          {dailyPassive > 0 && <div className="sb-row"><span className="sb-label">Passive / day</span><span className="sb-val" style={{color:'#00ddcc'}}>+{formatNum(dailyPassive)}</span></div>}
           <div className="sb-row"><span className="sb-label">Expense / day</span><span className="sb-val bad">-{formatNum(dailyExpense)}</span></div>
         </div>
 
@@ -1625,8 +1670,23 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
       {paths.map(path => {
         const inPath = CAREERS.filter(c => c.path === path);
         const anyReachable = inPath.some(c => isCareerUnlocked(c) || (c.prevReq && state.careers[c.prevReq]?.level > 0));
-        if (!anyReachable && path !== 'garage') return null;
         const meta = PATH_META[path];
+        if (!anyReachable && path !== 'garage') {
+          const gateway = inPath[0];
+          const gateCareer = gateway?.prevReq ? CAREERS.find(c => c.id === gateway.prevReq) : null;
+          const needsRebirth = gateway?.postRebirth;
+          const unlockHint = needsRebirth
+            ? `Unlocks after rebirth — reach ${gateCareer?.name || '?'} lv ${gateway.levelReq}`
+            : gateCareer ? `Unlocks at ${gateCareer.name} lv ${gateway.levelReq}` : null;
+          if (!unlockHint) return null;
+          return (
+            <div key={path} style={{opacity:0.45, marginBottom:8}}>
+              <div className="category-header" style={{color: meta.color, borderColor:'#1a0a2a'}}>
+                {meta.label} <span style={{color:'#3a3a4a', fontWeight:400, textTransform:'none', fontSize:10, letterSpacing:0}}>— {unlockHint}</span>
+              </div>
+            </div>
+          );
+        }
         return (
           <div key={path}>
             <div className="category-header" style={{color:'#00cc66'}}>
@@ -1638,7 +1698,7 @@ function CareersTab({ state, mults, setActiveJob, isCareerUnlocked, jobXpMult, j
               const need = xpToLevel(cur.level);
               const pct = Math.min(100, (cur.xp / need) * 100);
               const isActive = state.activeJob === career.id;
-              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + Math.log10(cur.level + 1));
+              const payGain = career.basePay * jobPayMult(state, mults, career) * (1 + 0.5 * Math.log10(cur.level + 1));
               const xpGain = career.baseXp * jobXpMult(state, mults, career);
               const prevCareer = career.prevReq ? CAREERS.find(c => c.id === career.prevReq) : null;
               const reqLabel = !unlocked && prevCareer ? `Needs ${prevCareer.name} lv ${career.levelReq}` : '';
@@ -1752,52 +1812,92 @@ function SkillsTab({ state, mults, setActiveSkill, isSkillUnlocked, skillXpMult,
   );
 }
 
+function ShopRow({ item, state, mults, buyShop, isShopUnlocked }) {
+  const unlocked = isShopUnlocked(item);
+  const active = !!state.shop[item.id];
+  let cost = item.cost;
+  cost *= mults.skills.tool_mastery;
+  cost *= mults.skills.composure;
+  return (
+    <div className={`row ${!unlocked ? 'locked' : ''}`}
+      style={active ? {background:'rgba(0,30,70,0.5)', borderLeft:'3px solid #00aaff', boxShadow:'inset 0 0 12px rgba(0,170,255,0.05)'} : {}}>
+      <div>
+        <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
+        {item.happiness != null && (
+          <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/50).toFixed(2)}</div>
+        )}
+      </div>
+      <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
+      <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
+      <div></div>
+      <div>
+        {unlocked ? (
+          <button
+            style={active ? {background:'rgba(0,40,100,0.7)', borderColor:'#0055cc', color:'#00aaff'} : {}}
+            onClick={() => buyShop(item)}>
+            {active ? (item.exclusive ? 'Active' : 'Drop') : (item.exclusive ? 'Choose' : 'Buy')}
+          </button>
+        ) : (
+          <button disabled>Locked</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ShopTab({ state, mults, buyShop, isShopUnlocked }) {
-  const cats = [
-    { name: 'Living Quarters', key: 'Living', desc: 'Only one active at a time. Better housing raises your Happiness, which multiplies all XP you earn.' },
-    { name: 'Equipment', key: 'Equipment', desc: 'Stack as many as you can afford — every active tool\'s bonus combines with the others.' },
-    { name: 'Misc', key: 'Misc', desc: 'Stackable lifestyle upgrades. Subscriptions, habits, and curiosities that compound over time.' },
+  const academyUnlocked = (state.careers.lab_assistant?.level || 0) >= 1;
+  const corpsUnlocked   = (state.careers.corps_cadet?.level   || 0) >= 1;
+  const syndiUnlocked   = (state.careers.field_agent?.level   || 0) >= 1;
+  const rebirthUnlocked = !!state.hasReborn;
+
+  const housingGroups = [
+    { key: 'basic',     label: 'Basic',          unlocked: true,           teaser: null },
+    { key: 'academy',   label: 'The Academy',    unlocked: academyUnlocked, teaser: 'Unlocks when you enter The Academy (Lab Assistant lv 1)' },
+    { key: 'corps',     label: 'The Corps',      unlocked: corpsUnlocked,   teaser: 'Unlocks when you join The Corps (Corps Cadet lv 1)' },
+    { key: 'syndicate', label: 'The Syndicate',  unlocked: syndiUnlocked,   teaser: 'Unlocks when you join The Syndicate (Field Agent lv 1)' },
+    { key: 'rebirth',   label: 'Post-Rebirth',   unlocked: rebirthUnlocked, teaser: 'Unlocks after completing your first full loop' },
   ];
+
+  const rowProps = { state, mults, buyShop, isShopUnlocked };
+
   return (
     <div className="panel">
-      {cats.map(cat => (
-        <div key={cat.key}>
-          <div className="category-header" style={{color:'#0088cc'}}>{cat.name}</div>
-          <div className="description" style={{color:'#5a8aaa'}}>{cat.desc}</div>
-          {SHOP.filter(i => i.category === cat.key).map(item => {
-            const unlocked = isShopUnlocked(item);
-            const active = !!state.shop[item.id];
-            let cost = item.cost;
-            cost *= mults.skills.tool_mastery;
-            cost *= mults.skills.composure;
-            return (
-              <div key={item.id} className={`row ${!unlocked ? 'locked' : ''}`}
-                style={active ? {background:'rgba(0,30,70,0.5)', borderLeft:'3px solid #00aaff', boxShadow:'inset 0 0 12px rgba(0,170,255,0.05)'} : {}}>
-                <div>
-                  <div className="row-name" style={{color:'#c0e8ff'}}>{item.name}</div>
-                  {item.happiness != null && (
-                    <div className="row-level" style={{color:'#00aaff'}}>Happiness {item.happiness} → XP ×{(item.happiness/50).toFixed(2)}</div>
-                  )}
-                </div>
-                <div className="row-effect" style={{color:'#00aaff'}}>{item.effect}</div>
-                <div className="row-cost">{cost > 0 ? `${formatNum(cost)} SC/day` : 'Free'}</div>
-                <div></div>
-                <div>
-                  {unlocked ? (
-                    <button
-                      style={active ? {background:'rgba(0,40,100,0.7)', borderColor:'#0055cc', color:'#00aaff'} : {}}
-                      onClick={() => buyShop(item)}>
-                      {active ? (item.exclusive ? 'Active' : 'Drop') : (item.exclusive ? 'Choose' : 'Buy')}
-                    </button>
-                  ) : (
-                    <button disabled>Locked</button>
-                  )}
-                </div>
+      {/* Living Quarters — grouped by career path */}
+      <div className="category-header" style={{color:'#0088cc'}}>Living Quarters</div>
+      <div className="description" style={{color:'#5a8aaa'}}>Only one active at a time. Better housing raises your Happiness, which multiplies all XP you earn.</div>
+      {housingGroups.map(group => {
+        const items = SHOP.filter(i => i.category === 'Living' && i.housingGroup === group.key);
+        if (items.length === 0) return null;
+        return (
+          <div key={group.key} style={{marginTop: 10}}>
+            <div style={{fontSize: 11, fontWeight: 600, color: group.unlocked ? '#4488aa' : '#2a4455', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '4px 0 2px', borderBottom: '1px solid rgba(0,120,200,0.15)', marginBottom: 4}}>
+              {group.label}
+            </div>
+            {group.unlocked ? (
+              items.map(item => <ShopRow key={item.id} item={item} {...rowProps} />)
+            ) : (
+              <div className="row locked" style={{opacity: 0.45, fontStyle: 'italic', color: '#2a5060', fontSize: 12}}>
+                <div style={{gridColumn:'1 / -1'}}>{group.teaser}</div>
               </div>
-            );
-          })}
-        </div>
-      ))}
+            )}
+          </div>
+        );
+      })}
+
+      {/* Equipment */}
+      <div style={{marginTop: 16}}>
+        <div className="category-header" style={{color:'#0088cc'}}>Equipment</div>
+        <div className="description" style={{color:'#5a8aaa'}}>Stack as many as you can afford — every active tool's bonus combines with the others.</div>
+        {SHOP.filter(i => i.category === 'Equipment').map(item => <ShopRow key={item.id} item={item} {...rowProps} />)}
+      </div>
+
+      {/* Misc */}
+      <div style={{marginTop: 16}}>
+        <div className="category-header" style={{color:'#0088cc'}}>Misc</div>
+        <div className="description" style={{color:'#5a8aaa'}}>Stackable lifestyle upgrades. Subscriptions, habits, and curiosities that compound over time.</div>
+        {SHOP.filter(i => i.category === 'Misc').map(item => <ShopRow key={item.id} item={item} {...rowProps} />)}
+      </div>
     </div>
   );
 }
@@ -1935,11 +2035,47 @@ function AchievementsTab({ state }) {
   );
 }
 
+function BuildRow({ b, state, buyBuilding }) {
+  const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
+  const canAfford = state.sc >= bd.nextCost;
+  return (
+    <div className="row" style={{marginBottom:8}}>
+      <div>
+        <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
+        <div className="row-level" style={{color:'#00ddcc'}}>
+          Owned: {bd.count}
+          {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
+        </div>
+      </div>
+      <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
+      <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
+        {formatNum(b.income)} SC/day each
+      </div>
+      <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
+        Cost: {formatNum(bd.nextCost)} SC
+      </div>
+      <div>
+        <button
+          style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
+          onClick={() => buyBuilding(b)}
+          disabled={!canAfford}>
+          Build
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function BuildTab({ state, buyBuilding }) {
   const totalPassive = BUILDINGS.reduce((sum, b) => {
     const bd = state.buildings?.[b.id];
     return sum + (bd ? b.income * bd.count : 0);
   }, 0);
+
+  const earlyBuilds = BUILDINGS.filter(b => ['auto_clicker','desktop_robot','ai_model','ai_agent'].includes(b.id));
+  const lateBuilds  = BUILDINGS.filter(b => !['auto_clicker','desktop_robot','ai_model','ai_agent'].includes(b.id));
+  const rowProps = { state, buyBuilding };
+
   return (
     <div className="panel">
       <div className="section-title" style={{color:'#00ddcc', textShadow:'0 0 8px rgba(0,221,204,0.3)', marginBottom:4}}>⊹ Installations</div>
@@ -1947,36 +2083,16 @@ function BuildTab({ state, buyBuilding }) {
         Permanent structures that generate passive SC/day income. Persist through every rebirth.
         {totalPassive > 0 && <span style={{color:'#00ddcc', marginLeft:8}}>+{formatNum(totalPassive)} SC/day total</span>}
       </div>
-      {BUILDINGS.map(b => {
-        const bd = state.buildings?.[b.id] || { count: 0, nextCost: b.baseCost };
-        const canAfford = state.sc >= bd.nextCost;
-        return (
-          <div key={b.id} className="row" style={{marginBottom:8}}>
-            <div>
-              <div className="row-name" style={{color:'#b0f0e8'}}>{b.name}</div>
-              <div className="row-level" style={{color:'#00ddcc'}}>
-                Owned: {bd.count}
-                {bd.count > 0 && <span style={{color:'#009988', marginLeft:8}}>+{formatNum(b.income * bd.count)} SC/day</span>}
-              </div>
-            </div>
-            <div className="row-effect" style={{color:'#4a9a90', fontSize:11}}>{b.desc}</div>
-            <div className="row-cost" style={{color: canAfford ? '#00ddcc' : '#4a6860'}}>
-              {formatNum(b.income)} SC/day each
-            </div>
-            <div className="row-cost" style={{color: canAfford ? '#00ff88' : '#4a6860'}}>
-              Cost: {formatNum(bd.nextCost)} SC
-            </div>
-            <div>
-              <button
-                style={canAfford ? {background:'rgba(0,50,60,0.7)', borderColor:'#009988', color:'#00ddcc'} : {}}
-                onClick={() => buyBuilding(b)}
-                disabled={!canAfford}>
-                Build
-              </button>
-            </div>
-          </div>
-        );
-      })}
+
+      <div style={{fontSize:11, fontWeight:600, color:'#2a7a70', letterSpacing:'0.08em', textTransform:'uppercase', padding:'4px 0 2px', borderBottom:'1px solid rgba(0,180,160,0.15)', marginBottom:6}}>
+        Automation
+      </div>
+      {earlyBuilds.map(b => <BuildRow key={b.id} b={b} {...rowProps} />)}
+
+      <div style={{fontSize:11, fontWeight:600, color:'#2a7a70', letterSpacing:'0.08em', textTransform:'uppercase', padding:'12px 0 2px', borderBottom:'1px solid rgba(0,180,160,0.15)', marginBottom:6}}>
+        Installations
+      </div>
+      {lateBuilds.map(b => <BuildRow key={b.id} b={b} {...rowProps} />)}
     </div>
   );
 }
