@@ -1,0 +1,10 @@
+{
+  "id": "stellar-ascent",
+  "name": "Stellar Ascent",
+  "category": "games",
+  "status": { "prod": "live", "dev": "live" },
+  "deploy": {
+    "prod": { "url": "https://stellar-ascent.dabrewer.dev/" },
+    "dev": { "url": "https://stellar-ascent.dabrewer.dev/dev/" }
+  }
+}
