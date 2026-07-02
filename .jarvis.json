@@ -1,7 +1,9 @@
 {
   "id": "stellar-ascent",
   "name": "Stellar Ascent",
+  "description": "A narrative incremental idle-RPG where a garage scientist lives many lifetimes toward the stars, rebirthing with persistent Cosmic Insight — a space-themed take on Progress Knight: Reborn.",
   "category": "games",
+  "tech": ["React 18", "Babel (in-browser)", "Vanilla CSS", "localStorage", "single-file HTML", "GitHub Pages"],
   "status": { "prod": "live", "dev": "live" },
   "deploy": {
     "prod": { "url": "https://stellar-ascent.dabrewer.dev/" },
