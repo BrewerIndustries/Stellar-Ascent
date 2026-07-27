@@ -7,6 +7,7 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
+<script src="https://arcade.dabrewer.dev/arcade-sdk.js" data-game="stellar-ascent"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -1057,6 +1058,7 @@ function App() {
   useEffect(() => {
     const t = setInterval(() => {
       try { localStorage.setItem('stellar_ascent_save', JSON.stringify(stateRef.current)); } catch (e) {}
+      if (window.Arcade) { Arcade.report('insight', stateRef.current.cosmicInsight||0); Arcade.report('rebirths', (stateRef.current.lifeCount||1)-1); }
     }, 30000);
     return () => clearInterval(t);
   }, []);
